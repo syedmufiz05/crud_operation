@@ -7,6 +7,7 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.util.Date;
+
 @Data
 @Entity
 @Table(name = "access_logs")
@@ -18,9 +19,9 @@ public class AccessLogs {
     @Column(name = "user_id")
     private Integer userId;
     @CreationTimestamp
-    @Column(name = "access_date_time" ,nullable = false, updatable = true)
+    @Column(name = "access_date_time", nullable = false, updatable = true)
     private Date accessDateTime;
-    @Column(name = "req_payload" ,columnDefinition = "JSON")
+    @Column(name = "req_payload", columnDefinition = "JSON")
     private String reqPayload;
     @Column(name = "response_payload")
     private String responsePayload;
@@ -30,7 +31,7 @@ public class AccessLogs {
     public void setReqPayload(String reqPayload) {
         try {
             this.reqPayload = new ObjectMapper().writeValueAsString(reqPayload);
-            } catch (JsonProcessingException e) {
+        } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
     }

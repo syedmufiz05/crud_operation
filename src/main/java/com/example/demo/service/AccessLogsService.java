@@ -10,7 +10,7 @@ public class AccessLogsService {
     @Autowired
     private AccessLogsRepository accessLogsRepository;
 
-    public void saveAccessLogs(AccessLogs accessLogs){
+    public void saveAccessLogs(AccessLogs accessLogs) {
         accessLogsRepository.save(accessLogs);
     }
 }
