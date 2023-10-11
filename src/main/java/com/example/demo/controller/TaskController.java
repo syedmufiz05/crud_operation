@@ -17,9 +17,9 @@ public class TaskController {
     private HssProvService hssProvService;
 
     @PostMapping("/api/v1/save/records")
-    public void saveDetails(@RequestBody HssProvDto hssProvDto, HttpServletRequest httpServletRequest) {
+    public void saveDetails(@RequestBody HssProv hssProv, HttpServletRequest httpServletRequest) {
         String authCode = httpServletRequest.getHeader("Authorization").replace("Bearer", "");
-        hssProvService.saveHssProv(hssProvDto, authCode);
+        hssProvService.saveHssProv(hssProv, authCode);
     }
 
     @DeleteMapping("/api/v1/delete/record")

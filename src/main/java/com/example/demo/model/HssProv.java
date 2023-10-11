@@ -94,6 +94,9 @@ public class HssProv {
     private Integer imsFlag;
     @Column(name = "subscriber_prof_id")
     private Integer subscriberProfId;
-    @Column(name = "access_id")
-    private Integer accessId;
+//    @Column(name = "access_id")
+//    private Integer accessId;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "access_id",referencedColumnName ="idaccess_logs_id")
+    private AccessLogs accessLogs;
 }
