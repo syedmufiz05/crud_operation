@@ -77,6 +77,7 @@ public class HssProvService {
     }
 
     private void saveAccessRequestPayload(HssProv hssProvDb, AccessLogs accessLogs) {
+//      accessLogs.setReqPayload(String.valueOf(new ReqPayloadDto(hssProvDb.getHssprovId(), hssProvDb.getImsi(), hssProvDb.getImsiFlag(), hssProvDb.getMsisdn(), hssProvDb.getNam(), hssProvDb.getOdb(), hssProvDb.getBaoc(), hssProvDb.getBoic(), hssProvDb.getOsb1(), hssProvDb.getOsb2(), hssProvDb.getBaic(), hssProvDb.getRoaming(), hssProvDb.getBearerService(), hssProvDb.getTelephone(), hssProvDb.getSms(), hssProvDb.getCfuA(), hssProvDb.getCfuR(), hssProvDb.getCfuP(), hssProvDb.getCfbP(), hssProvDb.getCfnryP(), hssProvDb.getCfnryT(), hssProvDb.getCfnrcP(), hssProvDb.getCwA(), hssProvDb.getCwP(), hssProvDb.getChP(), hssProvDb.getCamel(), hssProvDb.getOCsi(), hssProvDb.getTCsi(), hssProvDb.getSsCsi(), hssProvDb.getSmsCsi(), hssProvDb.getOCsiScfNo(), hssProvDb.getTCsiScfNo(), hssProvDb.getSsCsiScfNo(), hssProvDb.getSmsSciScfNo(), hssProvDb.getGprsFlag(), hssProvDb.getEpsFlag(), hssProvDb.getArd(), hssProvDb.getEpsUserTpl(), hssProvDb.getContextD(), hssProvDb.getApnCtxtList(), hssProvDb.getImsFlag(), hssProvDb.getSubscriberProfId(), hssProvDb.getAccessId())));
         accessLogs.setReqPayload(String.valueOf(hssProvDb));
         accessLogsRepository.save(accessLogs);
     }
