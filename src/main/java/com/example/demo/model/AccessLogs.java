@@ -16,15 +16,19 @@ public class AccessLogs {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "idaccess_logs_id")
     private Integer idAccessLogsId;
+
     @Column(name = "user_id")
     private Integer userId;
+
     @CreationTimestamp
     @Column(name = "access_date_time", nullable = false, updatable = true)
     private Date accessDateTime;
     @Column(name = "req_payload", columnDefinition = "JSON")
     private String reqPayload;
+
     @Column(name = "response_payload")
     private String responsePayload;
+
     @Column(name = "authtoken")
     private String authToken;
 

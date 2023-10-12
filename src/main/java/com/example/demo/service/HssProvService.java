@@ -1,6 +1,7 @@
 package com.example.demo.service;
 
 import com.example.demo.dto.HssProvDto;
+import com.example.demo.dto.ReqPayloadDto;
 import com.example.demo.model.AccessLogs;
 import com.example.demo.model.HssProv;
 import com.example.demo.repository.AccessLogsRepository;
@@ -22,29 +23,29 @@ public class HssProvService {
     @Qualifier("accessLogsRepository")
     private AccessLogsRepository accessLogsRepository;
 
-    public void saveHssProv(HssProv hssProv, String authToken) {
+    public String saveHssProv(HssProv hssProv, String authToken) {
         AccessLogs accessLogs = new AccessLogs();
         accessLogs.setUserId(1212);
         accessLogs.setResponsePayload("");
         accessLogs.setAuthToken(authToken);
         accessLogsRepository.save(accessLogs);
+        hssProv.setAccessLogs(accessLogs);
         hssProvRepository.save(hssProv);
-        saveAccessRequestPayload(hssProv, accessLogs);
+        return saveAccessRequestPayload(hssProv, accessLogs);
     }
 
-    private void saveAccessRequestPayload(HssProv hssProv, AccessLogs accessLogs) {
-//      accessLogs.setReqPayload(String.valueOf(new ReqPayloadDto(hssProv.getHssprovId(), hssProv.getImsi(), hssProv.getImsiFlag(), hssProv.getMsisdn(), hssProv.getNam(), hssProv.getOdb(), hssProv.getBaoc(), hssProv.getBoic(), hssProv.getOsb1(), hssProv.getOsb2(), hssProv.getBaic(), hssProv.getRoaming(), hssProv.getBearerService(), hssProv.getTelephone(), hssProv.getSms(), hssProv.getCfuA(), hssProv.getCfuR(), hssProv.getCfuP(), hssProv.getCfbP(), hssProv.getCfnryP(), hssProv.getCfnryT(), hssProv.getCfnrcP(), hssProv.getCwA(), hssProv.getCwP(), hssProv.getChP(), hssProv.getCamel(), hssProv.getOCsi(), hssProv.getTCsi(), hssProv.getSsCsi(), hssProv.getSmsCsi(), hssProv.getOCsiScfNo(), hssProv.getTCsiScfNo(), hssProv.getSsCsiScfNo(), hssProv.getSmsSciScfNo(), hssProv.getGprsFlag(), hssProv.getEpsFlag(), hssProv.getArd(), hssProv.getEpsUserTpl(), hssProv.getContextD(), hssProv.getApnCtxtList(), hssProv.getImsFlag(), hssProv.getSubscriberProfId(), hssProv.getAccessId())));
-        accessLogs.setReqPayload(String.valueOf(hssProv));
-        accessLogsRepository.save(accessLogs);
+
+    @Transactional
+    public String deleteHssProv(String imsi, String msisdn) {
+        if (imsi.isEmpty() || msisdn.isEmpty()) {
+            hssProvRepository.deleteByImsiOrMsisdn(imsi, msisdn);
+            return "Successfully deleted...";
+        }
+        return "Imsi or Msisdn Id is empty";
     }
 
     @Transactional
-    public void deleteHssProv(String imsi, String msisdn) {
-        hssProvRepository.deleteByImsiOrMsisdn(imsi, msisdn);
-    }
-
-    @Transactional
-    public HssProv updateHssProv(String imsi, String msisdn, HssProvDto hssProvDto) {
+    public String updateHssProv(String imsi, String msisdn, HssProvDto hssProvDto) {
         Optional<HssProv> hssProv = hssProvRepository.findByImsiOrMsisdn(imsi, msisdn);
         if (hssProv.isPresent()) {
             HssProv hssProvDb = hssProv.get();
@@ -90,10 +91,24 @@ public class HssProvService {
             Optional<AccessLogs> accessLogsDb = accessLogsRepository.findByIdAccessLogsId(hssProv.get().getAccessLogs().getIdAccessLogsId());
             AccessLogs accessLogs = accessLogsDb.get();
             accessLogs.setAccessDateTime(new Date());
-            accessLogs.setReqPayload(String.valueOf(hssProvDb));
+            accessLogs.setReqPayload(updateAccessRequestPayload(hssProvDb, accessLogs));
             accessLogsRepository.save(accessLogs);
-            return hssProvRepository.save(hssProvDb);
+            hssProvRepository.save(hssProvDb);
+            return "Successfully updated...";
         }
-        return null;
+        return "Invalid Imsi or Msisdn Id";
+    }
+
+    private String saveAccessRequestPayload(HssProv hssProv, AccessLogs accessLogs) {
+        accessLogs.setReqPayload(String.valueOf(new ReqPayloadDto(hssProv.getHssprovId(), hssProv.getImsi(), hssProv.getImsiFlag(), hssProv.getMsisdn(), hssProv.getNam(), hssProv.getOdb(), hssProv.getBaoc(), hssProv.getBoic(), hssProv.getOsb1(), hssProv.getOsb2(), hssProv.getBaic(), hssProv.getRoaming(), hssProv.getBearerService(), hssProv.getTelephone(), hssProv.getSms(), hssProv.getCfuA(), hssProv.getCfuR(), hssProv.getCfuP(), hssProv.getCfbP(), hssProv.getCfnryP(), hssProv.getCfnryT(), hssProv.getCfnrcP(), hssProv.getCwA(), hssProv.getCwP(), hssProv.getChP(), hssProv.getCamel(), hssProv.getOCsi(), hssProv.getTCsi(), hssProv.getSsCsi(), hssProv.getSmsCsi(), hssProv.getOCsiScfNo(), hssProv.getTCsiScfNo(), hssProv.getSsCsiScfNo(), hssProv.getSmsSciScfNo(), hssProv.getGprsFlag(), hssProv.getEpsFlag(), hssProv.getArd(), hssProv.getEpsUserTpl(), hssProv.getContextD(), hssProv.getApnCtxtList(), hssProv.getImsFlag(), hssProv.getSubscriberProfId(), hssProv.getAccessLogs().getIdAccessLogsId())));
+        accessLogsRepository.save(accessLogs);
+        return "Successfully saved...";
+    }
+
+    private String updateAccessRequestPayload(HssProv hssProv, AccessLogs accessLogs) {
+        accessLogs.setReqPayload(String.valueOf(new ReqPayloadDto(hssProv.getHssprovId(), hssProv.getImsi(), hssProv.getImsiFlag(), hssProv.getMsisdn(), hssProv.getNam(), hssProv.getOdb(), hssProv.getBaoc(), hssProv.getBoic(), hssProv.getOsb1(), hssProv.getOsb2(), hssProv.getBaic(), hssProv.getRoaming(), hssProv.getBearerService(), hssProv.getTelephone(), hssProv.getSms(), hssProv.getCfuA(), hssProv.getCfuR(), hssProv.getCfuP(), hssProv.getCfbP(), hssProv.getCfnryP(), hssProv.getCfnryT(), hssProv.getCfnrcP(), hssProv.getCwA(), hssProv.getCwP(), hssProv.getChP(), hssProv.getCamel(), hssProv.getOCsi(), hssProv.getTCsi(), hssProv.getSsCsi(), hssProv.getSmsCsi(), hssProv.getOCsiScfNo(), hssProv.getTCsiScfNo(), hssProv.getSsCsiScfNo(), hssProv.getSmsSciScfNo(), hssProv.getGprsFlag(), hssProv.getEpsFlag(), hssProv.getArd(), hssProv.getEpsUserTpl(), hssProv.getContextD(), hssProv.getApnCtxtList(), hssProv.getImsFlag(), hssProv.getSubscriberProfId(), hssProv.getAccessLogs().getIdAccessLogsId())));
+        accessLogsRepository.save(accessLogs);
+        String reqPayload = accessLogs.getReqPayload();
+        return reqPayload;
     }
 }

@@ -16,20 +16,21 @@ public class TaskController {
     @Autowired
     private HssProvService hssProvService;
 
-    @PostMapping("/api/v1/save/records")
-    public void saveDetails(@RequestBody HssProv hssProv, HttpServletRequest httpServletRequest) {
+    @PostMapping("/api/v1/save/record")
+    public String saveDetails(@RequestBody HssProv hssProv, HttpServletRequest httpServletRequest) {
         String authCode = httpServletRequest.getHeader("Authorization").replace("Bearer", "");
-        hssProvService.saveHssProv(hssProv, authCode);
+        return hssProvService.saveHssProv(hssProv, authCode);
     }
 
     @DeleteMapping("/api/v1/delete/record")
-    public void deleteHssProvData(@RequestParam String imsi, @RequestParam String msisdn) {
-        hssProvService.deleteHssProv(imsi, msisdn);
+    public String deleteHssProvData(@RequestParam String imsi, @RequestParam String msisdn) {
+        String msg =  hssProvService.deleteHssProv(imsi, msisdn);
+        return msg;
     }
 
-    @PutMapping("/api/v1/update/records")
-    public HssProv updateDetails(@RequestParam String imsi, @RequestParam String msisdn, @RequestBody HssProvDto hssProvDto) {
-        HssProv hssProv1 = hssProvService.updateHssProv(imsi, msisdn, hssProvDto);
-        return hssProv1;
+    @PutMapping("/api/v1/update/record")
+    public String updateDetails(@RequestParam String imsi, @RequestParam String msisdn, @RequestBody HssProvDto hssProvDto) {
+        String msg = hssProvService.updateHssProv(imsi, msisdn, hssProvDto);
+        return msg;
     }
 }
