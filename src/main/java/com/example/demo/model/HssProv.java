@@ -9,6 +9,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "hssprov")
 public class HssProv {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "hssprov_id")
@@ -163,6 +164,10 @@ public class HssProv {
     @JsonProperty("eps_user_tpl")
     private String epsUserTpl;
 
+    @Column(name = "def_eps")
+    @JsonProperty("def_eps")
+    private String defEps;
+
     @Column(name = "context_d")
     @JsonProperty("context_d")
     private String contextD;
@@ -183,4 +188,5 @@ public class HssProv {
     @JoinColumn(name = "access_id", referencedColumnName = "idaccess_logs_id")
     @JsonProperty("access_id")
     private AccessLogs accessLogs;
+
 }

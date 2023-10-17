@@ -6,12 +6,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
-public class HssProvDto {
-
-    @JsonProperty("hssProv_id")
-    private Integer hssProvId;
+@NoArgsConstructor
+public class SocketMsgDto {
 
     @JsonProperty("imsi")
     private String imsi;
@@ -136,11 +133,4 @@ public class HssProvDto {
     @JsonProperty("ims_flag")
     private Integer imsFlag;
 
-    @JsonProperty("subscriber_prof_id")
-    private Integer subscriberProfId;
-
-    @JsonProperty("access_id")
-    private Integer accessId;
-
 }
-

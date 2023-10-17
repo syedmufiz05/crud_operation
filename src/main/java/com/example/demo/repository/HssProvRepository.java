@@ -8,7 +8,9 @@ import java.util.Optional;
 
 @Repository
 public interface HssProvRepository extends JpaRepository<HssProv, Integer> {
+
     void deleteByImsiOrMsisdn(String imsi, String msisdn);
 
     Optional<HssProv> findByImsiOrMsisdn(String imsi, String msisdn);
+
 }

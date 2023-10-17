@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ReqPayloadDto {
+
     @JsonProperty("hssprov_id")
     private Integer hssprovId;
 
@@ -136,4 +137,5 @@ public class ReqPayloadDto {
 
     @JsonProperty("access_id")
     private Integer accessId;
+
 }

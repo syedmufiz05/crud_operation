@@ -3,7 +3,7 @@ package com.example.demo.model;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Data;
-import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -12,6 +12,7 @@ import java.util.Date;
 @Entity
 @Table(name = "access_logs")
 public class AccessLogs {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "idaccess_logs_id")
@@ -20,8 +21,8 @@ public class AccessLogs {
     @Column(name = "user_id")
     private Integer userId;
 
-    @CreationTimestamp
-    @Column(name = "access_date_time", nullable = false, updatable = true)
+    @UpdateTimestamp
+    @Column(name = "access_date_time", nullable = false)
     private Date accessDateTime;
     @Column(name = "req_payload", columnDefinition = "JSON")
     private String reqPayload;
@@ -39,4 +40,5 @@ public class AccessLogs {
             throw new RuntimeException(e);
         }
     }
+
 }

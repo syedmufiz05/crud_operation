@@ -7,6 +7,7 @@ package com.example.demo.service;
 
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
+import org.springframework.stereotype.Service;
 
 import java.io.*;
 import java.net.InetAddress;
@@ -16,7 +17,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Random;
 
-//@Service("hssSocketService")
+@Service("hssSocketService")
 public class HSSSocketClient implements Serializable {
 
     Socket socket = null;
@@ -481,6 +482,10 @@ public class HSSSocketClient implements Serializable {
     public String ussdDebit(String rechargeChannel, Integer dn) {
         // TODO Auto-generated method stub
         return null;
+    }
+
+    public void sendMessage(String msg) {
+        send(msg);
     }
 
 }
