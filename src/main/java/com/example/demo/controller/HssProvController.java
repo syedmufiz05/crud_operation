@@ -1,8 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.dto.HssProvDto;
-import com.example.demo.service.AccessLogsService;
-import com.example.demo.service.HssProvService;
+import com.example.demo.service.HssProvServiceImpl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -13,9 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 @RequestMapping("/api/v1")
 public class HssProvController {
     @Autowired
-    private AccessLogsService accessLogsService;
-    @Autowired
-    private HssProvService hssProvService;
+    private HssProvServiceImpl hssProvService;
 
     @RequestMapping(value = "/save/record", method = RequestMethod.POST)
     public String saveDetails(@RequestBody HssProvDto hssProvDto, HttpServletRequest httpServletRequest) throws JsonProcessingException {
@@ -34,4 +31,5 @@ public class HssProvController {
         String msg = hssProvService.deleteHssProv(imsi, msisdn);
         return msg;
     }
+
 }

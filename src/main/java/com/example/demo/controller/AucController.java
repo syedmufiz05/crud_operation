@@ -1,7 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.dto.AucDto;
-import com.example.demo.service.AucService;
+import com.example.demo.service.AucServiceImpl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 @RequestMapping("/api/v2")
 public class AucController {
     @Autowired
-    private AucService aucService;
+    private AucServiceImpl aucService;
 
     @RequestMapping(value = "/save/auc/detail", method = RequestMethod.POST)
     public String saveAucDetails(@RequestBody AucDto aucDto, HttpServletRequest httpServletRequest) throws JsonProcessingException {
@@ -29,4 +29,5 @@ public class AucController {
     public void deleteAucDetails(@RequestParam String imsi) {
         aucService.deleteAucDetails(imsi);
     }
+
 }

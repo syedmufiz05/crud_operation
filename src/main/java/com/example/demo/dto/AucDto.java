@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AucDto {
+
     @JsonProperty("imsi")
     private String imsi;
 
@@ -26,4 +27,5 @@ public class AucDto {
 
     @JsonProperty("access_id")
     private Integer accessId;
+
 }

@@ -9,6 +9,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "auc")
 public class Auc {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "auc_id")
@@ -33,4 +34,5 @@ public class Auc {
     @JoinColumn(name = "access_id", referencedColumnName = "idaccess_logs_id")
     @JsonProperty("access_id")
     private AccessLogs accessLogs;
+
 }
