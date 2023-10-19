@@ -137,7 +137,7 @@ public class HssProvServiceImpl implements HssProvService {
             accessLogs.setReqPayload(updateAccessRequestPayload(hssProvDto, hssProvDb, accessLogs));
             accessLogsRepository.save(accessLogs);
             hssProvRepository.save(hssProvDb);
-            return "Successfully updated...";
+            return "HLR details are updated...";
         }
         return "Invalid Imsi or Msisdn Id";
     }
@@ -160,7 +160,7 @@ public class HssProvServiceImpl implements HssProvService {
         SocketMsgDto socketMsgDto = new SocketMsgDto(hssProvDto.getImsi(), hssProvDto.getImsiFlag(), hssProvDto.getMsisdn(), hssProvDto.getNam(), hssProvDto.getOdb(), hssProvDto.getBaoc(), hssProvDto.getBoic(), hssProvDto.getOsb1(), hssProvDto.getOsb2(), hssProvDto.getBaic(), hssProvDto.getRoaming(), hssProvDto.getBearerService(), hssProvDto.getTelephone(), hssProvDto.getSms(), hssProvDto.getCfuA(), hssProvDto.getCfuR(), hssProvDto.getCfuP(), hssProvDto.getCfbP(), hssProvDto.getCfnryP(), hssProvDto.getCfnryT(), hssProvDto.getCfnrcP(), hssProvDto.getCwA(), hssProvDto.getCwP(), hssProvDto.getChP(), hssProvDto.getCamel(), hssProvDto.getOCsi(), hssProvDto.getTCsi(), hssProvDto.getSsCsi(), hssProvDto.getSmsCsi(), hssProvDto.getOCsiScfNo(), hssProvDto.getTCsiScfNo(), hssProvDto.getSsCsiScfNo(), hssProvDto.getSmsSciScfNo(), hssProvDto.getGprsFlag(), hssProvDto.getEpsFlag(), hssProvDto.getArd(), hssProvDto.getEpsUserTpl(), hssProvDto.getDefEps(), hssProvDto.getContextD(), hssProvDto.getApnCtxtList(), hssProvDto.getImsFlag());
         String reqMsg = convertDtoToJson(socketMsgDto);
         hssSocketClient.sendMessage(reqMsg);
-        return "Successfully saved...";
+        return "HLR details are saved...";
     }
 
     private String updateAccessRequestPayload(HssProvDto hssProvDto, HssProv hssProvDb, AccessLogs accessLogs) throws JsonProcessingException {

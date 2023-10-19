@@ -10,6 +10,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class AucDto {
 
+    @JsonProperty("auc_id")
+    private Integer aucId;
+
     @JsonProperty("imsi")
     private String imsi;
 

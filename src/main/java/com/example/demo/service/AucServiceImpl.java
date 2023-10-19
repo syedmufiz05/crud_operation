@@ -71,6 +71,7 @@ public class AucServiceImpl implements AucService {
     }
 
     private String saveAucRequestPayload(Auc auc, AucDto aucDto, AccessLogs accessLogs) throws JsonProcessingException {
+        aucDto.setAucId(auc.getAucId());
         aucDto.setAccessId(auc.getAccessLogs().getIdAccessLogsId() != null ? auc.getAccessLogs().getIdAccessLogsId() : Integer.valueOf(""));
         String reqPayload = convertEntityToJson(aucDto);
         accessLogs.setReqPayload(reqPayload);
