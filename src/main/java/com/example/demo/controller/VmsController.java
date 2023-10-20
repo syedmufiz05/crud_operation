@@ -26,8 +26,8 @@ public class VmsController {
     }
 
     @RequestMapping(value = "/delete/vms/detail", method = RequestMethod.DELETE)
-    public void deleteVmsDetails(@RequestParam String imsi) {
-        vmsService.deleteVmsDetails(imsi);
+    public String deleteVmsDetails(@RequestParam String msisdn) {
+        return vmsService.deleteVmsDetails(msisdn);
     }
 
 }

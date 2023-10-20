@@ -74,6 +74,7 @@ public class VmsServiceImpl implements VmsService {
             Optional<AccessLogs> accessLogsDb = accessLogsRepository.findByIdAccessLogsId(vmsDb.getAccessLogs().getIdAccessLogsId());
             if (accessLogsDb.isPresent()) {
                 AccessLogs accessLogs = accessLogsDb.get();
+                vmsDto.setVmsId(vmsDb.getVmsId() != null ? vmsDb.getVmsId() : Integer.valueOf(""));
                 vmsDto.setMsisdn(vmsDb.getMsisdn() != null ? vmsDb.getMsisdn() : "");
                 vmsDto.setAccessId(accessLogs.getIdAccessLogsId());
                 accessLogs.setReqPayload(convertEntityToJson(vmsDto));
@@ -87,8 +88,9 @@ public class VmsServiceImpl implements VmsService {
 
     @Transactional
     @Override
-    public void deleteVmsDetails(String msisdn) {
+    public String deleteVmsDetails(String msisdn) {
         vmsRepository.deleteByMsisdn(msisdn);
+        return "VMS Details are deleted";
     }
 
     private String saveVmsRequestPayload(Vms vms, VmsDto vmsDto, AccessLogs accessLogs) throws JsonProcessingException {

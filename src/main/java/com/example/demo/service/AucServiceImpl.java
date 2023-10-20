@@ -35,7 +35,7 @@ public class AucServiceImpl implements AucService {
             auc.setImsi(aucDto.getImsi() != null ? aucDto.getImsi() : "");
             auc.setKi(aucDto.getKi() != null ? aucDto.getKi() : "");
             auc.setOpc(aucDto.getOpc() != null ? aucDto.getOpc() : "");
-            auc.setA3a8Version(aucDto.getA3a8Version() != null ? aucDto.getA3a8Version() : "");
+            auc.setA3a8Version(aucDto.getA3a8Version() != null ? aucDto.getA3a8Version() : Integer.valueOf(""));
             auc.setStatus(aucDto.getStatus() != null ? aucDto.getStatus() : "");
             aucRepository.save(auc);
             return saveAucRequestPayload(auc, aucDto, accessLogs);
@@ -49,7 +49,7 @@ public class AucServiceImpl implements AucService {
             Auc aucDb = auc.get();
             aucDb.setKi(aucDto.getKi() != null ? aucDto.getKi() : "");
             aucDb.setOpc(aucDto.getOpc() != null ? aucDto.getOpc() : "");
-            aucDb.setA3a8Version(aucDto.getA3a8Version() != null ? aucDto.getA3a8Version() : "");
+            aucDb.setA3a8Version(aucDto.getA3a8Version() != null ? aucDto.getA3a8Version() : Integer.valueOf(""));
             aucDb.setStatus(aucDto.getStatus() != null ? aucDto.getStatus() : "");
             Optional<AccessLogs> accessLogsDb = accessLogsRepository.findByIdAccessLogsId(aucDb.getAccessLogs().getIdAccessLogsId());
             if (accessLogsDb.isPresent()) {

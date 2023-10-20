@@ -22,7 +22,7 @@ public class HssProv {
 
     @Column(name = "imsi_flag")
     @JsonProperty("imsi_flag")
-    private Integer imsiFlag;
+    private Boolean imsiFlag;
 
     @Column(name = "msisdn")
     @JsonProperty("msisdn")
@@ -34,31 +34,31 @@ public class HssProv {
 
     @Column(name = "odb")
     @JsonProperty("odb")
-    private Integer odb;
+    private Boolean odb;
 
     @Column(name = "baoc")
     @JsonProperty("baoc")
-    private Integer baoc;
+    private Boolean baoc;
 
     @Column(name = "boic")
     @JsonProperty("boic")
-    private Integer boic;
+    private Boolean boic;
 
     @Column(name = "osb1")
     @JsonProperty("osb1")
-    private Integer osb1;
+    private Boolean osb1;
 
     @Column(name = "osb2")
     @JsonProperty("osb2")
-    private Integer osb2;
+    private Boolean osb2;
 
     @Column(name = "baic")
     @JsonProperty("baic")
-    private Integer baic;
+    private Boolean baic;
 
     @Column(name = "roaming")
     @JsonProperty("roaming")
-    private Integer roaming;
+    private Boolean roaming;
 
     @Column(name = "bearer_service")
     @JsonProperty("bearer_service")
@@ -66,7 +66,7 @@ public class HssProv {
 
     @Column(name = "telephone")
     @JsonProperty("telephone")
-    private Integer telephone;
+    private Boolean telephone;
 
     @Column(name = "sms")
     @JsonProperty("sms")
@@ -74,23 +74,23 @@ public class HssProv {
 
     @Column(name = "cfu_a")
     @JsonProperty("cfu_a")
-    private Integer cfuA;
+    private Boolean cfuA;
 
     @Column(name = "cfu_r")
     @JsonProperty("cfu_r")
-    private Integer cfuR;
+    private Boolean cfuR;
 
     @Column(name = "cfu_p")
     @JsonProperty("cfu_p")
-    private Integer cfuP;
+    private Boolean cfuP;
 
     @Column(name = "cfb_p")
     @JsonProperty("cfb_p")
-    private Integer cfbP;
+    private Boolean cfbP;
 
     @Column(name = "cfnry_p")
     @JsonProperty("cfnry_p")
-    private Integer cfnryP;
+    private Boolean cfnryP;
 
     @Column(name = "cfnry_t")
     @JsonProperty("cfnry_t")
@@ -98,39 +98,39 @@ public class HssProv {
 
     @Column(name = "cfnrc_p")
     @JsonProperty("cfnrc_p")
-    private Integer cfnrcP;
+    private Boolean cfnrcP;
 
     @Column(name = "cw_a")
     @JsonProperty("cw_a")
-    private Integer cwA;
+    private Boolean cwA;
 
     @Column(name = "cw_p")
     @JsonProperty("cw_p")
-    private Integer cwP;
+    private Boolean cwP;
 
     @Column(name = "ch_p")
     @JsonProperty("ch_p")
-    private Integer chP;
+    private Boolean chP;
 
     @Column(name = "camel")
     @JsonProperty("camel")
-    private Integer camel;
+    private Boolean camel;
 
     @Column(name = "o_csi")
     @JsonProperty("o_csi")
-    private Integer oCsi;
+    private Boolean oCsi;
 
     @Column(name = "t_csi")
     @JsonProperty("t_csi")
-    private Integer tCsi;
+    private Boolean tCsi;
 
     @Column(name = "ss_csi")
     @JsonProperty("ss_csi")
-    private Integer ssCsi;
+    private Boolean ssCsi;
 
     @Column(name = "sms_csi")
     @JsonProperty("sms_csi")
-    private Integer smsCsi;
+    private Boolean smsCsi;
 
     @Column(name = "o_csi_scf_no")
     @JsonProperty("o_csi_scf_no")
@@ -150,11 +150,11 @@ public class HssProv {
 
     @Column(name = "gprs_flag")
     @JsonProperty("gprs_flag")
-    private Integer gprsFlag;
+    private Boolean gprsFlag;
 
     @Column(name = "eps_flag")
     @JsonProperty("eps_flag")
-    private Integer epsFlag;
+    private Boolean epsFlag;
 
     @Column(name = "ard")
     @JsonProperty("ard")
@@ -178,7 +178,7 @@ public class HssProv {
 
     @Column(name = "ims_flag")
     @JsonProperty("ims_flag")
-    private Integer imsFlag;
+    private Boolean imsFlag;
 
     @Column(name = "subscriber_prof_id")
     @JsonProperty("subscriber_prof_id")

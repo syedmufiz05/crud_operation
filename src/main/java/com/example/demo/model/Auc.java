@@ -25,7 +25,7 @@ public class Auc {
     private String opc;
 
     @Column(name = "a3a8_version")
-    private String a3a8Version;
+    private Integer a3a8Version;
 
     @Column(name = "status")
     private String status;

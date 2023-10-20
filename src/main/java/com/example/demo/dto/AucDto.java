@@ -23,7 +23,7 @@ public class AucDto {
     private String opc;
 
     @JsonProperty("a3a8_version")
-    private String a3a8Version;
+    private Integer a3a8Version;
 
     @JsonProperty("status")
     private String status;

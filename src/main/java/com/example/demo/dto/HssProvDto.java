@@ -17,7 +17,7 @@ public class HssProvDto {
     private String imsi;
 
     @JsonProperty("imsi_flag")
-    private Integer imsiFlag;
+    private Boolean imsiFlag;
 
     @JsonProperty("msisdn")
     private String msisdn;
@@ -26,79 +26,79 @@ public class HssProvDto {
     private String nam;
 
     @JsonProperty("odb")
-    private Integer odb;
+    private Boolean odb;
 
     @JsonProperty("baoc")
-    private Integer baoc;
+    private Boolean baoc;
 
     @JsonProperty("boic")
-    private Integer boic;
+    private Boolean boic;
 
     @JsonProperty("osb1")
-    private Integer osb1;
+    private Boolean osb1;
 
     @JsonProperty("osb2")
-    private Integer osb2;
+    private Boolean osb2;
 
     @JsonProperty("baic")
-    private Integer baic;
+    private Boolean baic;
 
     @JsonProperty("roaming")
-    private Integer roaming;
+    private Boolean roaming;
 
     @JsonProperty("bearer_service")
     private String bearerService;
 
     @JsonProperty("telephone")
-    private Integer telephone;
+    private Boolean telephone;
 
     @JsonProperty("sms")
     private String sms;
 
     @JsonProperty("cfu_a")
-    private Integer cfuA;
+    private Boolean cfuA;
 
     @JsonProperty("cfu_r")
-    private Integer cfuR;
+    private Boolean cfuR;
 
     @JsonProperty("cfu_p")
-    private Integer cfuP;
+    private Boolean cfuP;
 
     @JsonProperty("cfb_p")
-    private Integer cfbP;
+    private Boolean cfbP;
 
     @JsonProperty("cfnry_p")
-    private Integer cfnryP;
+    private Boolean cfnryP;
 
     @JsonProperty("cfnry_t")
     private Integer cfnryT;
 
     @JsonProperty("cfnrc_p")
-    private Integer cfnrcP;
+    private Boolean cfnrcP;
 
     @JsonProperty("cw_a")
-    private Integer cwA;
+    private Boolean cwA;
 
     @JsonProperty("cw_p")
-    private Integer cwP;
+    private Boolean cwP;
 
     @JsonProperty("ch_p")
-    private Integer chP;
+    private Boolean chP;
 
     @JsonProperty("camel")
-    private Integer camel;
+    private Boolean camel;
 
     @JsonProperty("o_csi")
-    private Integer oCsi;
+    private Boolean oCsi;
 
     @JsonProperty("t_csi")
-    private Integer TCsi;
+    private Boolean TCsi;
 
     @JsonProperty("ss_csi")
-    private Integer ssCsi;
+    private Boolean ssCsi;
 
     @JsonProperty("sms_csi")
-    private Integer smsCsi;
+    private Boolean smsCsi;
 
     @JsonProperty("o_csi_scf_no")
     private String oCsiScfNo;
@@ -113,10 +113,10 @@ public class HssProvDto {
     private String smsSciScfNo;
 
     @JsonProperty("gprs_flag")
-    private Integer gprsFlag;
+    private Boolean gprsFlag;
 
     @JsonProperty("eps_flag")
-    private Integer epsFlag;
+    private Boolean epsFlag;
 
     @JsonProperty("ard")
     private String ard;
@@ -134,7 +134,7 @@ public class HssProvDto {
     private String apnCtxtList;
 
     @JsonProperty("ims_flag")
-    private Integer imsFlag;
+    private Boolean imsFlag;
 
     @JsonProperty("subscriber_prof_id")
     private Integer subscriberProfId;

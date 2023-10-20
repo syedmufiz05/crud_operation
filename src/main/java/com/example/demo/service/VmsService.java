@@ -8,6 +8,6 @@ public interface VmsService {
 
     String updateVmsDetails(VmsDto vmsDto,String msisdn) throws JsonProcessingException;
 
-    void deleteVmsDetails(String msisdn);
+    String deleteVmsDetails(String msisdn);
 
 }
