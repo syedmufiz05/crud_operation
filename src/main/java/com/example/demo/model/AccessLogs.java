@@ -8,11 +8,10 @@ import org.hibernate.annotations.UpdateTimestamp;
 import javax.persistence.*;
 import java.util.Date;
 
-@Data
 @Entity
 @Table(name = "access_logs")
+@Data
 public class AccessLogs {
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "idaccess_logs_id")

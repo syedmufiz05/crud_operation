@@ -5,9 +5,9 @@ import lombok.Data;
 
 import javax.persistence.*;
 
-@Data
 @Entity
 @Table(name = "vms_record")
+@Data
 public class Vms {
 
     @Id
