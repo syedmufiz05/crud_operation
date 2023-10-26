@@ -13,11 +13,11 @@ public class Rates {
     @Column(name = "id")
     private Integer id;
 
-    @Column(name = "name")
-    private String name;
+    @Column(name = "dest_name")
+    private String destName;
 
-    @Column(name = "type")
-    private String type;
+    @Column(name = "dest_type")
+    private String destType;
 
     @Column(name = "rates_index")
     private Integer ratesIndex;
@@ -27,4 +27,8 @@ public class Rates {
 
     @Column(name = "is_rates_active")
     private Boolean isRatesActive;
+
+    @OneToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "access_id", referencedColumnName = "idaccess_logs_id")
+    private AccessLogs accessLogs;
 }

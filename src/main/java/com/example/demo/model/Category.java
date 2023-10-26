@@ -18,6 +18,10 @@ public class Category {
     @Column(name = "name", columnDefinition = "JSON")
     private String name;
 
+    @OneToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "access_id", referencedColumnName = "idaccess_logs_id")
+    private AccessLogs accessLogs;
+
     public void setName(String name) {
         try {
             this.name = new ObjectMapper().writeValueAsString(name);

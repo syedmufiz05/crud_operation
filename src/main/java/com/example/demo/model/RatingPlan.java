@@ -13,7 +13,7 @@ public class RatingPlan {
     @Column(name = "id")
     private Integer id;
 
-    @OneToOne(cascade = CascadeType.PERSIST)
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "destination_rates_id", referencedColumnName = "id")
     private DestinationRates destinationRates;
 }
