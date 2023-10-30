@@ -26,52 +26,63 @@ public class RatesServiceImpl implements RatesService {
     private AccessLogsRepository accessLogsRepository;
 
     @Override
-    public String addRates(RatesDto ratesDto, String authToken) throws JsonProcessingException {
+    public RatesDto addRates(RatesDto ratesDto, String authToken) throws JsonProcessingException {
+        Optional<Rates> rates = ratesRepository.findById(ratesDto.getRatesId());
+        if (rates.isPresent()) {
+            Rates ratesDb = rates.get();
+            ratesDb.setDestName(ratesDto.getDestName() != null ? ratesDto.getDestName() : "");
+            ratesDb.setDestType(ratesDto.getDestType() != null ? ratesDto.getDestType() : "");
+            ratesDb.setRatesIndex(ratesDto.getIndex() != null ? ratesDto.getIndex() : Integer.valueOf(""));
+            ratesDb.setDescription(ratesDto.getDescription() != null ? ratesDto.getDescription() : "");
+            ratesDb.setIsRatesActive(ratesDto.getIsRatesActive() != null ? ratesDto.getIsRatesActive() : false);
+            Optional<AccessLogs> accessLogsDb = accessLogsRepository.findByIdAccessLogsId(ratesDb.getAccessLogs().getIdAccessLogsId());
+            if (accessLogsDb.isPresent()) {
+                AccessLogs accessLogs = accessLogsDb.get();
+                ratesRepository.save(ratesDb);
+                return saveRatesRequestPayload(ratesDto, ratesDb, accessLogs);
+            }
+            AccessLogs accessLogs = new AccessLogs();
+            accessLogs.setUserId(1212);
+            accessLogs.setResponsePayload("");
+            accessLogs.setAuthToken(authToken);
+            accessLogsRepository.save(accessLogs);
+            return saveRatesRequestPayload(ratesDto, ratesDb, accessLogs);
+        }
+
+        Rates ratesNew = new Rates();
+        ratesNew.setDestName(ratesDto.getDestName() != null ? ratesDto.getDestName() : "");
+        ratesNew.setDestType(ratesDto.getDestType() != null ? ratesDto.getDestType() : "");
+        ratesNew.setRatesIndex(ratesDto.getIndex() != null ? ratesDto.getIndex() : Integer.valueOf(""));
+        ratesNew.setDescription(ratesDto.getDescription() != null ? ratesDto.getDescription() : "");
+        ratesNew.setIsRatesActive(ratesDto.getIsRatesActive() != null ? ratesDto.getIsRatesActive() : false);
+
         AccessLogs accessLogs = new AccessLogs();
         accessLogs.setUserId(1212);
         accessLogs.setResponsePayload("");
         accessLogs.setAuthToken(authToken);
         accessLogsRepository.save(accessLogs);
-
-        Rates rates = new Rates();
-        rates.setDestName(ratesDto.getDestName() != null ? ratesDto.getDestName() : "");
-        rates.setDestType(ratesDto.getDestType() != null ? ratesDto.getDestType() : "");
-        rates.setRatesIndex(ratesDto.getIndex() != null ? ratesDto.getIndex() : Integer.valueOf(""));
-        rates.setDescription(ratesDto.getDescription() != null ? ratesDto.getDescription() : "");
-        rates.setIsRatesActive(ratesDto.getIsRatesActive() != null ? ratesDto.getIsRatesActive() : false);
-        rates.setAccessLogs(accessLogs);
-        ratesRepository.save(rates);
-
-        Optional<Destination> destination = destinationRepository.findByName(rates.getDestName());
-        if (destination.isPresent()) {
-            Destination destinationDb = destination.get();
-            DestinationRates destinationRates = new DestinationRates();
-            destinationRates.setRates(rates);
-            destinationRates.setDestination(destinationDb);
-            DestinationRates destinationRatesDb = destinationRatesRepository.save(destinationRates);
-            RatingPlan ratingPlan = new RatingPlan();
-            ratingPlan.setDestinationRates(destinationRatesDb);
-            ratingPlanRepository.save(ratingPlan);
-        }
-        return saveRatesRequestPayload(ratesDto, rates, accessLogs);
+        ratesNew.setAccessLogs(accessLogs);
+        ratesRepository.save(ratesNew);
+        return saveRatesRequestPayload(ratesDto, ratesNew, accessLogs);
     }
 
     @Override
-    public String editRates(Integer ratesId, RatesDto ratesDto) throws JsonProcessingException {
+    public RatesDto editRates(Integer ratesId, RatesDto ratesDto) throws JsonProcessingException {
         Optional<Rates> rates = ratesRepository.findById(ratesId);
         if (rates.isPresent()) {
             Rates ratesDb = rates.get();
+            ratesDb.setDestName(ratesDto.getDestName() != null ? ratesDto.getDestName() : ratesDb.getDestName());
+            ratesDb.setDestType(ratesDto.getDestType() != null ? ratesDto.getDestType() : ratesDb.getDestType());
             ratesDb.setRatesIndex(ratesDto.getIndex() != null ? ratesDto.getIndex() : ratesDb.getRatesIndex());
             ratesDb.setDescription(ratesDto.getDescription() != null ? ratesDto.getDescription() : ratesDb.getDescription());
             ratesDb.setIsRatesActive(ratesDto.getIsRatesActive() != null ? ratesDto.getIsRatesActive() : ratesDb.getIsRatesActive());
-            ratesRepository.save(ratesDb);
 
             Optional<AccessLogs> accessLogs = accessLogsRepository.findByIdAccessLogsId(ratesDb.getAccessLogs().getIdAccessLogsId());
             AccessLogs accessLogsDb = accessLogs.get();
             accessLogsDb.setAccessDateTime(new Date());
             return editRatesRequestPayload(ratesDto, ratesDb, accessLogsDb);
         }
-        return "Please insert the valid Rate Id...";
+        return new RatesDto();
     }
 
     @Override
@@ -81,32 +92,32 @@ public class RatesServiceImpl implements RatesService {
     }
 
 
-    private String saveRatesRequestPayload(RatesDto ratesDto, Rates rates, AccessLogs accessLogs) throws JsonProcessingException {
+    private RatesDto saveRatesRequestPayload(RatesDto ratesDto, Rates rates, AccessLogs accessLogs) throws JsonProcessingException {
         ratesDto.setRatesId(rates.getId());
         ratesDto.setDestName(rates.getDestName());
         ratesDto.setDestType(rates.getDestType());
         ratesDto.setIndex(rates.getRatesIndex());
         ratesDto.setDescription(rates.getDescription());
         ratesDto.setIsRatesActive(rates.getIsRatesActive());
-        ratesDto.setAccessId(rates.getAccessLogs().getIdAccessLogsId());
+        ratesDto.setAccessId(accessLogs.getIdAccessLogsId());
         String reqPayload = convertEntityToJson(ratesDto);
         accessLogs.setReqPayload(reqPayload);
         accessLogsRepository.save(accessLogs);
-        return "Rates details saved successfully...";
+        return new RatesDto(ratesDto.getRatesId(), ratesDto.getDestName(), ratesDto.getDestType(), ratesDto.getIndex(), ratesDto.getDescription(), ratesDto.getIsRatesActive(), ratesDto.getAccessId());
     }
 
-    private String editRatesRequestPayload(RatesDto ratesDto, Rates rates, AccessLogs accessLogs) throws JsonProcessingException {
+    private RatesDto editRatesRequestPayload(RatesDto ratesDto, Rates rates, AccessLogs accessLogs) throws JsonProcessingException {
         ratesDto.setRatesId(rates.getId());
         ratesDto.setDestName(rates.getDestName());
         ratesDto.setDestType(rates.getDestType());
         ratesDto.setIndex(rates.getRatesIndex());
         ratesDto.setDescription(rates.getDescription());
         ratesDto.setIsRatesActive(rates.getIsRatesActive());
-        ratesDto.setAccessId(rates.getAccessLogs().getIdAccessLogsId());
+        ratesDto.setAccessId(accessLogs.getIdAccessLogsId());
         String reqPayload = convertEntityToJson(ratesDto);
         accessLogs.setReqPayload(reqPayload);
         accessLogsRepository.save(accessLogs);
-        return "Rates details updated successfully...";
+        return new RatesDto(ratesDto.getRatesId(), ratesDto.getDestName(), ratesDto.getDestType(), ratesDto.getIndex(), ratesDto.getDescription(), ratesDto.getIsRatesActive(), ratesDto.getAccessId());
     }
 
     private String convertEntityToJson(RatesDto ratesDto) throws JsonProcessingException {

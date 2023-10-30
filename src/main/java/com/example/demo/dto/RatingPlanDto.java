@@ -8,10 +8,10 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CategoryDto {
-    @JsonProperty("category_id")
-    private Integer categoryId;
+public class RatingPlanDto {
+    @JsonProperty("rating_plan_id")
+    private Integer ratingPlanId;
 
-    @JsonProperty("name")
-    private String name;
+    @JsonProperty("destination_rates_id")
+    private Integer destinationRatesId;
 }

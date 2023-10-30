@@ -8,10 +8,16 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CategoryDto {
+public class RatingProfileDto {
+    @JsonProperty("rating_profile_id")
+    private Integer ratingProfileId;
+
     @JsonProperty("category_id")
     private Integer categoryId;
 
-    @JsonProperty("name")
-    private String name;
+    @JsonProperty("calling_party")
+    private String callingParty;
+
+    @JsonProperty("rating_plan_id")
+    private Integer ratingPlanId;
 }

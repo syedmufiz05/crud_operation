@@ -16,13 +16,13 @@ public class RatesController {
     private RatesService ratesService;
 
     @RequestMapping(value = "/detail/add", method = RequestMethod.POST)
-    public String addRates(@RequestBody RatesDto ratesDto, HttpServletRequest httpServletRequest) throws JsonProcessingException {
+    public RatesDto addRates(@RequestBody RatesDto ratesDto, HttpServletRequest httpServletRequest) throws JsonProcessingException {
         String authToken = httpServletRequest.getHeader("Authorization").replace("Bearer", "");
         return ratesService.addRates(ratesDto, authToken);
     }
 
     @RequestMapping(value = "/detail/edit/{rates_id}", method = RequestMethod.PUT)
-    public String editRates(@PathVariable("rates_id") Integer ratesId, @RequestBody RatesDto ratesDto) throws JsonProcessingException {
+    public RatesDto editRates(@PathVariable("rates_id") Integer ratesId, @RequestBody RatesDto ratesDto) throws JsonProcessingException {
         return ratesService.editRates(ratesId, ratesDto);
     }
 

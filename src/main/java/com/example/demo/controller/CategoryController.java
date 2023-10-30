@@ -4,10 +4,7 @@ import com.example.demo.dto.CategoryDto;
 import com.example.demo.service.CategoryService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -18,9 +15,18 @@ public class CategoryController {
     private CategoryService categoryService;
 
     @RequestMapping(value = "/detail/add", method = RequestMethod.POST)
-    public String addCategory(@RequestBody CategoryDto categoryDto, HttpServletRequest httpServletRequest) throws JsonProcessingException {
+    public CategoryDto addCategory(@RequestBody CategoryDto categoryDto, HttpServletRequest httpServletRequest) throws JsonProcessingException {
         String authToken = httpServletRequest.getHeader("Authorization").replace("Bearer", "");
         return categoryService.addCategory(categoryDto, authToken);
     }
 
+    @RequestMapping(value = "/detail/edit/{category_id}", method = RequestMethod.PUT)
+    public CategoryDto editCategory(@PathVariable("category_id") Integer categoryId, @RequestBody CategoryDto categoryDto) throws JsonProcessingException {
+        return categoryService.editCategory(categoryId, categoryDto);
+    }
+
+    @RequestMapping(value = "/detail/delete/{category_id}", method = RequestMethod.DELETE)
+    public String deleteCategory(@PathVariable("category_id") Integer categoryId) {
+        return categoryService.deleteCategory(categoryId);
+    }
 }

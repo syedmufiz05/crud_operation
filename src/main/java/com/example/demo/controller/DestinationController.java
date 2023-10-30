@@ -15,13 +15,13 @@ public class DestinationController {
     private DestinationService destinationService;
 
     @RequestMapping(value = "/detail/add", method = RequestMethod.POST)
-    public String saveDestinationDetails(@RequestBody DestinationDto destinationDto, HttpServletRequest httpServletRequest) throws JsonProcessingException {
+    public DestinationDto saveDestinationDetails(@RequestBody DestinationDto destinationDto, HttpServletRequest httpServletRequest) throws JsonProcessingException {
         String authToken = httpServletRequest.getHeader("Authorization").replace("Bearer", "");
         return destinationService.addDestination(destinationDto, authToken);
     }
 
     @RequestMapping(value = "/detail/edit/{destination_id}", method = RequestMethod.PUT)
-    public String updateDestinationDetails(@PathVariable("destination_id") Integer destinationId, @RequestBody DestinationDto destinationDto) throws JsonProcessingException {
+    public DestinationDto updateDestinationDetails(@PathVariable("destination_id") Integer destinationId, @RequestBody DestinationDto destinationDto) throws JsonProcessingException {
         return destinationService.editDestination(destinationId, destinationDto);
     }
 

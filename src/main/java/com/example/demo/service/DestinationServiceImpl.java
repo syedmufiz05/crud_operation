@@ -22,41 +22,65 @@ public class DestinationServiceImpl implements DestinationService {
     private AccessLogsRepository accessLogsRepository;
 
     @Override
-    public String addDestination(DestinationDto destinationDto, String authToken) throws JsonProcessingException {
-        if (destinationDto != null) {
-            AccessLogs accessLogs = new AccessLogs();
-            accessLogs.setUserId(1212);
-            accessLogs.setResponsePayload("");
-            accessLogs.setAuthToken(authToken);
-            accessLogsRepository.save(accessLogs);
-            Destination destination = new Destination();
-            destination.setName(destinationDto.getName() != null ? destinationDto.getName() : "");
-            destination.setType(destinationDto.getType() != null ? destinationDto.getType() : "");
-            destination.setRemarks(destinationDto.getRemarks() != null ? destinationDto.getRemarks() : "");
-            destination.setActive(destinationDto.getActive() != null ? destinationDto.getActive() : false);
-            destination.setAccessLogs(accessLogs);
-            destinationRepository.save(destination);
-            return saveDestinationRequestPayload(destinationDto, destination, accessLogs);
+    public DestinationDto addDestination(DestinationDto destinationDto, String authToken) throws JsonProcessingException {
+        Optional<Destination> destination = destinationRepository.findById(destinationDto.getDestinationId());
+        if (destination.isPresent()) {
+            Destination destinationDb = destination.get();
+            destinationDb.setType(destinationDto.getType() != null ? destinationDto.getType() : "");
+            destinationDb.setName(destinationDto.getName() != null ? destinationDto.getName() : "");
+            destinationDb.setRemarks(destinationDto.getRemarks() != null ? destinationDto.getRemarks() : "");
+            destinationDb.setActive(destinationDto.getActive() != null ? destinationDto.getActive() : false);
+
+            Optional<AccessLogs> accessLogs = accessLogsRepository.findByIdAccessLogsId(destinationDb.getAccessLogs().getIdAccessLogsId());
+            if (accessLogs.isPresent()) {
+                AccessLogs accessLogsDb = accessLogs.get();
+                accessLogsDb.setUserId(1212);
+                accessLogsDb.setResponsePayload("");
+                accessLogsDb.setAuthToken(authToken);
+                accessLogsDb.setAccessDateTime(new Date());
+                accessLogsRepository.save(accessLogsDb);
+                return saveDestinationRequestPayload(destinationDto, destinationDb, accessLogsDb);
+            }
+            AccessLogs accessLogsNew = new AccessLogs();
+            accessLogsNew.setUserId(1212);
+            accessLogsNew.setResponsePayload("");
+            accessLogsNew.setAuthToken(authToken);
+            accessLogsNew.setAccessDateTime(new Date());
+            accessLogsRepository.save(accessLogsNew);
+            return saveDestinationRequestPayload(destinationDto, destinationDb, accessLogsNew);
         }
-        return "Please set the destination fields...";
+
+        Destination destinationNew = new Destination();
+        destinationNew.setType(destinationDto.getType() != null ? destinationDto.getType() : "");
+        destinationNew.setName(destinationDto.getName() != null ? destinationDto.getName() : "");
+        destinationNew.setRemarks(destinationDto.getRemarks() != null ? destinationDto.getRemarks() : "");
+        destinationNew.setActive(destinationDto.getActive() != null ? destinationDto.getActive() : false);
+        destinationRepository.save(destinationNew);
+        AccessLogs accessLogs = new AccessLogs();
+        accessLogs.setUserId(1212);
+        accessLogs.setResponsePayload("");
+        accessLogs.setAuthToken(authToken);
+        accessLogs.setAccessDateTime(new Date());
+        accessLogsRepository.save(accessLogs);
+        return saveDestinationRequestPayload(destinationDto, destinationNew, accessLogs);
     }
 
     @Override
-    public String editDestination(Integer destinationId, DestinationDto destinationDto) throws JsonProcessingException {
+    public DestinationDto editDestination(Integer destinationId, DestinationDto destinationDto) throws JsonProcessingException {
         Optional<Destination> destination = destinationRepository.findById(destinationId);
         if (destination.isPresent()) {
             Destination destinationDb = destination.get();
-            destinationDb.setName(destinationDto.getName() != null ? destinationDto.getName() : "");
-            destinationDb.setType(destinationDto.getType() != null ? destinationDto.getType() : "");
-            destinationDb.setRemarks(destinationDto.getRemarks() != null ? destinationDto.getRemarks() : "");
-            destinationDb.setActive(destinationDto.getActive() != null ? destinationDto.getActive() : false);
+            destinationDb.setName(destinationDto.getName() != null ? destinationDto.getName() : destinationDb.getName());
+            destinationDb.setType(destinationDto.getType() != null ? destinationDto.getType() : destinationDb.getType());
+            destinationDb.setRemarks(destinationDto.getRemarks() != null ? destinationDto.getRemarks() : destinationDb.getRemarks());
+            destinationDb.setActive(destinationDto.getActive() != null ? destinationDto.getActive() : destinationDb.getActive());
             destinationRepository.save(destinationDb);
             Optional<AccessLogs> accessLogsDb = accessLogsRepository.findByIdAccessLogsId(destinationDb.getAccessLogs().getIdAccessLogsId());
             AccessLogs accessLogs = accessLogsDb.get();
             accessLogs.setAccessDateTime(new Date());
             return editDestinationRequestPayload(destinationDto, destinationDb, accessLogs);
         }
-        return "Please insert the valid Destination id...";
+        return null;
     }
 
     @Override
@@ -65,7 +89,7 @@ public class DestinationServiceImpl implements DestinationService {
         return "Destination details deleted successfully...";
     }
 
-    private String saveDestinationRequestPayload(DestinationDto destinationDto, Destination destination, AccessLogs accessLogs) throws JsonProcessingException {
+    private DestinationDto saveDestinationRequestPayload(DestinationDto destinationDto, Destination destination, AccessLogs accessLogs) throws JsonProcessingException {
         destinationDto.setDestinationId(destination.getId());
         destinationDto.setName(destination.getName());
         destinationDto.setType(destination.getType());
@@ -75,10 +99,12 @@ public class DestinationServiceImpl implements DestinationService {
         String reqPayload = convertEntityToJson(destinationDto);
         accessLogs.setReqPayload(reqPayload);
         accessLogsRepository.save(accessLogs);
-        return "Destination details saved successfully...";
+        destination.setAccessLogs(accessLogs);
+        destinationRepository.save(destination);
+        return new DestinationDto(destinationDto.getDestinationId(), destinationDto.getName(), destinationDto.getType(), destinationDto.getRemarks(), destinationDto.getActive(), destinationDto.getAccessId());
     }
 
-    private String editDestinationRequestPayload(DestinationDto destinationDto, Destination destination, AccessLogs accessLogs) throws JsonProcessingException {
+    private DestinationDto editDestinationRequestPayload(DestinationDto destinationDto, Destination destination, AccessLogs accessLogs) throws JsonProcessingException {
         destinationDto.setDestinationId(destination.getId());
         destinationDto.setName(destination.getName());
         destinationDto.setType(destination.getType());
@@ -88,7 +114,7 @@ public class DestinationServiceImpl implements DestinationService {
         String reqPayload = convertEntityToJson(destinationDto);
         accessLogs.setReqPayload(reqPayload);
         accessLogsRepository.save(accessLogs);
-        return "Destination details updated successfully...";
+        return new DestinationDto(destinationDto.getDestinationId(), destinationDto.getName(), destinationDto.getType(), destinationDto.getRemarks(), destinationDto.getActive(), destinationDto.getAccessId());
     }
 
     private String convertEntityToJson(DestinationDto destinationDto) throws JsonProcessingException {
