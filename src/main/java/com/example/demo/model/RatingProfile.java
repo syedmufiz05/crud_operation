@@ -20,6 +20,6 @@ public class RatingProfile {
     private String callingParty;
 
     @OneToOne(cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "rating_plan_id", referencedColumnName = "id")
+    @JoinColumn(name = "rating_plan_id", referencedColumnName = "rating_plan_id")
     private RatingPlan ratingPlan;
 }

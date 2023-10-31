@@ -4,6 +4,7 @@ import com.example.demo.dto.DestinationDto;
 import com.example.demo.service.DestinationService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -21,7 +22,7 @@ public class DestinationController {
     }
 
     @RequestMapping(value = "/detail/edit/{destination_id}", method = RequestMethod.PUT)
-    public DestinationDto updateDestinationDetails(@PathVariable("destination_id") Integer destinationId, @RequestBody DestinationDto destinationDto) throws JsonProcessingException {
+    public ResponseEntity editDestinationDetails(@PathVariable("destination_id") Integer destinationId, @RequestBody DestinationDto destinationDto) throws JsonProcessingException {
         return destinationService.editDestination(destinationId, destinationDto);
     }
 

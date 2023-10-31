@@ -4,6 +4,7 @@ import com.example.demo.dto.RatesDto;
 import com.example.demo.service.RatesService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -22,7 +23,7 @@ public class RatesController {
     }
 
     @RequestMapping(value = "/detail/edit/{rates_id}", method = RequestMethod.PUT)
-    public RatesDto editRates(@PathVariable("rates_id") Integer ratesId, @RequestBody RatesDto ratesDto) throws JsonProcessingException {
+    public ResponseEntity editRates(@PathVariable("rates_id") Integer ratesId, @RequestBody RatesDto ratesDto) throws JsonProcessingException {
         return ratesService.editRates(ratesId, ratesDto);
     }
 

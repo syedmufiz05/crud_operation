@@ -13,11 +13,11 @@ public class DestinationRates {
     @Column(name = "id")
     private Integer id;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "destination_id", referencedColumnName = "id")
     private Destination destination;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "rates_tag", referencedColumnName = "id")
     private Rates rates;
 }

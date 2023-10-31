@@ -1,10 +1,12 @@
 package com.example.demo.service;
 
 import com.example.demo.dto.RatingProfileDto;
-import com.example.demo.model.RatingProfile;
+import org.springframework.http.ResponseEntity;
 
 public interface RatingProfileService {
-    RatingProfileDto createRatingProfile(RatingProfileDto ratingProfileDto,String authToken);
-    String editRatingProfile();
-    String deleteRatingProfile();
+    RatingProfileDto createRatingProfile(RatingProfileDto ratingProfileDto, String authToken);
+
+    ResponseEntity editRatingProfile(Integer ratingProfileId, String callingParty);
+
+    String deleteRatingProfile(Integer ratingProfileId);
 }

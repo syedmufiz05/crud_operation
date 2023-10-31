@@ -1,6 +1,7 @@
 package com.example.demo.service;
 
 import com.example.demo.dto.DestinationDto;
+import com.example.demo.exception.CustomMessage;
 import com.example.demo.model.AccessLogs;
 import com.example.demo.model.Destination;
 import com.example.demo.repository.AccessLogsRepository;
@@ -9,6 +10,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -66,7 +69,7 @@ public class DestinationServiceImpl implements DestinationService {
     }
 
     @Override
-    public DestinationDto editDestination(Integer destinationId, DestinationDto destinationDto) throws JsonProcessingException {
+    public ResponseEntity editDestination(Integer destinationId, DestinationDto destinationDto) throws JsonProcessingException {
         Optional<Destination> destination = destinationRepository.findById(destinationId);
         if (destination.isPresent()) {
             Destination destinationDb = destination.get();
@@ -80,7 +83,9 @@ public class DestinationServiceImpl implements DestinationService {
             accessLogs.setAccessDateTime(new Date());
             return editDestinationRequestPayload(destinationDto, destinationDb, accessLogs);
         }
-        return null;
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(new CustomMessage(HttpStatus.NOT_FOUND.value(), "Destination Id does n't exist"));
     }
 
     @Override
@@ -104,7 +109,7 @@ public class DestinationServiceImpl implements DestinationService {
         return new DestinationDto(destinationDto.getDestinationId(), destinationDto.getName(), destinationDto.getType(), destinationDto.getRemarks(), destinationDto.getActive(), destinationDto.getAccessId());
     }
 
-    private DestinationDto editDestinationRequestPayload(DestinationDto destinationDto, Destination destination, AccessLogs accessLogs) throws JsonProcessingException {
+    private ResponseEntity editDestinationRequestPayload(DestinationDto destinationDto, Destination destination, AccessLogs accessLogs) throws JsonProcessingException {
         destinationDto.setDestinationId(destination.getId());
         destinationDto.setName(destination.getName());
         destinationDto.setType(destination.getType());
@@ -114,7 +119,8 @@ public class DestinationServiceImpl implements DestinationService {
         String reqPayload = convertEntityToJson(destinationDto);
         accessLogs.setReqPayload(reqPayload);
         accessLogsRepository.save(accessLogs);
-        return new DestinationDto(destinationDto.getDestinationId(), destinationDto.getName(), destinationDto.getType(), destinationDto.getRemarks(), destinationDto.getActive(), destinationDto.getAccessId());
+        DestinationDto destinationDtoNew = new DestinationDto(destinationDto.getDestinationId(), destinationDto.getName(), destinationDto.getType(), destinationDto.getRemarks(), destinationDto.getActive(), destinationDto.getAccessId());
+        return new ResponseEntity<>(destinationDtoNew, HttpStatus.OK);
     }
 
     private String convertEntityToJson(DestinationDto destinationDto) throws JsonProcessingException {

@@ -1,6 +1,7 @@
 package com.example.demo.service;
 
 import com.example.demo.dto.CategoryDto;
+import com.example.demo.exception.CustomMessage;
 import com.example.demo.model.AccessLogs;
 import com.example.demo.model.Category;
 import com.example.demo.repository.AccessLogsRepository;
@@ -9,6 +10,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -57,7 +60,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public CategoryDto editCategory(Integer categoryId, CategoryDto categoryDto) throws JsonProcessingException {
+    public ResponseEntity editCategory(Integer categoryId, CategoryDto categoryDto) throws JsonProcessingException {
         Optional<Category> category = categoryRepository.findById(categoryId);
         if (category.isPresent()) {
             Category categoryDb = category.get();
@@ -70,9 +73,10 @@ public class CategoryServiceImpl implements CategoryService {
                 accessLogsDb.setReqPayload(convertEntityToJson(categoryDto));
                 accessLogsRepository.save(accessLogsDb);
             }
-            return new CategoryDto(categoryDto.getCategoryId(), categoryDto.getName());
+            CategoryDto categoryDtoNew = new CategoryDto(categoryDto.getCategoryId(), categoryDto.getName());
+            return new ResponseEntity<>(categoryDtoNew, HttpStatus.OK);
         }
-        return new CategoryDto();
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new CustomMessage(HttpStatus.NOT_FOUND.value(), "Category Id does n't exists"));
     }
 
     @Override

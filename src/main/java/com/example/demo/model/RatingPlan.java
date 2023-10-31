@@ -10,8 +10,8 @@ import javax.persistence.*;
 public class RatingPlan {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id")
-    private Integer id;
+    @Column(name = "rating_plan_id")
+    private Integer ratingPlanId;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "destination_rates_id", referencedColumnName = "id")

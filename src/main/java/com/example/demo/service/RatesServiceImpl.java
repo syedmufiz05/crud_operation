@@ -1,12 +1,15 @@
 package com.example.demo.service;
 
 import com.example.demo.dto.RatesDto;
+import com.example.demo.exception.CustomMessage;
 import com.example.demo.model.*;
 import com.example.demo.repository.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -67,7 +70,7 @@ public class RatesServiceImpl implements RatesService {
     }
 
     @Override
-    public RatesDto editRates(Integer ratesId, RatesDto ratesDto) throws JsonProcessingException {
+    public ResponseEntity editRates(Integer ratesId, RatesDto ratesDto) throws JsonProcessingException {
         Optional<Rates> rates = ratesRepository.findById(ratesId);
         if (rates.isPresent()) {
             Rates ratesDb = rates.get();
@@ -82,7 +85,8 @@ public class RatesServiceImpl implements RatesService {
             accessLogsDb.setAccessDateTime(new Date());
             return editRatesRequestPayload(ratesDto, ratesDb, accessLogsDb);
         }
-        return new RatesDto();
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(new CustomMessage(HttpStatus.NOT_FOUND.value(), "Rates Id does n't exists"));
     }
 
     @Override
@@ -106,7 +110,7 @@ public class RatesServiceImpl implements RatesService {
         return new RatesDto(ratesDto.getRatesId(), ratesDto.getDestName(), ratesDto.getDestType(), ratesDto.getIndex(), ratesDto.getDescription(), ratesDto.getIsRatesActive(), ratesDto.getAccessId());
     }
 
-    private RatesDto editRatesRequestPayload(RatesDto ratesDto, Rates rates, AccessLogs accessLogs) throws JsonProcessingException {
+    private ResponseEntity editRatesRequestPayload(RatesDto ratesDto, Rates rates, AccessLogs accessLogs) throws JsonProcessingException {
         ratesDto.setRatesId(rates.getId());
         ratesDto.setDestName(rates.getDestName());
         ratesDto.setDestType(rates.getDestType());
@@ -117,7 +121,8 @@ public class RatesServiceImpl implements RatesService {
         String reqPayload = convertEntityToJson(ratesDto);
         accessLogs.setReqPayload(reqPayload);
         accessLogsRepository.save(accessLogs);
-        return new RatesDto(ratesDto.getRatesId(), ratesDto.getDestName(), ratesDto.getDestType(), ratesDto.getIndex(), ratesDto.getDescription(), ratesDto.getIsRatesActive(), ratesDto.getAccessId());
+        RatesDto ratesDtoNew = new RatesDto(ratesDto.getRatesId(), ratesDto.getDestName(), ratesDto.getDestType(), ratesDto.getIndex(), ratesDto.getDescription(), ratesDto.getIsRatesActive(), ratesDto.getAccessId());
+        return new ResponseEntity<>(ratesDtoNew, HttpStatus.OK);
     }
 
     private String convertEntityToJson(RatesDto ratesDto) throws JsonProcessingException {

@@ -19,20 +19,20 @@ public class RatingPlanServiceImpl implements RatingPlanService {
 
     @Override
     public RatingPlanDto createRatingPlan(RatingPlanDto ratingPlanDto, String authToken) {
-        Optional<RatingPlan> ratingPlan = ratingPlanRepository.findById(ratingPlanDto.getRatingPlanId());
+        Optional<RatingPlan> ratingPlan = ratingPlanRepository.findByRatingPlanId(ratingPlanDto.getRatingPlanId());
         if (ratingPlan.isPresent()) {
             RatingPlan ratingPlanDb = ratingPlan.get();
             DestinationRates destinationRates = new DestinationRates();
             destinationRatesRepository.save(destinationRates);
             ratingPlanDb.setDestinationRates(destinationRates);
             ratingPlanRepository.save(ratingPlanDb);
-            return new RatingPlanDto(ratingPlanDb.getId(), destinationRates.getId());
+            return new RatingPlanDto(ratingPlanDb.getRatingPlanId(), destinationRates.getId());
         }
         RatingPlan ratingPlanNew = new RatingPlan();
         DestinationRates destinationRates = new DestinationRates();
         destinationRatesRepository.save(destinationRates);
         ratingPlanNew.setDestinationRates(destinationRates);
         ratingPlanRepository.save(ratingPlanNew);
-        return new RatingPlanDto(ratingPlanNew.getId(), destinationRates.getId());
+        return new RatingPlanDto(ratingPlanNew.getRatingPlanId(), destinationRates.getId());
     }
 }
