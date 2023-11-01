@@ -84,7 +84,7 @@ public class RatingProfileServiceImpl implements RatingProfileService {
             RatingProfileDto ratingProfileDto = new RatingProfileDto(ratingProfileDb.getId(), ratingProfileDb.getCategory().getId(), ratingProfileDb.getCallingParty(), ratingProfileDb.getRatingPlan().getRatingPlanId());
             return new ResponseEntity<>(ratingProfileDto, HttpStatus.OK);
         }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new CustomMessage(HttpStatus.NOT_FOUND.value(), "Rating Profile Id does n't exists"));
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new CustomMessage(HttpStatus.NOT_FOUND.value(), "Rating Profile Id does n't exist"));
     }
 
     @Override

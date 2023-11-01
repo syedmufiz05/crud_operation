@@ -76,7 +76,7 @@ public class CategoryServiceImpl implements CategoryService {
             CategoryDto categoryDtoNew = new CategoryDto(categoryDto.getCategoryId(), categoryDto.getName());
             return new ResponseEntity<>(categoryDtoNew, HttpStatus.OK);
         }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new CustomMessage(HttpStatus.NOT_FOUND.value(), "Category Id does n't exists"));
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new CustomMessage(HttpStatus.NOT_FOUND.value(), "Category Id does n't exist"));
     }
 
     @Override

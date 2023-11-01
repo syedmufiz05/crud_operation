@@ -1,6 +1,7 @@
 package com.example.demo.service;
 
 import com.example.demo.dto.VmsDto;
+import com.example.demo.exception.CustomMessage;
 import com.example.demo.model.AccessLogs;
 import com.example.demo.model.Vms;
 import com.example.demo.repository.AccessLogsRepository;
@@ -9,6 +10,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -22,39 +25,41 @@ public class VmsServiceImpl implements VmsService {
     private VmsRepository vmsRepository;
 
     @Override
-    public String saveVmsDetails(VmsDto vmsDto, String authToken) throws JsonProcessingException {
+    public ResponseEntity saveVmsDetails(VmsDto vmsDto, String authToken) throws JsonProcessingException {
         String msisdn = vmsDto.getMsisdn();
-        Optional<Vms> vmsDb = vmsRepository.findByMsisdn(msisdn);
-        if (!vmsDb.isPresent()) {
+        Optional<Vms> vms = vmsRepository.findByMsisdn(msisdn);
+        if (!vms.isPresent()) {
             AccessLogs accessLogs = new AccessLogs();
             accessLogs.setUserId(1212);
             accessLogs.setResponsePayload("");
             accessLogs.setAuthToken(authToken != null ? authToken : "");
             accessLogsRepository.save(accessLogs);
-            Vms vms = new Vms();
-            vms.setAccessLogs(accessLogs);
-            vms.setMsisdn(vmsDto.getMsisdn() != null ? vmsDto.getMsisdn() : "");
-            vms.setSystemId(vmsDto.getSystemId() != null ? vmsDto.getSystemId() : Integer.valueOf(""));
-            vms.setMailboxId(vmsDto.getMailboxId() != null ? vmsDto.getMailboxId() : Integer.valueOf(""));
-            vms.setRegisterFlag(vmsDto.getRegisterFlag() != null ? vmsDto.getRegisterFlag() : false);
-            vms.setActiveFlag(vmsDto.getActiveFlag() != null ? vmsDto.getActiveFlag() : false);
-            vms.setLockedFlag(vmsDto.getLockedFlag() != null ? vmsDto.getLockedFlag() : false);
-            vms.setLanguage(vmsDto.getLanguage() != null ? vmsDto.getLanguage() : Integer.valueOf(""));
-            vms.setTemporaryGreeting(vmsDto.getTemporaryGreeting() != null ? vmsDto.getTemporaryGreeting() : false);
-            vms.setGreetingTypeSystem(vmsDto.getGreetingTypeSystem() != null ? vmsDto.getGreetingTypeSystem() : "");
-            vms.setPasswordFlag(vmsDto.getPasswordFlag() != null ? vmsDto.getPasswordFlag() : false);
-            vms.setCallbackFlag(vmsDto.getCallbackFlag() != null ? vmsDto.getCallbackFlag() : false);
-            vms.setCliFlag(vmsDto.getCliFlag() != null ? vmsDto.getCliFlag() : false);
-            vms.setPassword(vmsDto.getPassword() != null ? vmsDto.getPassword() : "");
-            vms.setCallbackTimeout(vmsDto.getCallbackTimeout() != null ? vmsDto.getCallbackTimeout() : "");
-            vmsRepository.save(vms);
-            return saveVmsRequestPayload(vms, vmsDto, accessLogs);
+            Vms vmsDb = new Vms();
+            vmsDb.setAccessLogs(accessLogs);
+            vmsDb.setMsisdn(vmsDto.getMsisdn() != null ? vmsDto.getMsisdn() : "");
+            vmsDb.setSystemId(vmsDto.getSystemId() != null ? vmsDto.getSystemId() : Integer.valueOf(""));
+            vmsDb.setMailboxId(vmsDto.getMailboxId() != null ? vmsDto.getMailboxId() : Integer.valueOf(""));
+            vmsDb.setRegisterFlag(vmsDto.getRegisterFlag() != null ? vmsDto.getRegisterFlag() : false);
+            vmsDb.setActiveFlag(vmsDto.getActiveFlag() != null ? vmsDto.getActiveFlag() : false);
+            vmsDb.setLockedFlag(vmsDto.getLockedFlag() != null ? vmsDto.getLockedFlag() : false);
+            vmsDb.setLanguage(vmsDto.getLanguage() != null ? vmsDto.getLanguage() : Integer.valueOf(""));
+            vmsDb.setTemporaryGreeting(vmsDto.getTemporaryGreeting() != null ? vmsDto.getTemporaryGreeting() : false);
+            vmsDb.setGreetingTypeSystem(vmsDto.getGreetingTypeSystem() != null ? vmsDto.getGreetingTypeSystem() : "");
+            vmsDb.setPasswordFlag(vmsDto.getPasswordFlag() != null ? vmsDto.getPasswordFlag() : false);
+            vmsDb.setCallbackFlag(vmsDto.getCallbackFlag() != null ? vmsDto.getCallbackFlag() : false);
+            vmsDb.setCliFlag(vmsDto.getCliFlag() != null ? vmsDto.getCliFlag() : false);
+            vmsDb.setPassword(vmsDto.getPassword() != null ? vmsDto.getPassword() : "");
+            vmsDb.setCallbackTimeout(vmsDto.getCallbackTimeout() != null ? vmsDto.getCallbackTimeout() : "");
+            vmsRepository.save(vmsDb);
+            saveVmsRequestPayload(vmsDb, vmsDto, accessLogs);
+            VmsDto vmsDtoNew = new VmsDto(vmsDb.getVmsId(), vmsDb.getMsisdn(), vmsDb.getSystemId(), vmsDto.getMailboxId(), vmsDb.getRegisterFlag(), vmsDb.getActiveFlag(), vmsDb.getLockedFlag(), vmsDb.getLanguage(), vmsDb.getTemporaryGreeting(), vmsDb.getGreetingTypeSystem(), vmsDb.getPasswordFlag(), vmsDb.getCallbackFlag(), vmsDb.getCliFlag(), vmsDb.getPassword(), vmsDb.getCallbackTimeout(), vmsDb.getAccessLogs().getIdAccessLogsId());
+            return new ResponseEntity<>(vmsDtoNew, HttpStatus.OK);
         }
-        return msisdn + " is already exist";
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(new CustomMessage(HttpStatus.CONFLICT.value(), "Msisdn Id already exist"));
     }
 
     @Override
-    public String updateVmsDetails(VmsDto vmsDto, String msisdn) throws JsonProcessingException {
+    public ResponseEntity updateVmsDetails(VmsDto vmsDto, String msisdn) throws JsonProcessingException {
         Optional<Vms> vms = vmsRepository.findByMsisdn(msisdn);
         if (vms.isPresent()) {
             Vms vmsDb = vms.get();
@@ -80,10 +85,11 @@ public class VmsServiceImpl implements VmsService {
                 accessLogs.setReqPayload(convertEntityToJson(vmsDto));
                 vmsRepository.save(vmsDb);
                 accessLogsRepository.save(accessLogs);
-                return "VMS Details are updated...";
             }
+            VmsDto vmsDtoNew = new VmsDto(vmsDb.getVmsId(), vmsDb.getMsisdn(), vmsDb.getSystemId(), vmsDto.getMailboxId(), vmsDb.getRegisterFlag(), vmsDb.getActiveFlag(), vmsDb.getLockedFlag(), vmsDb.getLanguage(), vmsDb.getTemporaryGreeting(), vmsDb.getGreetingTypeSystem(), vmsDb.getPasswordFlag(), vmsDb.getCallbackFlag(), vmsDb.getCliFlag(), vmsDb.getPassword(), vmsDb.getCallbackTimeout(), vmsDb.getAccessLogs().getIdAccessLogsId());
+            return new ResponseEntity<>(vmsDtoNew, HttpStatus.OK);
         }
-        return "Invalid IMSI";
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new CustomMessage(HttpStatus.NOT_FOUND.value(), "Msisdn Id does n't exist"));
     }
 
     @Transactional
@@ -93,13 +99,12 @@ public class VmsServiceImpl implements VmsService {
         return "VMS Details are deleted";
     }
 
-    private String saveVmsRequestPayload(Vms vms, VmsDto vmsDto, AccessLogs accessLogs) throws JsonProcessingException {
+    private void saveVmsRequestPayload(Vms vms, VmsDto vmsDto, AccessLogs accessLogs) throws JsonProcessingException {
         vmsDto.setVmsId(vms.getVmsId());
         vmsDto.setAccessId(vms.getAccessLogs().getIdAccessLogsId() != null ? vms.getAccessLogs().getIdAccessLogsId() : Integer.valueOf(""));
         String reqPayload = convertEntityToJson(vmsDto);
         accessLogs.setReqPayload(reqPayload);
         accessLogsRepository.save(accessLogs);
-        return "VMS Details are saved...";
     }
 
     private String convertEntityToJson(VmsDto vmsDto) throws JsonProcessingException {

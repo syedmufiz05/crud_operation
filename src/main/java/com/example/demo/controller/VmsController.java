@@ -4,6 +4,7 @@ import com.example.demo.dto.VmsDto;
 import com.example.demo.service.VmsService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -15,13 +16,13 @@ public class VmsController {
     private VmsService vmsService;
 
     @RequestMapping(value = "/save/vms/detail", method = RequestMethod.POST)
-    public String saveVmsDetails(@RequestBody VmsDto vmsDto, HttpServletRequest httpServletRequest) throws JsonProcessingException {
+    public ResponseEntity<VmsDto> saveVmsDetails(@RequestBody VmsDto vmsDto, HttpServletRequest httpServletRequest) throws JsonProcessingException {
         String authToken = httpServletRequest.getHeader("Authorization").replace("Bearer", "");
         return vmsService.saveVmsDetails(vmsDto, authToken);
     }
 
     @RequestMapping(value = "/update/vms/detail", method = RequestMethod.PUT)
-    public String updateVmsDetails(@RequestParam String msisdn, @RequestBody VmsDto vmsDto) throws JsonProcessingException {
+    public ResponseEntity<VmsDto> updateVmsDetails(@RequestParam String msisdn, @RequestBody VmsDto vmsDto) throws JsonProcessingException {
         return vmsService.updateVmsDetails(vmsDto, msisdn);
     }
 

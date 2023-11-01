@@ -1,6 +1,7 @@
 package com.example.demo.service;
 
 import com.example.demo.dto.AucDto;
+import com.example.demo.exception.CustomMessage;
 import com.example.demo.model.AccessLogs;
 import com.example.demo.model.Auc;
 import com.example.demo.repository.AccessLogsRepository;
@@ -9,6 +10,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -21,29 +24,31 @@ public class AucServiceImpl implements AucService {
     @Autowired
     private AccessLogsRepository accessLogsRepository;
 
-    public String saveAucDetails(AucDto aucDto, String authToken) throws JsonProcessingException {
+    public ResponseEntity saveAucDetails(AucDto aucDto, String authToken) throws JsonProcessingException {
         String imsi = aucDto.getImsi();
-        Optional<Auc> aucDb = aucRepository.findByImsi(imsi);
-        if (!aucDb.isPresent()) {
+        Optional<Auc> auc = aucRepository.findByImsi(imsi);
+        if (!auc.isPresent()) {
             AccessLogs accessLogs = new AccessLogs();
             accessLogs.setUserId(1212);
             accessLogs.setResponsePayload("");
             accessLogs.setAuthToken(authToken != null ? authToken : "");
             accessLogsRepository.save(accessLogs);
-            Auc auc = new Auc();
-            auc.setAccessLogs(accessLogs);
-            auc.setImsi(aucDto.getImsi() != null ? aucDto.getImsi() : "");
-            auc.setKi(aucDto.getKi() != null ? aucDto.getKi() : "");
-            auc.setOpc(aucDto.getOpc() != null ? aucDto.getOpc() : "");
-            auc.setA3a8Version(aucDto.getA3a8Version() != null ? aucDto.getA3a8Version() : Integer.valueOf(""));
-            auc.setStatus(aucDto.getStatus() != null ? aucDto.getStatus() : "");
-            aucRepository.save(auc);
-            return saveAucRequestPayload(auc, aucDto, accessLogs);
+            Auc aucDb = new Auc();
+            aucDb.setAccessLogs(accessLogs);
+            aucDb.setImsi(aucDto.getImsi() != null ? aucDto.getImsi() : "");
+            aucDb.setKi(aucDto.getKi() != null ? aucDto.getKi() : "");
+            aucDb.setOpc(aucDto.getOpc() != null ? aucDto.getOpc() : "");
+            aucDb.setA3a8Version(aucDto.getA3a8Version() != null ? aucDto.getA3a8Version() : Integer.valueOf(""));
+            aucDb.setStatus(aucDto.getStatus() != null ? aucDto.getStatus() : "");
+            aucRepository.save(aucDb);
+            saveAucRequestPayload(aucDb, aucDto, accessLogs);
+            AucDto aucDtoNew = new AucDto(aucDb.getAucId(), aucDb.getImsi(), aucDb.getKi(), aucDb.getOpc(), aucDb.getA3a8Version(), aucDb.getStatus(), aucDb.getAccessLogs().getIdAccessLogsId());
+            return new ResponseEntity<>(aucDtoNew, HttpStatus.OK);
         }
-        return imsi + " already exist";
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(new CustomMessage(HttpStatus.CONFLICT.value(), "Imsi id already exist"));
     }
 
-    public String updateAucDetails(String imsi, AucDto aucDto) throws JsonProcessingException {
+    public ResponseEntity updateAucDetails(String imsi, AucDto aucDto) throws JsonProcessingException {
         Optional<Auc> auc = aucRepository.findByImsi(imsi);
         if (auc.isPresent()) {
             Auc aucDb = auc.get();
@@ -59,10 +64,11 @@ public class AucServiceImpl implements AucService {
                 accessLogs.setReqPayload(convertEntityToJson(aucDto));
                 aucRepository.save(aucDb);
                 accessLogsRepository.save(accessLogs);
-                return "AUC Details are updated...";
             }
+            AucDto aucDtoNew = new AucDto(aucDb.getAucId(), aucDb.getImsi(), aucDb.getKi(), aucDb.getOpc(), aucDb.getA3a8Version(), aucDb.getStatus(), aucDb.getAccessLogs().getIdAccessLogsId());
+            return new ResponseEntity<>(aucDtoNew, HttpStatus.OK);
         }
-        return "Invalid IMSI";
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new CustomMessage(HttpStatus.NOT_FOUND.value(), "Imsi Id does n't exist"));
     }
 
     @Transactional
@@ -70,13 +76,12 @@ public class AucServiceImpl implements AucService {
         aucRepository.deleteByImsi(imsi);
     }
 
-    private String saveAucRequestPayload(Auc auc, AucDto aucDto, AccessLogs accessLogs) throws JsonProcessingException {
+    private void saveAucRequestPayload(Auc auc, AucDto aucDto, AccessLogs accessLogs) throws JsonProcessingException {
         aucDto.setAucId(auc.getAucId());
         aucDto.setAccessId(auc.getAccessLogs().getIdAccessLogsId() != null ? auc.getAccessLogs().getIdAccessLogsId() : Integer.valueOf(""));
         String reqPayload = convertEntityToJson(aucDto);
         accessLogs.setReqPayload(reqPayload);
         accessLogsRepository.save(accessLogs);
-        return "AUC Details are saved...";
     }
 
     private String convertEntityToJson(AucDto aucDto) throws JsonProcessingException {

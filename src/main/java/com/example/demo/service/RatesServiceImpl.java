@@ -86,7 +86,7 @@ public class RatesServiceImpl implements RatesService {
             return editRatesRequestPayload(ratesDto, ratesDb, accessLogsDb);
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                .body(new CustomMessage(HttpStatus.NOT_FOUND.value(), "Rates Id does n't exists"));
+                .body(new CustomMessage(HttpStatus.NOT_FOUND.value(), "Rates Id does n't exist"));
     }
 
     @Override
