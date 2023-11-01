@@ -22,7 +22,7 @@ public class CategoryController {
     }
 
     @RequestMapping(value = "/detail/edit/{category_id}", method = RequestMethod.PUT)
-    public ResponseEntity editCategory(@PathVariable("category_id") Integer categoryId, @RequestBody CategoryDto categoryDto) throws JsonProcessingException {
+    public ResponseEntity<CategoryDto> editCategory(@PathVariable("category_id") Integer categoryId, @RequestBody CategoryDto categoryDto) throws JsonProcessingException {
         return categoryService.editCategory(categoryId, categoryDto);
     }
 

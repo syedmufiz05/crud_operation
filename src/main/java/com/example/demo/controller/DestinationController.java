@@ -22,7 +22,7 @@ public class DestinationController {
     }
 
     @RequestMapping(value = "/detail/edit/{destination_id}", method = RequestMethod.PUT)
-    public ResponseEntity editDestinationDetails(@PathVariable("destination_id") Integer destinationId, @RequestBody DestinationDto destinationDto) throws JsonProcessingException {
+    public ResponseEntity<DestinationDto> editDestinationDetails(@PathVariable("destination_id") Integer destinationId, @RequestBody DestinationDto destinationDto) throws JsonProcessingException {
         return destinationService.editDestination(destinationId, destinationDto);
     }
 

@@ -23,7 +23,7 @@ public class RatesController {
     }
 
     @RequestMapping(value = "/detail/edit/{rates_id}", method = RequestMethod.PUT)
-    public ResponseEntity editRates(@PathVariable("rates_id") Integer ratesId, @RequestBody RatesDto ratesDto) throws JsonProcessingException {
+    public ResponseEntity<RatesDto> editRates(@PathVariable("rates_id") Integer ratesId, @RequestBody RatesDto ratesDto) throws JsonProcessingException {
         return ratesService.editRates(ratesId, ratesDto);
     }
 
