@@ -10,24 +10,24 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 
 @RestController
-@RequestMapping("/api/rates")
+@RequestMapping("/api/rates/detail")
 public class RatesController {
 
     @Autowired
     private RatesService ratesService;
 
-    @RequestMapping(value = "/detail/add", method = RequestMethod.POST)
+    @RequestMapping(value = "/add", method = RequestMethod.POST)
     public RatesDto addRates(@RequestBody RatesDto ratesDto, HttpServletRequest httpServletRequest) throws JsonProcessingException {
         String authToken = httpServletRequest.getHeader("Authorization").replace("Bearer", "");
         return ratesService.addRates(ratesDto, authToken);
     }
 
-    @RequestMapping(value = "/detail/edit/{rates_id}", method = RequestMethod.PUT)
+    @RequestMapping(value = "/edit/{rates_id}", method = RequestMethod.PUT)
     public ResponseEntity<RatesDto> editRates(@PathVariable("rates_id") Integer ratesId, @RequestBody RatesDto ratesDto) throws JsonProcessingException {
         return ratesService.editRates(ratesId, ratesDto);
     }
 
-    @RequestMapping(value = "/detail/delete/{rates_id}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/delete/{rates_id}", method = RequestMethod.DELETE)
     public String deleteRates(@PathVariable("rates_id") Integer ratesId) {
         return ratesService.deleteRates(ratesId);
     }

@@ -10,23 +10,23 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/api/hss/detail")
 public class HssProvController {
     @Autowired
     private HssProvServiceImpl hssProvService;
 
-    @RequestMapping(value = "/save/record", method = RequestMethod.POST)
+    @RequestMapping(value = "/save", method = RequestMethod.POST)
     public ResponseEntity<HssProvDto> saveDetails(@RequestBody HssProvDto hssProvDto, HttpServletRequest httpServletRequest) throws JsonProcessingException {
         String authCode = httpServletRequest.getHeader("Authorization").replace("Bearer", "");
         return hssProvService.saveHssProv(hssProvDto, authCode);
     }
 
-    @RequestMapping(value = "/update/record", method = RequestMethod.PUT)
+    @RequestMapping(value = "/update", method = RequestMethod.PUT)
     public ResponseEntity<HssProvDto> updateDetails(@RequestParam String imsi, @RequestParam String msisdn, @RequestBody HssProvDto hssProvDto) throws JsonProcessingException {
         return hssProvService.updateHssProv(imsi, msisdn, hssProvDto);
     }
 
-    @RequestMapping(value = "/delete/record", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/delete", method = RequestMethod.DELETE)
     public String deleteHssProvData(@RequestParam String imsi, @RequestParam String msisdn) {
         String msg = hssProvService.deleteHssProv(imsi, msisdn);
         return msg;

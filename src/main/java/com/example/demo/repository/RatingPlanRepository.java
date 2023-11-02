@@ -9,4 +9,6 @@ import java.util.Optional;
 @Repository
 public interface RatingPlanRepository extends JpaRepository<RatingPlan, Integer> {
     Optional<RatingPlan> findByRatingPlanId(Integer id);
+
+    void deleteByRatingPlanId(Integer id);
 }

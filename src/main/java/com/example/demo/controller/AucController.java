@@ -10,23 +10,23 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 
 @RestController
-@RequestMapping("/api/v2")
+@RequestMapping("/api/auc/detail")
 public class AucController {
     @Autowired
     private AucServiceImpl aucService;
 
-    @RequestMapping(value = "/save/auc/detail", method = RequestMethod.POST)
+    @RequestMapping(value = "/save", method = RequestMethod.POST)
     public ResponseEntity<AucDto> saveAucDetails(@RequestBody AucDto aucDto, HttpServletRequest httpServletRequest) throws JsonProcessingException {
         String authToken = httpServletRequest.getHeader("Authorization").replace("Bearer", "");
         return aucService.saveAucDetails(aucDto, authToken);
     }
 
-    @RequestMapping(value = "/update/auc/detail", method = RequestMethod.PUT)
+    @RequestMapping(value = "/update", method = RequestMethod.PUT)
     public ResponseEntity<AucDto> updateAucDetails(@RequestParam String imsi, @RequestBody AucDto aucDto) throws JsonProcessingException {
         return aucService.updateAucDetails(imsi, aucDto);
     }
 
-    @RequestMapping(value = "/delete/auc/detail", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/delete", method = RequestMethod.DELETE)
     public void deleteAucDetails(@RequestParam String imsi) {
         aucService.deleteAucDetails(imsi);
     }

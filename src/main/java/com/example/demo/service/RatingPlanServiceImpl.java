@@ -35,4 +35,10 @@ public class RatingPlanServiceImpl implements RatingPlanService {
         ratingPlanRepository.save(ratingPlanNew);
         return new RatingPlanDto(ratingPlanNew.getRatingPlanId(), destinationRates.getId());
     }
+
+    @Override
+    public String deleteRatingPlan(Integer ratingPlanId) {
+        ratingPlanRepository.deleteByRatingPlanId(ratingPlanId);
+        return "Successfully deleted...";
+    }
 }
