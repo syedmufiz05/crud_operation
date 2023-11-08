@@ -7,6 +7,8 @@ import org.springframework.http.ResponseEntity;
 public interface VmsService {
     ResponseEntity saveVmsDetails(VmsDto vmsDto, String authToken) throws JsonProcessingException;
 
+    ResponseEntity getVmsDetails(String msisdn);
+
     ResponseEntity updateVmsDetails(VmsDto vmsDto, String msisdn) throws JsonProcessingException;
 
     String deleteVmsDetails(String msisdn);

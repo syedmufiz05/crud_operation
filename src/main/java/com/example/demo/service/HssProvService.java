@@ -7,6 +7,8 @@ import org.springframework.http.ResponseEntity;
 public interface HssProvService {
     ResponseEntity saveHssProv(HssProvDto hssProvDto, String authToken) throws JsonProcessingException;
 
+    ResponseEntity getHssProv(String imsi, String msisdn);
+
     ResponseEntity updateHssProv(String imsi, String msisdn, HssProvDto hssProvDto) throws JsonProcessingException;
 
     String deleteHssProv(String imsi, String msisdn);

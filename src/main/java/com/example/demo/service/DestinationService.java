@@ -7,6 +7,8 @@ import org.springframework.http.ResponseEntity;
 public interface DestinationService {
     DestinationDto addDestination(DestinationDto destinationDto, String authToken) throws JsonProcessingException;
 
+    ResponseEntity getDestinationDetail(Integer destinationId);
+
     ResponseEntity editDestination(Integer destinationId, DestinationDto destinationDto) throws JsonProcessingException;
 
     String deleteDestination(Integer destinationId);

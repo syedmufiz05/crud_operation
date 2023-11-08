@@ -21,6 +21,11 @@ public class DestinationController {
         return destinationService.addDestination(destinationDto, authToken);
     }
 
+    @RequestMapping(value = "/detail/get/{destination_id}", method = RequestMethod.GET)
+    public ResponseEntity<DestinationDto> getDestinationDetails(@PathVariable("destination_id") Integer destinationId) {
+        return destinationService.getDestinationDetail(destinationId);
+    }
+
     @RequestMapping(value = "/detail/edit/{destination_id}", method = RequestMethod.PUT)
     public ResponseEntity<DestinationDto> editDestinationDetails(@PathVariable("destination_id") Integer destinationId, @RequestBody DestinationDto destinationDto) throws JsonProcessingException {
         return destinationService.editDestination(destinationId, destinationDto);

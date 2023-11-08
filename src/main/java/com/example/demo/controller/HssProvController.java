@@ -21,6 +21,11 @@ public class HssProvController {
         return hssProvService.saveHssProv(hssProvDto, authCode);
     }
 
+    @RequestMapping(value = "/get", method = RequestMethod.GET)
+    public ResponseEntity<HssProvDto> getDetails(@RequestParam("imsi") String imsi, @RequestParam("msisdn") String msisdn) {
+        return hssProvService.getHssProv(imsi, msisdn);
+    }
+
     @RequestMapping(value = "/update", method = RequestMethod.PUT)
     public ResponseEntity<HssProvDto> updateDetails(@RequestParam String imsi, @RequestParam String msisdn, @RequestBody HssProvDto hssProvDto) throws JsonProcessingException {
         return hssProvService.updateHssProv(imsi, msisdn, hssProvDto);

@@ -7,6 +7,8 @@ import org.springframework.http.ResponseEntity;
 public interface AucService {
     ResponseEntity saveAucDetails(AucDto aucDto, String authToken) throws JsonProcessingException;
 
+    ResponseEntity getAucDetails(String imsi);
+
     ResponseEntity updateAucDetails(String imsi, AucDto aucDto) throws JsonProcessingException;
 
     void deleteAucDetails(String imsi);

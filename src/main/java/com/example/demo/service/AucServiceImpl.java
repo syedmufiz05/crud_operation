@@ -48,6 +48,24 @@ public class AucServiceImpl implements AucService {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(new CustomMessage(HttpStatus.CONFLICT.value(), "Imsi id already exist"));
     }
 
+    @Override
+    public ResponseEntity getAucDetails(String imsi) {
+        Optional<Auc> auc = aucRepository.findByImsi(imsi);
+        if (auc.isPresent()) {
+            Auc aucDb = auc.get();
+            AucDto aucDto = new AucDto();
+            aucDto.setAucId(aucDb.getAucId());
+            aucDto.setImsi(aucDb.getImsi());
+            aucDto.setKi(aucDb.getKi());
+            aucDto.setOpc(aucDb.getOpc());
+            aucDto.setA3a8Version(aucDb.getA3a8Version());
+            aucDto.setStatus(aucDb.getStatus());
+            aucDto.setAccessId(aucDb.getAccessLogs().getIdAccessLogsId());
+            return new ResponseEntity<>(aucDto, HttpStatus.OK);
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new CustomMessage(HttpStatus.NOT_FOUND.value(), "Imsi id does n't exist"));
+    }
+
     public ResponseEntity updateAucDetails(String imsi, AucDto aucDto) throws JsonProcessingException {
         Optional<Auc> auc = aucRepository.findByImsi(imsi);
         if (auc.isPresent()) {

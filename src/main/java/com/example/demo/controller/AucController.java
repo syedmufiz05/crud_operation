@@ -21,6 +21,11 @@ public class AucController {
         return aucService.saveAucDetails(aucDto, authToken);
     }
 
+    @RequestMapping(value = "/get/{imsi}", method = RequestMethod.GET)
+    public ResponseEntity<AucDto> getAucDetails(@PathVariable("imsi") String imsi) {
+        return aucService.getAucDetails(imsi);
+    }
+
     @RequestMapping(value = "/update", method = RequestMethod.PUT)
     public ResponseEntity<AucDto> updateAucDetails(@RequestParam String imsi, @RequestBody AucDto aucDto) throws JsonProcessingException {
         return aucService.updateAucDetails(imsi, aucDto);

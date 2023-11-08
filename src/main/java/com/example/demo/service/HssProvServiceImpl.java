@@ -90,6 +90,61 @@ public class HssProvServiceImpl implements HssProvService {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(new CustomMessage(HttpStatus.CONFLICT.value(), "IMSI or MSISDN Id already exist"));
     }
 
+    @Override
+    public ResponseEntity getHssProv(String imsi, String msisdn) {
+        Optional<HssProv> hssProv = hssProvRepository.findByImsiOrMsisdn(imsi, msisdn);
+        if (hssProv.isPresent()) {
+            HssProv hssProvDb = hssProv.get();
+            HssProvDto hssProvDto = new HssProvDto();
+            hssProvDto.setHssProvId(hssProvDb.getHssprovId());
+            hssProvDto.setImsi(hssProvDb.getImsi());
+            hssProvDto.setImsiFlag(hssProvDb.getImsiFlag());
+            hssProvDto.setMsisdn(hssProvDb.getMsisdn());
+            hssProvDto.setNam(hssProvDb.getNam());
+            hssProvDto.setOdb(hssProvDb.getOdb());
+            hssProvDto.setBaoc(hssProvDb.getBaoc());
+            hssProvDto.setBoic(hssProvDb.getBoic());
+            hssProvDto.setOsb1(hssProvDb.getOsb1());
+            hssProvDto.setOsb2(hssProvDb.getOsb2());
+            hssProvDto.setBaic(hssProvDb.getBaic());
+            hssProvDto.setRoaming(hssProvDb.getRoaming());
+            hssProvDto.setBearerService(hssProvDb.getBearerService());
+            hssProvDto.setTelephone(hssProvDb.getTelephone());
+            hssProvDto.setSms(hssProvDb.getSms());
+            hssProvDto.setCfuA(hssProvDb.getCfuA());
+            hssProvDto.setCfuR(hssProvDb.getCfuR());
+            hssProvDto.setCfuP(hssProvDb.getCfuP());
+            hssProvDto.setCfbP(hssProvDb.getCfbP());
+            hssProvDto.setCfnryP(hssProvDb.getCfnryP());
+            hssProvDto.setCfnryT(hssProvDb.getCfnryT());
+            hssProvDto.setCfnrcP(hssProvDb.getCfnrcP());
+            hssProvDto.setCwA(hssProvDb.getCwA());
+            hssProvDto.setCwP(hssProvDb.getCwP());
+            hssProvDto.setChP(hssProvDb.getChP());
+            hssProvDto.setCamel(hssProvDb.getCamel());
+            hssProvDto.setOCsi(hssProvDb.getOCsi());
+            hssProvDto.setTCsi(hssProvDb.getTCsi());
+            hssProvDto.setSsCsi(hssProvDb.getSsCsi());
+            hssProvDto.setSmsCsi(hssProvDb.getSmsCsi());
+            hssProvDto.setOCsiScfNo(hssProvDb.getOCsiScfNo());
+            hssProvDto.setTCsiScfNo(hssProvDb.getTCsiScfNo());
+            hssProvDto.setSsCsiScfNo(hssProvDb.getSsCsiScfNo());
+            hssProvDto.setSmsSciScfNo(hssProvDb.getSmsSciScfNo());
+            hssProvDto.setGprsFlag(hssProvDb.getGprsFlag());
+            hssProvDto.setEpsFlag(hssProvDb.getEpsFlag());
+            hssProvDto.setArd(hssProvDb.getArd());
+            hssProvDto.setEpsUserTpl(hssProvDb.getEpsUserTpl());
+            hssProvDto.setDefEps(hssProvDb.getDefEps());
+            hssProvDto.setContextD(hssProvDb.getContextD());
+            hssProvDto.setApnCtxtList(hssProvDb.getApnCtxtList());
+            hssProvDto.setImsFlag(hssProvDb.getImsFlag());
+            hssProvDto.setSubscriberProfId(hssProvDb.getSubscriberProfId());
+            hssProvDto.setAccessId(hssProvDb.getAccessLogs().getIdAccessLogsId());
+            return new ResponseEntity<>(hssProvDto, HttpStatus.OK);
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new CustomMessage(HttpStatus.NOT_FOUND.value(), "IMSI or MSISDN Id does n't exist"));
+    }
+
     @Transactional
     public ResponseEntity updateHssProv(String imsi, String msisdn, HssProvDto hssProvDto) throws JsonProcessingException {
         Optional<HssProv> hssProv = hssProvRepository.findByImsiOrMsisdn(imsi, msisdn);

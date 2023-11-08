@@ -69,6 +69,25 @@ public class DestinationServiceImpl implements DestinationService {
     }
 
     @Override
+    public ResponseEntity getDestinationDetail(Integer destinationId) {
+        Optional<Destination> destination = destinationRepository.findById(destinationId);
+        if (destination.isPresent()) {
+            Destination destinationDb = destination.get();
+            DestinationDto destinationDto = new DestinationDto();
+            destinationDto.setDestinationId(destinationDb.getId());
+            destinationDto.setName(destinationDb.getName());
+            destinationDto.setType(destinationDb.getType());
+            destinationDto.setRemarks(destinationDb.getRemarks());
+            destinationDto.setActive(destinationDb.getActive());
+            destinationDto.setAccessId(destinationDb.getAccessLogs().getIdAccessLogsId());
+            return new ResponseEntity<>(destinationDto, HttpStatus.OK);
+        }
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(new CustomMessage(HttpStatus.NOT_FOUND.value(), "Destination Id does n't exist"));
+    }
+
+    @Override
     public ResponseEntity editDestination(Integer destinationId, DestinationDto destinationDto) throws JsonProcessingException {
         Optional<Destination> destination = destinationRepository.findById(destinationId);
         if (destination.isPresent()) {

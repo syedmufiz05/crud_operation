@@ -21,6 +21,11 @@ public class VmsController {
         return vmsService.saveVmsDetails(vmsDto, authToken);
     }
 
+    @RequestMapping(value = "/get/{msisdn}", method = RequestMethod.GET)
+    public ResponseEntity<VmsDto> getVmsDetails(@PathVariable("msisdn") String msisdn) {
+        return vmsService.getVmsDetails(msisdn);
+    }
+
     @RequestMapping(value = "/update", method = RequestMethod.PUT)
     public ResponseEntity<VmsDto> updateVmsDetails(@RequestParam String msisdn, @RequestBody VmsDto vmsDto) throws JsonProcessingException {
         return vmsService.updateVmsDetails(vmsDto, msisdn);

@@ -59,6 +59,32 @@ public class VmsServiceImpl implements VmsService {
     }
 
     @Override
+    public ResponseEntity getVmsDetails(String msisdn) {
+        Optional<Vms> vms = vmsRepository.findByMsisdn(msisdn);
+        if (vms.isPresent()) {
+            Vms vmsDb = vms.get();
+            VmsDto vmsDto = new VmsDto();
+            vmsDto.setVmsId(vmsDb.getVmsId());
+            vmsDto.setMsisdn(vmsDb.getMsisdn());
+            vmsDto.setSystemId(vmsDb.getSystemId());
+            vmsDto.setMailboxId(vmsDb.getMailboxId());
+            vmsDto.setRegisterFlag(vmsDb.getRegisterFlag());
+            vmsDto.setActiveFlag(vmsDb.getActiveFlag());
+            vmsDto.setLockedFlag(vmsDb.getLockedFlag());
+            vmsDto.setTemporaryGreeting(vmsDb.getTemporaryGreeting());
+            vmsDto.setGreetingTypeSystem(vmsDb.getGreetingTypeSystem());
+            vmsDto.setPasswordFlag(vmsDb.getPasswordFlag());
+            vmsDto.setCallbackFlag(vmsDb.getCallbackFlag());
+            vmsDto.setCliFlag(vmsDb.getCliFlag());
+            vmsDto.setPassword(vmsDb.getPassword());
+            vmsDto.setCallbackTimeout(vmsDb.getCallbackTimeout());
+            vmsDto.setAccessId(vmsDb.getAccessLogs().getIdAccessLogsId());
+            return new ResponseEntity<>(vmsDto, HttpStatus.OK);
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new CustomMessage(HttpStatus.NOT_FOUND.value(), "Msisdn Id does n't exist"));
+    }
+
+    @Override
     public ResponseEntity updateVmsDetails(VmsDto vmsDto, String msisdn) throws JsonProcessingException {
         Optional<Vms> vms = vmsRepository.findByMsisdn(msisdn);
         if (vms.isPresent()) {
