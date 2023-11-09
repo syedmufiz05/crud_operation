@@ -70,6 +70,24 @@ public class RatesServiceImpl implements RatesService {
     }
 
     @Override
+    public ResponseEntity getRates(Integer ratesId) {
+        Optional<Rates> rates = ratesRepository.findById(ratesId);
+        if (rates.isPresent()) {
+            Rates ratesDb = rates.get();
+            RatesDto ratesDto = new RatesDto();
+            ratesDto.setRatesId(ratesDb.getId());
+            ratesDto.setDestName(ratesDb.getDestName());
+            ratesDto.setDestType(ratesDb.getDestType());
+            ratesDto.setIndex(ratesDb.getRatesIndex());
+            ratesDto.setDescription(ratesDb.getDescription());
+            ratesDto.setIsRatesActive(ratesDb.getIsRatesActive());
+            ratesDto.setAccessId(ratesDb.getAccessLogs().getIdAccessLogsId());
+            return new ResponseEntity<>(ratesDto, HttpStatus.OK);
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new CustomMessage(HttpStatus.NOT_FOUND.value(), "Rates Id does n't exist"));
+    }
+
+    @Override
     public ResponseEntity editRates(Integer ratesId, RatesDto ratesDto) throws JsonProcessingException {
         Optional<Rates> rates = ratesRepository.findById(ratesId);
         if (rates.isPresent()) {

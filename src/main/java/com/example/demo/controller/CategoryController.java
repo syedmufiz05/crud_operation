@@ -21,6 +21,11 @@ public class CategoryController {
         return categoryService.addCategory(categoryDto, authToken);
     }
 
+    @RequestMapping(value = "/detail/get/{category_id}", method = RequestMethod.GET)
+    public ResponseEntity<CategoryDto> getCategory(@PathVariable("category_id") Integer categoryId) throws JsonProcessingException {
+        return categoryService.getCategory(categoryId);
+    }
+
     @RequestMapping(value = "/detail/edit/{category_id}", method = RequestMethod.PUT)
     public ResponseEntity<CategoryDto> editCategory(@PathVariable("category_id") Integer categoryId, @RequestBody CategoryDto categoryDto) throws JsonProcessingException {
         return categoryService.editCategory(categoryId, categoryDto);

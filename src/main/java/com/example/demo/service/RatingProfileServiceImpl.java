@@ -75,6 +75,21 @@ public class RatingProfileServiceImpl implements RatingProfileService {
     }
 
     @Override
+    public ResponseEntity getRatingProfile(Integer ratingProfileId) {
+        Optional<RatingProfile> ratingProfile = ratingProfileRepository.findById(ratingProfileId);
+        if (ratingProfile.isPresent()) {
+            RatingProfile ratingProfileDb = ratingProfile.get();
+            RatingProfileDto ratingProfileDto = new RatingProfileDto();
+            ratingProfileDto.setRatingProfileId(ratingProfileDb.getId());
+            ratingProfileDto.setCategoryId(ratingProfileDb.getCategory().getId());
+            ratingProfileDto.setCallingParty(ratingProfileDb.getCallingParty());
+            ratingProfileDto.setRatingPlanId(ratingProfileDb.getRatingPlan().getRatingPlanId());
+            return new ResponseEntity<>(ratingProfileDto, HttpStatus.OK);
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new CustomMessage(HttpStatus.NOT_FOUND.value(), "Rating Profile Id does n't exist"));
+    }
+
+    @Override
     public ResponseEntity editRatingProfile(Integer ratingProfileId, String callingParty) {
         Optional<RatingProfile> ratingProfile = ratingProfileRepository.findById(ratingProfileId);
         if (ratingProfile.isPresent()) {

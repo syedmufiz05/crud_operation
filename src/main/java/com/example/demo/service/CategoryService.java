@@ -7,6 +7,8 @@ import org.springframework.http.ResponseEntity;
 public interface CategoryService {
     CategoryDto addCategory(CategoryDto categoryDto, String authToken) throws JsonProcessingException;
 
+    ResponseEntity getCategory(Integer categoryId);
+
     ResponseEntity editCategory(Integer categoryId, CategoryDto categoryDto) throws JsonProcessingException;
 
     String deleteCategory(Integer categoryId);

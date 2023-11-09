@@ -22,6 +22,11 @@ public class RatesController {
         return ratesService.addRates(ratesDto, authToken);
     }
 
+    @RequestMapping(value = "/get/{rates_id}", method = RequestMethod.GET)
+    public ResponseEntity<RatesDto> getRates(@PathVariable("rates_id") Integer ratesId) {
+        return ratesService.getRates(ratesId);
+    }
+
     @RequestMapping(value = "/edit/{rates_id}", method = RequestMethod.PUT)
     public ResponseEntity<RatesDto> editRates(@PathVariable("rates_id") Integer ratesId, @RequestBody RatesDto ratesDto) throws JsonProcessingException {
         return ratesService.editRates(ratesId, ratesDto);

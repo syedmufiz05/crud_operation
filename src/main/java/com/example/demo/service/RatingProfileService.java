@@ -6,6 +6,8 @@ import org.springframework.http.ResponseEntity;
 public interface RatingProfileService {
     RatingProfileDto createRatingProfile(RatingProfileDto ratingProfileDto, String authToken);
 
+    ResponseEntity getRatingProfile(Integer ratingProfileId);
+
     ResponseEntity editRatingProfile(Integer ratingProfileId, String callingParty);
 
     String deleteRatingProfile(Integer ratingProfileId);

@@ -9,6 +9,7 @@ import com.example.demo.repository.CategoryRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -60,6 +61,19 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
+    public ResponseEntity getCategory(Integer categoryId) {
+        Optional<Category> category = categoryRepository.findById(categoryId);
+        if (category.isPresent()) {
+            Category categoryDb = category.get();
+            CategoryDto categoryDto = new CategoryDto();
+            categoryDto.setCategoryId(categoryDb.getId());
+            categoryDto.setName(fetchValueFromJsonData(categoryDb.getName()));
+            return new ResponseEntity<>(categoryDto, HttpStatus.OK);
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new CustomMessage(HttpStatus.NOT_FOUND.value(), "Category Id does n't exist"));
+    }
+
+    @Override
     public ResponseEntity editCategory(Integer categoryId, CategoryDto categoryDto) throws JsonProcessingException {
         Optional<Category> category = categoryRepository.findById(categoryId);
         if (category.isPresent()) {
@@ -90,5 +104,12 @@ public class CategoryServiceImpl implements CategoryService {
         String body = ow.writeValueAsString(categoryDto);
         body = body.replaceAll("(\\r|\\n)", "");
         return body;
+    }
+
+    private String fetchValueFromJsonData(String name) {
+        String value = name.replaceAll("\\\\", "");
+        String catName = value.substring(1, value.length() - 1).replaceAll("\\s", "");
+        JSONObject jsonObject = new JSONObject(catName);
+        return jsonObject.get("name").toString();
     }
 }

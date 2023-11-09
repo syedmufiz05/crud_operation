@@ -20,6 +20,11 @@ public class RatingProfileController {
         return ratingProfileService.createRatingProfile(ratingProfileDto, authToken);
     }
 
+    @RequestMapping(value = "/get/{rating_profile_id}", method = RequestMethod.GET)
+    public ResponseEntity<RatingProfileDto> getRatingProfile(@PathVariable("rating_profile_id") Integer ratingProfileId) {
+        return ratingProfileService.getRatingProfile(ratingProfileId);
+    }
+
     @RequestMapping(value = "/edit/{rating_profile_id}", method = RequestMethod.PUT)
     public ResponseEntity<RatingProfileDto> editRatingProfile(@PathVariable("rating_profile_id") Integer ratingProfileId, @RequestParam("calling_party") String callingParty) {
         return ratingProfileService.editRatingProfile(ratingProfileId, callingParty);

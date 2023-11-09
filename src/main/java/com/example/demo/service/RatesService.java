@@ -7,6 +7,8 @@ import org.springframework.http.ResponseEntity;
 public interface RatesService {
     RatesDto addRates(RatesDto ratesDto, String authToken) throws JsonProcessingException;
 
+    ResponseEntity getRates(Integer ratesId);
+
     ResponseEntity editRates(Integer ratesId, RatesDto ratesDto) throws JsonProcessingException;
 
     String deleteRates(Integer ratesId);
