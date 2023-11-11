@@ -22,13 +22,13 @@ public class CategoryController {
     }
 
     @RequestMapping(value = "/detail/get/{category_id}", method = RequestMethod.GET)
-    public ResponseEntity<CategoryDto> getCategory(@PathVariable("category_id") Integer categoryId) throws JsonProcessingException {
+    public ResponseEntity<CategoryDto> getCategory(@PathVariable("category_id") Integer categoryId) {
         return categoryService.getCategory(categoryId);
     }
 
     @RequestMapping(value = "/detail/edit/{category_id}", method = RequestMethod.PUT)
-    public ResponseEntity<CategoryDto> editCategory(@PathVariable("category_id") Integer categoryId, @RequestBody CategoryDto categoryDto) throws JsonProcessingException {
-        return categoryService.editCategory(categoryId, categoryDto);
+    public ResponseEntity<CategoryDto> editCategory(@PathVariable("category_id") Integer categoryId, @RequestParam("category_name") String categoryName) throws JsonProcessingException {
+        return categoryService.editCategory(categoryId, categoryName);
     }
 
     @RequestMapping(value = "/detail/delete/{category_id}", method = RequestMethod.DELETE)

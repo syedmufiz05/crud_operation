@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class ViewController {
     @RequestMapping(value = "/show", method = RequestMethod.GET)
     public String showMsg() {
-        System.out.println("Hello server");
-        return "Hello server";
+        System.out.println("Hello updated server");
+        return "Hello updated server";
     }
 }

@@ -74,12 +74,13 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public ResponseEntity editCategory(Integer categoryId, CategoryDto categoryDto) throws JsonProcessingException {
+    public ResponseEntity editCategory(Integer categoryId, String categoryName) throws JsonProcessingException {
         Optional<Category> category = categoryRepository.findById(categoryId);
         if (category.isPresent()) {
             Category categoryDb = category.get();
-            categoryDb.setName(convertEntityToJson(categoryDto));
+            categoryDb.setName(categoryName);
             categoryRepository.save(categoryDb);
+            CategoryDto categoryDto = new CategoryDto(categoryId, categoryName);
             Optional<AccessLogs> accessLogs = accessLogsRepository.findByIdAccessLogsId(categoryDb.getAccessLogs().getIdAccessLogsId());
             if (accessLogs.isPresent()) {
                 AccessLogs accessLogsDb = accessLogs.get();
@@ -87,8 +88,7 @@ public class CategoryServiceImpl implements CategoryService {
                 accessLogsDb.setReqPayload(convertEntityToJson(categoryDto));
                 accessLogsRepository.save(accessLogsDb);
             }
-            CategoryDto categoryDtoNew = new CategoryDto(categoryDto.getCategoryId(), categoryDto.getName());
-            return new ResponseEntity<>(categoryDtoNew, HttpStatus.OK);
+            return new ResponseEntity<>(categoryDto, HttpStatus.OK);
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new CustomMessage(HttpStatus.NOT_FOUND.value(), "Category Id does n't exist"));
     }

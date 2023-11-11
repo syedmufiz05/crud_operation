@@ -9,7 +9,7 @@ public interface CategoryService {
 
     ResponseEntity getCategory(Integer categoryId);
 
-    ResponseEntity editCategory(Integer categoryId, CategoryDto categoryDto) throws JsonProcessingException;
+    ResponseEntity editCategory(Integer categoryId, String categoryName) throws JsonProcessingException;
 
     String deleteCategory(Integer categoryId);
 }
