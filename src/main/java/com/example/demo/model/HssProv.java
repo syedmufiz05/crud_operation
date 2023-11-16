@@ -140,6 +140,6 @@ public class HssProv {
     private Integer subscriberProfId;
 
     @OneToOne(cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "access_id", referencedColumnName = "idaccess_logs_id")
+    @JoinColumn(name = "access_id", referencedColumnName = "id")
     private AccessLogs accessLogs;
 }

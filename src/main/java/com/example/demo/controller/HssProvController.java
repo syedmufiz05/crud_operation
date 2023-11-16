@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/hss/detail")
@@ -24,6 +25,11 @@ public class HssProvController {
     @RequestMapping(value = "/get", method = RequestMethod.GET)
     public ResponseEntity<HssProvDto> getDetails(@RequestParam("imsi") String imsi, @RequestParam("msisdn") String msisdn) {
         return hssProvService.getHssProv(imsi, msisdn);
+    }
+
+    @RequestMapping(value = "/get/all", method = RequestMethod.GET)
+    public List<HssProvDto> getAllDetails() {
+        return hssProvService.getAllHssProvRecord();
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.PUT)

@@ -38,7 +38,7 @@ public class RatesServiceImpl implements RatesService {
             ratesDb.setRatesIndex(ratesDto.getIndex() != null ? ratesDto.getIndex() : Integer.valueOf(""));
             ratesDb.setDescription(ratesDto.getDescription() != null ? ratesDto.getDescription() : "");
             ratesDb.setIsRatesActive(ratesDto.getIsRatesActive() != null ? ratesDto.getIsRatesActive() : false);
-            Optional<AccessLogs> accessLogsDb = accessLogsRepository.findByIdAccessLogsId(ratesDb.getAccessLogs().getIdAccessLogsId());
+            Optional<AccessLogs> accessLogsDb = accessLogsRepository.findById(ratesDb.getAccessLogs().getId());
             if (accessLogsDb.isPresent()) {
                 AccessLogs accessLogs = accessLogsDb.get();
                 ratesRepository.save(ratesDb);
@@ -81,7 +81,7 @@ public class RatesServiceImpl implements RatesService {
             ratesDto.setIndex(ratesDb.getRatesIndex());
             ratesDto.setDescription(ratesDb.getDescription());
             ratesDto.setIsRatesActive(ratesDb.getIsRatesActive());
-            ratesDto.setAccessId(ratesDb.getAccessLogs().getIdAccessLogsId());
+            ratesDto.setAccessId(ratesDb.getAccessLogs().getId());
             return new ResponseEntity<>(ratesDto, HttpStatus.OK);
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new CustomMessage(HttpStatus.NOT_FOUND.value(), "Rates Id does n't exist"));
@@ -98,7 +98,7 @@ public class RatesServiceImpl implements RatesService {
             ratesDb.setDescription(ratesDto.getDescription() != null ? ratesDto.getDescription() : ratesDb.getDescription());
             ratesDb.setIsRatesActive(ratesDto.getIsRatesActive() != null ? ratesDto.getIsRatesActive() : ratesDb.getIsRatesActive());
 
-            Optional<AccessLogs> accessLogs = accessLogsRepository.findByIdAccessLogsId(ratesDb.getAccessLogs().getIdAccessLogsId());
+            Optional<AccessLogs> accessLogs = accessLogsRepository.findById(ratesDb.getAccessLogs().getId());
             AccessLogs accessLogsDb = accessLogs.get();
             accessLogsDb.setAccessDateTime(new Date());
             return editRatesRequestPayload(ratesDto, ratesDb, accessLogsDb);
@@ -121,7 +121,7 @@ public class RatesServiceImpl implements RatesService {
         ratesDto.setIndex(rates.getRatesIndex());
         ratesDto.setDescription(rates.getDescription());
         ratesDto.setIsRatesActive(rates.getIsRatesActive());
-        ratesDto.setAccessId(accessLogs.getIdAccessLogsId());
+        ratesDto.setAccessId(accessLogs.getId());
         String reqPayload = convertEntityToJson(ratesDto);
         accessLogs.setReqPayload(reqPayload);
         accessLogsRepository.save(accessLogs);
@@ -135,7 +135,7 @@ public class RatesServiceImpl implements RatesService {
         ratesDto.setIndex(rates.getRatesIndex());
         ratesDto.setDescription(rates.getDescription());
         ratesDto.setIsRatesActive(rates.getIsRatesActive());
-        ratesDto.setAccessId(accessLogs.getIdAccessLogsId());
+        ratesDto.setAccessId(accessLogs.getId());
         String reqPayload = convertEntityToJson(ratesDto);
         accessLogs.setReqPayload(reqPayload);
         accessLogsRepository.save(accessLogs);

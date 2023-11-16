@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -42,7 +43,7 @@ public class AucServiceImpl implements AucService {
             aucDb.setStatus(aucDto.getStatus() != null ? aucDto.getStatus() : "");
             aucRepository.save(aucDb);
             saveAucRequestPayload(aucDb, aucDto, accessLogs);
-            AucDto aucDtoNew = new AucDto(aucDb.getAucId(), aucDb.getImsi(), aucDb.getKi(), aucDb.getOpc(), aucDb.getA3a8Version(), aucDb.getStatus(), aucDb.getAccessLogs().getIdAccessLogsId());
+            AucDto aucDtoNew = new AucDto(aucDb.getAucId(), aucDb.getImsi(), aucDb.getKi(), aucDb.getOpc(), aucDb.getA3a8Version(), aucDb.getStatus(), aucDb.getAccessLogs().getId());
             return new ResponseEntity<>(aucDtoNew, HttpStatus.OK);
         }
         return ResponseEntity.status(HttpStatus.CONFLICT).body(new CustomMessage(HttpStatus.CONFLICT.value(), "Imsi id already exist"));
@@ -60,11 +61,17 @@ public class AucServiceImpl implements AucService {
             aucDto.setOpc(aucDb.getOpc());
             aucDto.setA3a8Version(aucDb.getA3a8Version());
             aucDto.setStatus(aucDb.getStatus());
-            aucDto.setAccessId(aucDb.getAccessLogs().getIdAccessLogsId());
+            aucDto.setAccessId(aucDb.getAccessLogs().getId());
             return new ResponseEntity<>(aucDto, HttpStatus.OK);
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new CustomMessage(HttpStatus.NOT_FOUND.value(), "Imsi id does n't exist"));
     }
+
+    @Override
+    public List<AucDto> getAllAucDetails() {
+        return aucRepository.fetchAllAucRecord();
+    }
+
 
     public ResponseEntity updateAucDetails(String imsi, AucDto aucDto) throws JsonProcessingException {
         Optional<Auc> auc = aucRepository.findByImsi(imsi);
@@ -74,16 +81,16 @@ public class AucServiceImpl implements AucService {
             aucDb.setOpc(aucDto.getOpc() != null ? aucDto.getOpc() : "");
             aucDb.setA3a8Version(aucDto.getA3a8Version() != null ? aucDto.getA3a8Version() : Integer.valueOf(""));
             aucDb.setStatus(aucDto.getStatus() != null ? aucDto.getStatus() : "");
-            Optional<AccessLogs> accessLogsDb = accessLogsRepository.findByIdAccessLogsId(aucDb.getAccessLogs().getIdAccessLogsId());
+            Optional<AccessLogs> accessLogsDb = accessLogsRepository.findById(aucDb.getAccessLogs().getId());
             if (accessLogsDb.isPresent()) {
                 AccessLogs accessLogs = accessLogsDb.get();
                 aucDto.setImsi(aucDb.getImsi() != null ? aucDb.getImsi() : "");
-                aucDto.setAccessId(accessLogs.getIdAccessLogsId());
+                aucDto.setAccessId(accessLogs.getId());
                 accessLogs.setReqPayload(convertEntityToJson(aucDto));
                 aucRepository.save(aucDb);
                 accessLogsRepository.save(accessLogs);
             }
-            AucDto aucDtoNew = new AucDto(aucDb.getAucId(), aucDb.getImsi(), aucDb.getKi(), aucDb.getOpc(), aucDb.getA3a8Version(), aucDb.getStatus(), aucDb.getAccessLogs().getIdAccessLogsId());
+            AucDto aucDtoNew = new AucDto(aucDb.getAucId(), aucDb.getImsi(), aucDb.getKi(), aucDb.getOpc(), aucDb.getA3a8Version(), aucDb.getStatus(), aucDb.getAccessLogs().getId());
             return new ResponseEntity<>(aucDtoNew, HttpStatus.OK);
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new CustomMessage(HttpStatus.NOT_FOUND.value(), "Imsi Id does n't exist"));
@@ -96,7 +103,7 @@ public class AucServiceImpl implements AucService {
 
     private void saveAucRequestPayload(Auc auc, AucDto aucDto, AccessLogs accessLogs) throws JsonProcessingException {
         aucDto.setAucId(auc.getAucId());
-        aucDto.setAccessId(auc.getAccessLogs().getIdAccessLogsId() != null ? auc.getAccessLogs().getIdAccessLogsId() : Integer.valueOf(""));
+        aucDto.setAccessId(auc.getAccessLogs().getId() != null ? auc.getAccessLogs().getId() : Integer.valueOf(""));
         String reqPayload = convertEntityToJson(aucDto);
         accessLogs.setReqPayload(reqPayload);
         accessLogsRepository.save(accessLogs);

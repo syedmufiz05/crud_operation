@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/vms/detail")
@@ -24,6 +25,11 @@ public class VmsController {
     @RequestMapping(value = "/get/{msisdn}", method = RequestMethod.GET)
     public ResponseEntity<VmsDto> getVmsDetails(@PathVariable("msisdn") String msisdn) {
         return vmsService.getVmsDetails(msisdn);
+    }
+
+    @RequestMapping(value = "/get/all", method = RequestMethod.GET)
+    public List<VmsDto> getAllVmsDetails() {
+        return vmsService.getAllVmsDetails();
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.PUT)

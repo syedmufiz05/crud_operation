@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -52,7 +53,7 @@ public class VmsServiceImpl implements VmsService {
             vmsDb.setCallbackTimeout(vmsDto.getCallbackTimeout() != null ? vmsDto.getCallbackTimeout() : "");
             vmsRepository.save(vmsDb);
             saveVmsRequestPayload(vmsDb, vmsDto, accessLogs);
-            VmsDto vmsDtoNew = new VmsDto(vmsDb.getVmsId(), vmsDb.getMsisdn(), vmsDb.getSystemId(), vmsDto.getMailboxId(), vmsDb.getRegisterFlag(), vmsDb.getActiveFlag(), vmsDb.getLockedFlag(), vmsDb.getLanguage(), vmsDb.getTemporaryGreeting(), vmsDb.getGreetingTypeSystem(), vmsDb.getPasswordFlag(), vmsDb.getCallbackFlag(), vmsDb.getCliFlag(), vmsDb.getPassword(), vmsDb.getCallbackTimeout(), vmsDb.getAccessLogs().getIdAccessLogsId());
+            VmsDto vmsDtoNew = new VmsDto(vmsDb.getVmsId(), vmsDb.getMsisdn(), vmsDb.getSystemId(), vmsDto.getMailboxId(), vmsDb.getRegisterFlag(), vmsDb.getActiveFlag(), vmsDb.getLockedFlag(), vmsDb.getLanguage(), vmsDb.getTemporaryGreeting(), vmsDb.getGreetingTypeSystem(), vmsDb.getPasswordFlag(), vmsDb.getCallbackFlag(), vmsDb.getCliFlag(), vmsDb.getPassword(), vmsDb.getCallbackTimeout(), vmsDb.getAccessLogs().getId());
             return new ResponseEntity<>(vmsDtoNew, HttpStatus.OK);
         }
         return ResponseEntity.status(HttpStatus.CONFLICT).body(new CustomMessage(HttpStatus.CONFLICT.value(), "Msisdn Id already exist"));
@@ -78,10 +79,15 @@ public class VmsServiceImpl implements VmsService {
             vmsDto.setCliFlag(vmsDb.getCliFlag());
             vmsDto.setPassword(vmsDb.getPassword());
             vmsDto.setCallbackTimeout(vmsDb.getCallbackTimeout());
-            vmsDto.setAccessId(vmsDb.getAccessLogs().getIdAccessLogsId());
+            vmsDto.setAccessId(vmsDb.getAccessLogs().getId());
             return new ResponseEntity<>(vmsDto, HttpStatus.OK);
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new CustomMessage(HttpStatus.NOT_FOUND.value(), "Msisdn Id does n't exist"));
+    }
+
+    @Override
+    public List<VmsDto> getAllVmsDetails() {
+        return vmsRepository.fetchAllVmsRecord();
     }
 
     @Override
@@ -102,17 +108,17 @@ public class VmsServiceImpl implements VmsService {
             vmsDb.setCliFlag(vmsDto.getCliFlag() != null ? vmsDto.getCliFlag() : false);
             vmsDb.setPassword(vmsDto.getPassword() != null ? vmsDto.getPassword() : "");
             vmsDb.setCallbackTimeout(vmsDto.getCallbackTimeout() != null ? vmsDto.getCallbackTimeout() : "");
-            Optional<AccessLogs> accessLogsDb = accessLogsRepository.findByIdAccessLogsId(vmsDb.getAccessLogs().getIdAccessLogsId());
+            Optional<AccessLogs> accessLogsDb = accessLogsRepository.findById(vmsDb.getAccessLogs().getId());
             if (accessLogsDb.isPresent()) {
                 AccessLogs accessLogs = accessLogsDb.get();
                 vmsDto.setVmsId(vmsDb.getVmsId() != null ? vmsDb.getVmsId() : Integer.valueOf(""));
                 vmsDto.setMsisdn(vmsDb.getMsisdn() != null ? vmsDb.getMsisdn() : "");
-                vmsDto.setAccessId(accessLogs.getIdAccessLogsId());
+                vmsDto.setAccessId(accessLogs.getId());
                 accessLogs.setReqPayload(convertEntityToJson(vmsDto));
                 vmsRepository.save(vmsDb);
                 accessLogsRepository.save(accessLogs);
             }
-            VmsDto vmsDtoNew = new VmsDto(vmsDb.getVmsId(), vmsDb.getMsisdn(), vmsDb.getSystemId(), vmsDto.getMailboxId(), vmsDb.getRegisterFlag(), vmsDb.getActiveFlag(), vmsDb.getLockedFlag(), vmsDb.getLanguage(), vmsDb.getTemporaryGreeting(), vmsDb.getGreetingTypeSystem(), vmsDb.getPasswordFlag(), vmsDb.getCallbackFlag(), vmsDb.getCliFlag(), vmsDb.getPassword(), vmsDb.getCallbackTimeout(), vmsDb.getAccessLogs().getIdAccessLogsId());
+            VmsDto vmsDtoNew = new VmsDto(vmsDb.getVmsId(), vmsDb.getMsisdn(), vmsDb.getSystemId(), vmsDto.getMailboxId(), vmsDb.getRegisterFlag(), vmsDb.getActiveFlag(), vmsDb.getLockedFlag(), vmsDb.getLanguage(), vmsDb.getTemporaryGreeting(), vmsDb.getGreetingTypeSystem(), vmsDb.getPasswordFlag(), vmsDb.getCallbackFlag(), vmsDb.getCliFlag(), vmsDb.getPassword(), vmsDb.getCallbackTimeout(), vmsDb.getAccessLogs().getId());
             return new ResponseEntity<>(vmsDtoNew, HttpStatus.OK);
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new CustomMessage(HttpStatus.NOT_FOUND.value(), "Msisdn Id does n't exist"));
@@ -127,7 +133,7 @@ public class VmsServiceImpl implements VmsService {
 
     private void saveVmsRequestPayload(Vms vms, VmsDto vmsDto, AccessLogs accessLogs) throws JsonProcessingException {
         vmsDto.setVmsId(vms.getVmsId());
-        vmsDto.setAccessId(vms.getAccessLogs().getIdAccessLogsId() != null ? vms.getAccessLogs().getIdAccessLogsId() : Integer.valueOf(""));
+        vmsDto.setAccessId(vms.getAccessLogs().getId() != null ? vms.getAccessLogs().getId() : Integer.valueOf(""));
         String reqPayload = convertEntityToJson(vmsDto);
         accessLogs.setReqPayload(reqPayload);
         accessLogsRepository.save(accessLogs);

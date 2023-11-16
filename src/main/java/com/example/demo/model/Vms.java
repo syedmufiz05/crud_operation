@@ -58,7 +58,7 @@ public class Vms {
     private String callbackTimeout;
 
     @OneToOne(cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "access_id", referencedColumnName = "idaccess_logs_id")
+    @JoinColumn(name = "access_id", referencedColumnName = "id")
     @JsonProperty("access_id")
     private AccessLogs accessLogs;
 

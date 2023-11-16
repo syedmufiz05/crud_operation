@@ -34,7 +34,7 @@ public class DestinationServiceImpl implements DestinationService {
             destinationDb.setRemarks(destinationDto.getRemarks() != null ? destinationDto.getRemarks() : "");
             destinationDb.setActive(destinationDto.getActive() != null ? destinationDto.getActive() : false);
 
-            Optional<AccessLogs> accessLogs = accessLogsRepository.findByIdAccessLogsId(destinationDb.getAccessLogs().getIdAccessLogsId());
+            Optional<AccessLogs> accessLogs = accessLogsRepository.findById(destinationDb.getAccessLogs().getId());
             if (accessLogs.isPresent()) {
                 AccessLogs accessLogsDb = accessLogs.get();
                 accessLogsDb.setUserId(1212);
@@ -79,7 +79,7 @@ public class DestinationServiceImpl implements DestinationService {
             destinationDto.setType(destinationDb.getType());
             destinationDto.setRemarks(destinationDb.getRemarks());
             destinationDto.setActive(destinationDb.getActive());
-            destinationDto.setAccessId(destinationDb.getAccessLogs().getIdAccessLogsId());
+            destinationDto.setAccessId(destinationDb.getAccessLogs().getId());
             return new ResponseEntity<>(destinationDto, HttpStatus.OK);
         }
         return ResponseEntity
@@ -97,7 +97,7 @@ public class DestinationServiceImpl implements DestinationService {
             destinationDb.setRemarks(destinationDto.getRemarks() != null ? destinationDto.getRemarks() : destinationDb.getRemarks());
             destinationDb.setActive(destinationDto.getActive() != null ? destinationDto.getActive() : destinationDb.getActive());
             destinationRepository.save(destinationDb);
-            Optional<AccessLogs> accessLogsDb = accessLogsRepository.findByIdAccessLogsId(destinationDb.getAccessLogs().getIdAccessLogsId());
+            Optional<AccessLogs> accessLogsDb = accessLogsRepository.findById(destinationDb.getAccessLogs().getId());
             AccessLogs accessLogs = accessLogsDb.get();
             accessLogs.setAccessDateTime(new Date());
             return editDestinationRequestPayload(destinationDto, destinationDb, accessLogs);
@@ -119,7 +119,7 @@ public class DestinationServiceImpl implements DestinationService {
         destinationDto.setType(destination.getType());
         destinationDto.setRemarks(destination.getRemarks());
         destinationDto.setActive(destination.getActive());
-        destinationDto.setAccessId(destination.getAccessLogs().getIdAccessLogsId() != null ? destination.getAccessLogs().getIdAccessLogsId() : Integer.valueOf(""));
+        destinationDto.setAccessId(destination.getAccessLogs().getId() != null ? destination.getAccessLogs().getId() : Integer.valueOf(""));
         String reqPayload = convertEntityToJson(destinationDto);
         accessLogs.setReqPayload(reqPayload);
         accessLogsRepository.save(accessLogs);
@@ -134,7 +134,7 @@ public class DestinationServiceImpl implements DestinationService {
         destinationDto.setType(destination.getType());
         destinationDto.setRemarks(destination.getRemarks());
         destinationDto.setActive(destination.getActive());
-        destinationDto.setAccessId(destination.getAccessLogs().getIdAccessLogsId() != null ? destination.getAccessLogs().getIdAccessLogsId() : Integer.valueOf(""));
+        destinationDto.setAccessId(destination.getAccessLogs().getId() != null ? destination.getAccessLogs().getId() : Integer.valueOf(""));
         String reqPayload = convertEntityToJson(destinationDto);
         accessLogs.setReqPayload(reqPayload);
         accessLogsRepository.save(accessLogs);

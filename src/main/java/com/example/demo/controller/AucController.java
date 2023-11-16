@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/auc/detail")
@@ -24,6 +25,11 @@ public class AucController {
     @RequestMapping(value = "/get/{imsi}", method = RequestMethod.GET)
     public ResponseEntity<AucDto> getAucDetails(@PathVariable("imsi") String imsi) {
         return aucService.getAucDetails(imsi);
+    }
+
+    @RequestMapping(value = "/get/all", method = RequestMethod.GET)
+    public List<AucDto> getAllAucDetails() {
+        return aucService.getAllAucDetails();
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.PUT)

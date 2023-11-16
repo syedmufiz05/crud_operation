@@ -32,7 +32,7 @@ public class CategoryServiceImpl implements CategoryService {
             Category categoryDb = category.get();
             categoryDto.setCategoryId(categoryDb.getId());
             categoryDto.setName(categoryDb.getName().replaceAll("\\\\", ""));
-            Optional<AccessLogs> accessLogs = accessLogsRepository.findByIdAccessLogsId(categoryDb.getAccessLogs().getIdAccessLogsId());
+            Optional<AccessLogs> accessLogs = accessLogsRepository.findById(categoryDb.getAccessLogs().getId());
             if (accessLogs.isPresent()) {
                 AccessLogs accessLogsDb = accessLogs.get();
                 accessLogsDb.setUserId(1212);
@@ -81,7 +81,7 @@ public class CategoryServiceImpl implements CategoryService {
             categoryDb.setName(categoryName);
             categoryRepository.save(categoryDb);
             CategoryDto categoryDto = new CategoryDto(categoryId, categoryName);
-            Optional<AccessLogs> accessLogs = accessLogsRepository.findByIdAccessLogsId(categoryDb.getAccessLogs().getIdAccessLogsId());
+            Optional<AccessLogs> accessLogs = accessLogsRepository.findById(categoryDb.getAccessLogs().getId());
             if (accessLogs.isPresent()) {
                 AccessLogs accessLogsDb = accessLogs.get();
                 accessLogsDb.setAccessDateTime(new Date());

@@ -8,7 +8,6 @@ import java.util.Optional;
 
 @Repository
 public interface AccessLogsRepository extends JpaRepository<AccessLogs, Integer> {
-    Optional<AccessLogs> findByIdAccessLogsId(Integer idAccessLogsId);
 }
 
 

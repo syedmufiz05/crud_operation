@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -27,6 +28,7 @@ public class HssProvServiceImpl implements HssProvService {
     private AccessLogsRepository accessLogsRepository;
     @Autowired
     private HSSSocketClient hssSocketClient;
+
 
     public ResponseEntity saveHssProv(HssProvDto hssProvDto, String authToken) throws JsonProcessingException {
         String imsi = hssProvDto.getImsi();
@@ -84,10 +86,16 @@ public class HssProvServiceImpl implements HssProvService {
             hssProvDb.setAccessLogs(accessLogs);
             hssProvRepository.save(hssProvDb);
             saveAccessRequestPayload(hssProvDto, hssProvDb, accessLogs);
-            HssProvDto hssProvDtoNew = new HssProvDto(hssProvDb.getHssprovId(), hssProvDb.getImsi(), hssProvDb.getImsiFlag(), hssProvDb.getMsisdn(), hssProvDb.getNam(), hssProvDb.getOdb(), hssProvDb.getBaoc(), hssProvDb.getBoic(), hssProvDb.getOsb1(), hssProvDb.getOsb2(), hssProvDb.getBaic(), hssProvDb.getRoaming(), hssProvDb.getBearerService(), hssProvDb.getTelephone(), hssProvDb.getSms(), hssProvDb.getCfuA(), hssProvDb.getCfuR(), hssProvDb.getCfuP(), hssProvDb.getCfbP(), hssProvDb.getCfnryP(), hssProvDb.getCfnryT(), hssProvDb.getCfnrcP(), hssProvDb.getCwA(), hssProvDb.getCwP(), hssProvDb.getChP(), hssProvDb.getCamel(), hssProvDb.getOCsi(), hssProvDb.getTCsi(), hssProvDb.getSsCsi(), hssProvDb.getSmsCsi(), hssProvDb.getOCsiScfNo(), hssProvDb.getTCsiScfNo(), hssProvDb.getSsCsiScfNo(), hssProvDb.getSmsSciScfNo(), hssProvDb.getGprsFlag(), hssProvDb.getEpsFlag(), hssProvDb.getArd(), hssProvDb.getEpsUserTpl(), hssProvDb.getDefEps(), hssProvDb.getContextD(), hssProvDb.getApnCtxtList(), hssProvDb.getImsFlag(), hssProvDb.getSubscriberProfId(), hssProvDb.getAccessLogs().getIdAccessLogsId());
+            HssProvDto hssProvDtoNew = new HssProvDto(hssProvDb.getHssprovId(), hssProvDb.getImsi(), hssProvDb.getImsiFlag(), hssProvDb.getMsisdn(), hssProvDb.getNam(), hssProvDb.getOdb(), hssProvDb.getBaoc(), hssProvDb.getBoic(), hssProvDb.getOsb1(), hssProvDb.getOsb2(), hssProvDb.getBaic(), hssProvDb.getRoaming(), hssProvDb.getBearerService(), hssProvDb.getTelephone(), hssProvDb.getSms(), hssProvDb.getCfuA(), hssProvDb.getCfuR(), hssProvDb.getCfuP(), hssProvDb.getCfbP(), hssProvDb.getCfnryP(), hssProvDb.getCfnryT(), hssProvDb.getCfnrcP(), hssProvDb.getCwA(), hssProvDb.getCwP(), hssProvDb.getChP(), hssProvDb.getCamel(), hssProvDb.getOCsi(), hssProvDb.getTCsi(), hssProvDb.getSsCsi(), hssProvDb.getSmsCsi(), hssProvDb.getOCsiScfNo(), hssProvDb.getTCsiScfNo(), hssProvDb.getSsCsiScfNo(), hssProvDb.getSmsSciScfNo(), hssProvDb.getGprsFlag(), hssProvDb.getEpsFlag(), hssProvDb.getArd(), hssProvDb.getEpsUserTpl(), hssProvDb.getDefEps(), hssProvDb.getContextD(), hssProvDb.getApnCtxtList(), hssProvDb.getImsFlag(), hssProvDb.getSubscriberProfId(), hssProvDb.getAccessLogs().getId());
             return new ResponseEntity<>(hssProvDtoNew, HttpStatus.OK);
         }
         return ResponseEntity.status(HttpStatus.CONFLICT).body(new CustomMessage(HttpStatus.CONFLICT.value(), "IMSI or MSISDN Id already exist"));
+    }
+
+    @Override
+    public List<HssProvDto> getAllHssProvRecord() {
+        List<HssProvDto> hssProvDtoList = hssProvRepository.fetchAllHssProvRecord();
+        return hssProvDtoList;
     }
 
     @Override
@@ -139,7 +147,7 @@ public class HssProvServiceImpl implements HssProvService {
             hssProvDto.setApnCtxtList(hssProvDb.getApnCtxtList());
             hssProvDto.setImsFlag(hssProvDb.getImsFlag());
             hssProvDto.setSubscriberProfId(hssProvDb.getSubscriberProfId());
-            hssProvDto.setAccessId(hssProvDb.getAccessLogs().getIdAccessLogsId());
+            hssProvDto.setAccessId(hssProvDb.getAccessLogs().getId());
             return new ResponseEntity<>(hssProvDto, HttpStatus.OK);
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new CustomMessage(HttpStatus.NOT_FOUND.value(), "IMSI or MSISDN Id does n't exist"));
@@ -191,13 +199,13 @@ public class HssProvServiceImpl implements HssProvService {
             hssProvDb.setApnCtxtList(hssProvDto.getApnCtxtList() != null ? hssProvDto.getApnCtxtList() : "");
             hssProvDb.setImsFlag(hssProvDto.getImsFlag() != null ? hssProvDto.getImsFlag() : false);
             hssProvDb.setSubscriberProfId(hssProvDto.getSubscriberProfId() != null ? hssProvDto.getSubscriberProfId() : Integer.valueOf(""));
-            Optional<AccessLogs> accessLogsDb = accessLogsRepository.findByIdAccessLogsId(hssProvDb.getAccessLogs().getIdAccessLogsId());
+            Optional<AccessLogs> accessLogsDb = accessLogsRepository.findById(hssProvDb.getAccessLogs().getId());
             AccessLogs accessLogs = accessLogsDb.get();
             accessLogs.setAccessDateTime(new Date());
             accessLogs.setReqPayload(updateAccessRequestPayload(hssProvDto, hssProvDb, accessLogs));
             accessLogsRepository.save(accessLogs);
             hssProvRepository.save(hssProvDb);
-            HssProvDto hssProvDtoNew = new HssProvDto(hssProvDb.getHssprovId(), hssProvDb.getImsi(), hssProvDb.getImsiFlag(), hssProvDb.getMsisdn(), hssProvDb.getNam(), hssProvDb.getOdb(), hssProvDb.getBaoc(), hssProvDb.getBoic(), hssProvDb.getOsb1(), hssProvDb.getOsb2(), hssProvDb.getBaic(), hssProvDb.getRoaming(), hssProvDb.getBearerService(), hssProvDb.getTelephone(), hssProvDb.getSms(), hssProvDb.getCfuA(), hssProvDb.getCfuR(), hssProvDb.getCfuP(), hssProvDb.getCfbP(), hssProvDb.getCfnryP(), hssProvDb.getCfnryT(), hssProvDb.getCfnrcP(), hssProvDb.getCwA(), hssProvDb.getCwP(), hssProvDb.getChP(), hssProvDb.getCamel(), hssProvDb.getOCsi(), hssProvDb.getTCsi(), hssProvDb.getSsCsi(), hssProvDb.getSmsCsi(), hssProvDb.getOCsiScfNo(), hssProvDb.getTCsiScfNo(), hssProvDb.getSsCsiScfNo(), hssProvDb.getSmsSciScfNo(), hssProvDb.getGprsFlag(), hssProvDb.getEpsFlag(), hssProvDb.getArd(), hssProvDb.getEpsUserTpl(), hssProvDb.getDefEps(), hssProvDb.getContextD(), hssProvDb.getApnCtxtList(), hssProvDb.getImsFlag(), hssProvDb.getSubscriberProfId(), hssProvDb.getAccessLogs().getIdAccessLogsId());
+            HssProvDto hssProvDtoNew = new HssProvDto(hssProvDb.getHssprovId(), hssProvDb.getImsi(), hssProvDb.getImsiFlag(), hssProvDb.getMsisdn(), hssProvDb.getNam(), hssProvDb.getOdb(), hssProvDb.getBaoc(), hssProvDb.getBoic(), hssProvDb.getOsb1(), hssProvDb.getOsb2(), hssProvDb.getBaic(), hssProvDb.getRoaming(), hssProvDb.getBearerService(), hssProvDb.getTelephone(), hssProvDb.getSms(), hssProvDb.getCfuA(), hssProvDb.getCfuR(), hssProvDb.getCfuP(), hssProvDb.getCfbP(), hssProvDb.getCfnryP(), hssProvDb.getCfnryT(), hssProvDb.getCfnrcP(), hssProvDb.getCwA(), hssProvDb.getCwP(), hssProvDb.getChP(), hssProvDb.getCamel(), hssProvDb.getOCsi(), hssProvDb.getTCsi(), hssProvDb.getSsCsi(), hssProvDb.getSmsCsi(), hssProvDb.getOCsiScfNo(), hssProvDb.getTCsiScfNo(), hssProvDb.getSsCsiScfNo(), hssProvDb.getSmsSciScfNo(), hssProvDb.getGprsFlag(), hssProvDb.getEpsFlag(), hssProvDb.getArd(), hssProvDb.getEpsUserTpl(), hssProvDb.getDefEps(), hssProvDb.getContextD(), hssProvDb.getApnCtxtList(), hssProvDb.getImsFlag(), hssProvDb.getSubscriberProfId(), hssProvDb.getAccessLogs().getId());
             return new ResponseEntity<>(hssProvDtoNew, HttpStatus.OK);
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new CustomMessage(HttpStatus.NOT_FOUND.value(), "IMSI or MSISDN Id does n't exist"));
@@ -211,7 +219,7 @@ public class HssProvServiceImpl implements HssProvService {
 
     private void saveAccessRequestPayload(HssProvDto hssProvDto, HssProv hssProv, AccessLogs accessLogs) throws JsonProcessingException {
         hssProvDto.setHssProvId(hssProv.getHssprovId());
-        hssProvDto.setAccessId(hssProv.getAccessLogs().getIdAccessLogsId() != null ? hssProv.getAccessLogs().getIdAccessLogsId() : Integer.valueOf(""));
+        hssProvDto.setAccessId(hssProv.getAccessLogs().getId() != null ? hssProv.getAccessLogs().getId() : Integer.valueOf(""));
         String reqPayload = convertEntityToJson(hssProvDto);
         accessLogs.setReqPayload(reqPayload);
         accessLogsRepository.save(accessLogs);
@@ -223,7 +231,7 @@ public class HssProvServiceImpl implements HssProvService {
     private String updateAccessRequestPayload(HssProvDto hssProvDto, HssProv hssProvDb, AccessLogs accessLogs) throws JsonProcessingException {
         hssProvDto.setHssProvId(hssProvDb.getHssprovId());
         hssProvDto.setDefEps(hssProvDb.getDefEps() != null ? hssProvDb.getDefEps() : "");
-        hssProvDto.setAccessId(accessLogs.getIdAccessLogsId() != null ? accessLogs.getIdAccessLogsId() : Integer.valueOf(""));
+        hssProvDto.setAccessId(accessLogs.getId() != null ? accessLogs.getId() : Integer.valueOf(""));
         String reqPayload = convertEntityToJson(hssProvDto);
         accessLogs.setReqPayload(reqPayload);
         accessLogsRepository.save(accessLogs);

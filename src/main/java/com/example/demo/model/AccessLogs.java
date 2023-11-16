@@ -1,5 +1,6 @@
 package com.example.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Data;
@@ -14,8 +15,8 @@ import java.util.Date;
 public class AccessLogs {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "idaccess_logs_id")
-    private Integer idAccessLogsId;
+    @Column(name = "id")
+    private Integer id;
 
     @Column(name = "user_id")
     private Integer userId;
