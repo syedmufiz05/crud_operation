@@ -8,9 +8,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/destination")
+@CrossOrigin("http://localhost:5173/")
 public class DestinationController {
     @Autowired
     private DestinationService destinationService;
@@ -24,6 +26,11 @@ public class DestinationController {
     @RequestMapping(value = "/detail/get/{destination_id}", method = RequestMethod.GET)
     public ResponseEntity<DestinationDto> getDestinationDetails(@PathVariable("destination_id") Integer destinationId) {
         return destinationService.getDestinationDetail(destinationId);
+    }
+
+    @RequestMapping(value = "/detail/get/all", method = RequestMethod.GET)
+    public List<DestinationDto> getDestinationAllDetails() {
+        return destinationService.getAllDestinationDetail();
     }
 
     @RequestMapping(value = "/detail/edit/{destination_id}", method = RequestMethod.PUT)

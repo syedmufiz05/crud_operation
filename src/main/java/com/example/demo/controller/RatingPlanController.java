@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("/api/rating/plan")
+@CrossOrigin("http://localhost:5173/")
 public class RatingPlanController {
     @Autowired
     private RatingPlanService ratingPlanService;

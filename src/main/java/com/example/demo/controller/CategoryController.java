@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("/api/category")
+@CrossOrigin("http://localhost:5173/")
 public class CategoryController {
     @Autowired
     private CategoryService categoryService;

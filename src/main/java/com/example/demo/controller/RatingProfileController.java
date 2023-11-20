@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("/api/rating/profile")
+@CrossOrigin("http://localhost:5173/")
 public class RatingProfileController {
     @Autowired
     private RatingProfileService ratingProfileService;
