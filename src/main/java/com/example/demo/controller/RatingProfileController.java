@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/rating/profile")
@@ -24,6 +25,11 @@ public class RatingProfileController {
     @RequestMapping(value = "/get/{rating_profile_id}", method = RequestMethod.GET)
     public ResponseEntity<RatingProfileDto> getRatingProfile(@PathVariable("rating_profile_id") Integer ratingProfileId) {
         return ratingProfileService.getRatingProfile(ratingProfileId);
+    }
+
+    @RequestMapping(value = "/get/all", method = RequestMethod.GET)
+    public List<RatingProfileDto> getAllRatingProfile() {
+        return ratingProfileService.getAllRatingProfile();
     }
 
     @RequestMapping(value = "/edit/{rating_profile_id}", method = RequestMethod.PUT)

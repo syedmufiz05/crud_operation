@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -87,6 +88,11 @@ public class RatingProfileServiceImpl implements RatingProfileService {
             return new ResponseEntity<>(ratingProfileDto, HttpStatus.OK);
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new CustomMessage(HttpStatus.NOT_FOUND.value(), "Rating Profile Id does n't exist"));
+    }
+
+    @Override
+    public List<RatingProfileDto> getAllRatingProfile() {
+        return ratingProfileRepository.fetchAll();
     }
 
     @Override
