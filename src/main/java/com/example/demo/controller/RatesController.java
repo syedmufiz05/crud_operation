@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/rates/detail")
@@ -26,6 +27,11 @@ public class RatesController {
     @RequestMapping(value = "/get/{rates_id}", method = RequestMethod.GET)
     public ResponseEntity<RatesDto> getRates(@PathVariable("rates_id") Integer ratesId) {
         return ratesService.getRates(ratesId);
+    }
+
+    @RequestMapping(value = "/get/all", method = RequestMethod.GET)
+    public List<RatesDto> getAllRates() {
+        return ratesService.getAllRates();
     }
 
     @RequestMapping(value = "/edit/{rates_id}", method = RequestMethod.PUT)

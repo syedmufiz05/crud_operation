@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -85,6 +86,11 @@ public class RatesServiceImpl implements RatesService {
             return new ResponseEntity<>(ratesDto, HttpStatus.OK);
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new CustomMessage(HttpStatus.NOT_FOUND.value(), "Rates Id does n't exist"));
+    }
+
+    @Override
+    public List<RatesDto> getAllRates() {
+        return ratesRepository.fetchAllRates();
     }
 
     @Override
