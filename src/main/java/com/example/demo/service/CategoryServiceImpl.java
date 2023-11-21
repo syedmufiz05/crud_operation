@@ -79,15 +79,20 @@ public class CategoryServiceImpl implements CategoryService {
         if (category.isPresent()) {
             Category categoryDb = category.get();
             categoryDb.setName(categoryName);
-            categoryRepository.save(categoryDb);
             CategoryDto categoryDto = new CategoryDto(categoryId, categoryName);
-            Optional<AccessLogs> accessLogs = accessLogsRepository.findById(categoryDb.getAccessLogs().getId());
+            Optional<AccessLogs> accessLogs = accessLogsRepository.findById(categoryDb.getAccessLogs() != null ? categoryDb.getAccessLogs().getId() : 0);
             if (accessLogs.isPresent()) {
                 AccessLogs accessLogsDb = accessLogs.get();
                 accessLogsDb.setAccessDateTime(new Date());
                 accessLogsDb.setReqPayload(convertEntityToJson(categoryDto));
                 accessLogsRepository.save(accessLogsDb);
             }
+            AccessLogs accessLogsNew = new AccessLogs();
+            accessLogsNew.setAccessDateTime(new Date());
+            accessLogsNew.setReqPayload(convertEntityToJson(categoryDto));
+            accessLogsRepository.save(accessLogsNew);
+            categoryDb.setAccessLogs(accessLogsNew);
+            categoryRepository.save(categoryDb);
             return new ResponseEntity<>(categoryDto, HttpStatus.OK);
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new CustomMessage(HttpStatus.NOT_FOUND.value(), "Category Id does n't exist"));
