@@ -10,6 +10,7 @@ import com.example.demo.repository.RatesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -60,6 +61,11 @@ public class DestinationRatesServiceImpl implements DestinationRatesService {
         destinationRatesNew.setRates(rates);
         destinationRatesRepository.save(destinationRatesNew);
         return new DestinationRatesDto(destinationRatesNew.getId(), destination.getId(), rates.getId());
+    }
+
+    @Override
+    public List<DestinationRatesDto> getAllDestinationRates() {
+        return destinationRatesRepository.fetchAllDestination();
     }
 
     @Override
