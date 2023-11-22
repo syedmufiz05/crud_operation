@@ -106,7 +106,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public String deleteCategory(Integer categoryId) {
-        categoryRepository.findById(categoryId);
+        categoryRepository.deleteById(categoryId);
         return "Deleted successfully...";
     }
 
