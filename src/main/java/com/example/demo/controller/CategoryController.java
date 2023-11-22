@@ -18,9 +18,9 @@ public class CategoryController {
     private CategoryService categoryService;
 
     @RequestMapping(value = "/detail/add", method = RequestMethod.POST)
-    public CategoryDto addCategory(@RequestBody CategoryDto categoryDto, HttpServletRequest httpServletRequest) throws JsonProcessingException {
+    public CategoryDto addCategory(@RequestParam("ctg_name") String ctgName, HttpServletRequest httpServletRequest) throws JsonProcessingException {
         String authToken = httpServletRequest.getHeader("Authorization").replace("Bearer", "");
-        return categoryService.addCategory(categoryDto, authToken);
+        return categoryService.addCategory(ctgName, authToken);
     }
 
     @RequestMapping(value = "/detail/get/{category_id}", method = RequestMethod.GET)
