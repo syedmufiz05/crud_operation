@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/category")
@@ -25,6 +26,11 @@ public class CategoryController {
     @RequestMapping(value = "/detail/get/{category_id}", method = RequestMethod.GET)
     public ResponseEntity<CategoryDto> getCategory(@PathVariable("category_id") Integer categoryId) {
         return categoryService.getCategory(categoryId);
+    }
+
+    @RequestMapping(value = "/detail/get/all", method = RequestMethod.GET)
+    public List<CategoryDto> getAllCategory() {
+        return categoryService.getAllCategory();
     }
 
     @RequestMapping(value = "/detail/edit/{category_id}", method = RequestMethod.PUT)
