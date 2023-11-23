@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class ViewController {
     @RequestMapping(value = "/show", method = RequestMethod.GET)
     public String showMsg() {
-        System.out.println("Hello updated server");
-        return "Hello updated server";
+        System.out.println("Hello updated server on 23/11/2023");
+        return "Hello updated server on 23/11/2023";
     }
 }

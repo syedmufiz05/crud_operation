@@ -15,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -61,7 +62,16 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public List<CategoryDto> getAllCategory() {
-        return categoryRepository.fetchAllCategory();
+        List<CategoryDto> categoryDb = categoryRepository.fetchAllCategory();
+        List<CategoryDto> categoryDtoList = new ArrayList<>();
+        for (CategoryDto categoryDto : categoryDb) {
+            CategoryDto categoryDtoNew = new CategoryDto();
+            categoryDtoNew.setCategoryId(categoryDto.getCategoryId());
+            categoryDtoNew.setName(categoryDto.getName().replace("\"", ""));
+            categoryDtoList.add(categoryDtoNew);
+        }
+        System.out.println(categoryDtoList);
+        return categoryDtoList;
     }
 
     @Override
