@@ -1,6 +1,7 @@
 package com.example.demo.service;
 
 import com.example.demo.dto.CategoryDto;
+import com.example.demo.dto.CtgNameDto;
 import com.example.demo.exception.CustomMessage;
 import com.example.demo.model.AccessLogs;
 import com.example.demo.model.Category;
@@ -19,7 +20,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class CategoryServiceImpl implements CategoryService {
@@ -31,7 +31,9 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public CategoryDto addCategory(String ctgName, String authToken) throws JsonProcessingException {
         Category categoryDb = new Category();
-        categoryDb.setName(ctgName);
+        CtgNameDto ctgNameDto = new CtgNameDto();
+        ctgNameDto.setCategoryName(ctgName);
+        categoryDb.setName(convertStringToJson(ctgNameDto));
         categoryRepository.save(categoryDb);
         CategoryDto categoryDto = new CategoryDto();
         categoryDto.setCategoryId(categoryDb.getId());
@@ -67,10 +69,9 @@ public class CategoryServiceImpl implements CategoryService {
         for (CategoryDto categoryDto : categoryDb) {
             CategoryDto categoryDtoNew = new CategoryDto();
             categoryDtoNew.setCategoryId(categoryDto.getCategoryId());
-            categoryDtoNew.setName(categoryDto.getName().replace("\"", ""));
+            categoryDtoNew.setName(fetchValueFromJsonData(categoryDto.getName()));
             categoryDtoList.add(categoryDtoNew);
         }
-        System.out.println(categoryDtoList);
         return categoryDtoList;
     }
 
@@ -79,7 +80,9 @@ public class CategoryServiceImpl implements CategoryService {
         Optional<Category> category = categoryRepository.findById(categoryId);
         if (category.isPresent()) {
             Category categoryDb = category.get();
-            categoryDb.setName(categoryName);
+            CtgNameDto ctgNameDto = new CtgNameDto();
+            ctgNameDto.setCategoryName(categoryName);
+            categoryDb.setName(convertStringToJson(ctgNameDto));
             CategoryDto categoryDto = new CategoryDto(categoryId, categoryName);
             Optional<AccessLogs> accessLogs = accessLogsRepository.findById(categoryDb.getAccessLogs() != null ? categoryDb.getAccessLogs().getId() : 0);
             if (accessLogs.isPresent()) {
@@ -113,10 +116,17 @@ public class CategoryServiceImpl implements CategoryService {
         return body;
     }
 
+    private String convertStringToJson(CtgNameDto ctgNameDto) throws JsonProcessingException {
+        ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+        String body = ow.writeValueAsString(ctgNameDto);
+        body = body.replaceAll("(\\r|\\n)", "");
+        return body;
+    }
+
     private String fetchValueFromJsonData(String name) {
         String value = name.replaceAll("\\\\", "");
         String catName = value.substring(1, value.length() - 1).replaceAll("\\s", "");
         JSONObject jsonObject = new JSONObject(catName);
-        return jsonObject.get("name").toString();
+        return jsonObject.get("category_name").toString();
     }
 }

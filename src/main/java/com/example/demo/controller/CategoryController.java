@@ -30,7 +30,6 @@ public class CategoryController {
 
     @RequestMapping(value = "/detail/get/all", method = RequestMethod.GET)
     public List<CategoryDto> getAllCategory() {
-        System.out.println(categoryService.getAllCategory());
         return categoryService.getAllCategory();
     }
 
