@@ -74,6 +74,7 @@ public class VmsServiceImpl implements VmsService {
             vmsDto.setLockedFlag(vmsDb.getLockedFlag());
             vmsDto.setTemporaryGreeting(vmsDb.getTemporaryGreeting());
             vmsDto.setGreetingTypeSystem(vmsDb.getGreetingTypeSystem());
+            vmsDto.setLanguage(vmsDb.getLanguage());
             vmsDto.setPasswordFlag(vmsDb.getPasswordFlag());
             vmsDto.setCallbackFlag(vmsDb.getCallbackFlag());
             vmsDto.setCliFlag(vmsDb.getCliFlag());
