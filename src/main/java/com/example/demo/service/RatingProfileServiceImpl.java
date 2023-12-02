@@ -27,7 +27,7 @@ public class RatingProfileServiceImpl implements RatingProfileService {
 
     @Override
     public RatingProfileDto createRatingProfile(RatingProfileDto ratingProfileDto, String authToken) {
-        Optional<Category> category = categoryRepository.findById(ratingProfileDto.getCategoryId());
+        Optional<Category> category = categoryRepository.findByName(ratingProfileDto.getCategoryName());
         Optional<RatingPlan> ratingPlan = ratingPlanRepository.findById(ratingProfileDto.getRatingPlanId());
         if (category.isPresent() && ratingPlan.isPresent()) {
             Category categoryDb = category.get();
@@ -38,7 +38,7 @@ public class RatingProfileServiceImpl implements RatingProfileService {
             ratingProfile.setRatingPlan(ratingPlanDb);
             ratingProfile.setCallingParty(ratingProfileDto.getCallingParty() != null ? ratingProfileDto.getCallingParty() : "");
             ratingProfileRepository.save(ratingProfile);
-            return new RatingProfileDto(ratingProfile.getId(), categoryDb.getId(), ratingProfile.getCallingParty(), ratingPlanDb.getRatingPlanId());
+            return new RatingProfileDto(ratingProfile.getId(), categoryDb.getName(), ratingProfile.getCallingParty(), ratingPlanDb.getRatingPlanId());
         } else if (category.isPresent()) {
             Category categoryDb = category.get();
             RatingPlan ratingPlanDb = new RatingPlan();
@@ -49,7 +49,7 @@ public class RatingProfileServiceImpl implements RatingProfileService {
             ratingProfile.setRatingPlan(ratingPlanDb);
             ratingProfile.setCallingParty(ratingProfileDto.getCallingParty() != null ? ratingProfileDto.getCallingParty() : "");
             ratingProfileRepository.save(ratingProfile);
-            return new RatingProfileDto(ratingProfile.getId(), categoryDb.getId(), ratingProfile.getCallingParty(), ratingPlanDb.getRatingPlanId());
+            return new RatingProfileDto(ratingProfile.getId(), categoryDb.getName(), ratingProfile.getCallingParty(), ratingPlanDb.getRatingPlanId());
         } else if (ratingPlan.isPresent()) {
             Category categoryDb = new Category();
             categoryRepository.save(categoryDb);
@@ -60,9 +60,10 @@ public class RatingProfileServiceImpl implements RatingProfileService {
             ratingProfile.setRatingPlan(ratingPlanDb);
             ratingProfile.setCallingParty(ratingProfileDto.getCallingParty() != null ? ratingProfileDto.getCallingParty() : "");
             ratingProfileRepository.save(ratingProfile);
-            return new RatingProfileDto(ratingProfile.getId(), categoryDb.getId(), ratingProfile.getCallingParty(), ratingPlanDb.getRatingPlanId());
+            return new RatingProfileDto(ratingProfile.getId(), categoryDb.getName(), ratingProfile.getCallingParty(), ratingPlanDb.getRatingPlanId());
         }
         Category categoryNew = new Category();
+        categoryNew.setName(ratingProfileDto.getCategoryName());
         categoryRepository.save(categoryNew);
         RatingPlan ratingPlanNew = new RatingPlan();
         ratingPlanRepository.save(ratingPlanNew);
@@ -72,7 +73,7 @@ public class RatingProfileServiceImpl implements RatingProfileService {
         ratingProfile.setCategory(categoryNew);
         ratingProfile.setRatingPlan(ratingPlanNew);
         ratingProfileRepository.save(ratingProfile);
-        return new RatingProfileDto(ratingProfile.getId(), categoryNew.getId(), ratingProfile.getCallingParty(), ratingPlanNew.getRatingPlanId());
+        return new RatingProfileDto(ratingProfile.getId(), categoryNew.getName(), ratingProfile.getCallingParty(), ratingPlanNew.getRatingPlanId());
     }
 
     @Override
@@ -82,7 +83,7 @@ public class RatingProfileServiceImpl implements RatingProfileService {
             RatingProfile ratingProfileDb = ratingProfile.get();
             RatingProfileDto ratingProfileDto = new RatingProfileDto();
             ratingProfileDto.setRatingProfileId(ratingProfileDb.getId());
-            ratingProfileDto.setCategoryId(ratingProfileDb.getCategory().getId());
+            ratingProfileDto.setCategoryName(ratingProfileDb.getCategory().getName());
             ratingProfileDto.setCallingParty(ratingProfileDb.getCallingParty());
             ratingProfileDto.setRatingPlanId(ratingProfileDb.getRatingPlan().getRatingPlanId());
             return new ResponseEntity<>(ratingProfileDto, HttpStatus.OK);
@@ -102,7 +103,7 @@ public class RatingProfileServiceImpl implements RatingProfileService {
             RatingProfile ratingProfileDb = ratingProfile.get();
             ratingProfileDb.setCallingParty(!callingParty.isEmpty() ? callingParty : ratingProfileDb.getCallingParty());
             ratingProfileRepository.save(ratingProfileDb);
-            RatingProfileDto ratingProfileDto = new RatingProfileDto(ratingProfileDb.getId(), ratingProfileDb.getCategory().getId(), ratingProfileDb.getCallingParty(), ratingProfileDb.getRatingPlan().getRatingPlanId());
+            RatingProfileDto ratingProfileDto = new RatingProfileDto(ratingProfileDb.getId(), ratingProfileDb.getCategory().getName(), ratingProfileDb.getCallingParty(), ratingProfileDb.getRatingPlan().getRatingPlanId());
             return new ResponseEntity<>(ratingProfileDto, HttpStatus.OK);
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new CustomMessage(HttpStatus.NOT_FOUND.value(), "Rating Profile Id does n't exist"));

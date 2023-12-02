@@ -33,7 +33,7 @@ public class CategoryServiceImpl implements CategoryService {
         Category categoryDb = new Category();
         CtgNameDto ctgNameDto = new CtgNameDto();
         ctgNameDto.setCategoryName(ctgName);
-        categoryDb.setName(convertStringToJson(ctgNameDto));
+        categoryDb.setName(ctgNameDto.getCategoryName());
         categoryRepository.save(categoryDb);
         CategoryDto categoryDto = new CategoryDto();
         categoryDto.setCategoryId(categoryDb.getId());
@@ -82,19 +82,25 @@ public class CategoryServiceImpl implements CategoryService {
             Category categoryDb = category.get();
             CtgNameDto ctgNameDto = new CtgNameDto();
             ctgNameDto.setCategoryName(categoryName);
-            categoryDb.setName(convertStringToJson(ctgNameDto));
+            categoryDb.setName(categoryName);
             CategoryDto categoryDto = new CategoryDto(categoryId, categoryName);
             Optional<AccessLogs> accessLogs = accessLogsRepository.findById(categoryDb.getAccessLogs() != null ? categoryDb.getAccessLogs().getId() : 0);
             if (accessLogs.isPresent()) {
                 AccessLogs accessLogsDb = accessLogs.get();
+                accessLogsDb.setAuthToken("");
                 accessLogsDb.setAccessDateTime(new Date());
                 accessLogsDb.setReqPayload(convertEntityToJson(categoryDto));
+                accessLogsDb.setResponsePayload("");
+                accessLogsDb.setUserId(1212);
                 accessLogsRepository.save(accessLogsDb);
                 return new ResponseEntity<>(categoryDto, HttpStatus.OK);
             }
             AccessLogs accessLogsNew = new AccessLogs();
+            accessLogsNew.setAuthToken("");
             accessLogsNew.setAccessDateTime(new Date());
             accessLogsNew.setReqPayload(convertEntityToJson(categoryDto));
+            accessLogsNew.setResponsePayload("");
+            accessLogsNew.setUserId(1212);
             accessLogsRepository.save(accessLogsNew);
             categoryDb.setAccessLogs(accessLogsNew);
             categoryRepository.save(categoryDb);

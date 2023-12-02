@@ -10,6 +10,6 @@ import java.util.List;
 
 @Repository
 public interface RatingProfileRepository extends JpaRepository<RatingProfile, Integer> {
-    @Query("select new com.example.demo.dto.RatingProfileDto(ratingProfile.id,ratingProfile.category.id,ratingProfile.callingParty,ratingProfile.ratingPlan.ratingPlanId) from RatingProfile ratingProfile")
+    @Query("select new com.example.demo.dto.RatingProfileDto(ratingProfile.id,ratingProfile.category.name,ratingProfile.callingParty,ratingProfile.ratingPlan.ratingPlanId) from RatingProfile ratingProfile")
     List<RatingProfileDto> fetchAll();
 }

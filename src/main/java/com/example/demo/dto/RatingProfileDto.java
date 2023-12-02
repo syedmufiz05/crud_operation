@@ -12,8 +12,8 @@ public class RatingProfileDto {
     @JsonProperty("rating_profile_id")
     private Integer ratingProfileId;
 
-    @JsonProperty("category_id")
-    private Integer categoryId;
+    @JsonProperty("category_name")
+    private String categoryName;
 
     @JsonProperty("calling_party")
     private String callingParty;
