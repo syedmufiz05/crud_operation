@@ -12,6 +12,6 @@ import java.util.Optional;
 @Repository
 public interface InventoryMgmtRepository extends JpaRepository<InventoryMgmt, Integer> {
     @Query("select new com.example.demo.dto.InventoryMgmtDto(invMgmt.id,invMgmt.imsi,invMgmt.pImsi,invMgmt.batchId,invMgmt.vendorId,invMgmt.msisdn,invMgmt.status,invMgmt.provStatus,invMgmt.allocationDate,invMgmt.activationDate)from InventoryMgmt invMgmt")
-    List<InventoryMgmtDto> fetchAllInventories();
+    List<InventoryMgmtDto> fetchAllInventoriesMgmt();
     Optional<InventoryMgmt> findByImsi(String imsi);
 }

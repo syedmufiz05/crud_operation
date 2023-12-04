@@ -42,7 +42,7 @@ public class InventoryMgmtServiceImpl implements InventoryMgmtService {
 
     @Override
     public List<InventoryMgmtDto> getAllInventory() {
-        return inventoryMgmtRepository.fetchAllInventories();
+        return inventoryMgmtRepository.fetchAllInventoriesMgmt();
     }
 
     private Date fetchReadableDateTime(String value) throws ParseException {
