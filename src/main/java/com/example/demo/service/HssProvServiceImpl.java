@@ -103,6 +103,10 @@ public class HssProvServiceImpl implements HssProvService {
         Optional<HssProv> hssProv = hssProvRepository.findByImsiOrMsisdn(imsi, msisdn);
         if (hssProv.isPresent()) {
             HssProv hssProvDb = hssProv.get();
+            // Sending data to the socket....
+            String msg = setSocketMsgBody(hssProvDb);
+            hssSocketClient.sendMessage(msg);
+
             HssProvDto hssProvDto = new HssProvDto();
             hssProvDto.setHssProvId(hssProvDb.getHssprovId());
             hssProvDto.setImsi(hssProvDb.getImsi());
@@ -249,6 +253,12 @@ public class HssProvServiceImpl implements HssProvService {
         ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
         String body = ow.writeValueAsString(socketMsgDto);
         body = body.replaceAll("(\\r|\\n)", "");
+        return body;
+    }
+
+    private static String setSocketMsgBody(HssProv hssProv) {
+        String body = "create subscriber -imsi\t" + hssProv.getImsi() + "-imsi_flag\t" + hssProv.getImsiFlag() + "- nam\t" + hssProv.getNam() + "- msisdn\t" + hssProv.getMsisdn() + "-odb\t" + hssProv.getOdb() + "-baoc\t" + hssProv.getBaoc() + "- boic\t" + hssProv.getBoic() + "- osb1\t" + hssProv.getOsb1() + "- osb2\t" + hssProv.getOsb2() + " - baic\t" + hssProv.getBaic() + "- roaming\t" + hssProv.getRoaming() + "- bearer_service\t" + hssProv.getBearerService() + "- telephony\t" + hssProv.getTelephone() + "- sms\t" + hssProv.getSms() + "- cfu_a\t" + hssProv.getCfuA() + "- cfu_r\t" + hssProv.getCfuR() + "- cfu_p\t" + hssProv.getCfuP() + "- cfb_p\t" + hssProv.getCfbP() + "- cfnry_p\t" + hssProv.getCfnryP() + "- cfnry_t\t" + hssProv.getCfnryT() + "- cfnrc_p\t" + hssProv.getCfnrcP() + "-cw_a\t" + hssProv.getCwA() + "-cw_p\t" + hssProv.getCwP() + "-ch_p\t" + hssProv.getChP() + "-camel\t" + hssProv.getCamel() + "- o_csi\t" +hssProv.getOCsi() + "- t_csi\t" + hssProv.getTCsi() + "-ss_csi\t" + hssProv.getSsCsi() + "- sms_csi\t" + hssProv.getSmsCsi() + "-o_csi_scf_no\t" + hssProv.getOCsiScfNo() + "-t_csi_scf_no\t" + hssProv.getTCsiScfNo() + "-ss_csi_scf_no\t" + hssProv.getSsCsiScfNo() + "- sms_sci_scf_no\t" + hssProv.getSmsSciScfNo() + "-gprs_flag\t" + hssProv.getGprsFlag() + "-eps_flag\t" + hssProv.getEpsFlag() + "-ard\t" + hssProv.getArd() + "-eps_user_tpl\t" + hssProv.getEpsUserTpl() + "def_eps\t" + hssProv.getDefEps() + "-context_id\t" + hssProv.getContextD() + "-apn_ctxt_list\t" + hssProv.getApnCtxtList() + "-ims_flag\t" + hssProv.getImsFlag();
+        System.out.println(body);
         return body;
     }
 
