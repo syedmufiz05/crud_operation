@@ -56,7 +56,7 @@ public class CategoryServiceImpl implements CategoryService {
             Category categoryDb = category.get();
             CategoryDto categoryDto = new CategoryDto();
             categoryDto.setCategoryId(categoryDb.getId());
-            categoryDto.setName(fetchValueFromJsonData(categoryDb.getName()));
+            categoryDto.setName(categoryDb.getName());
             return new ResponseEntity<>(categoryDto, HttpStatus.OK);
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new CustomMessage(HttpStatus.NOT_FOUND.value(), "Category Id does n't exist"));
@@ -69,7 +69,7 @@ public class CategoryServiceImpl implements CategoryService {
         for (CategoryDto categoryDto : categoryDb) {
             CategoryDto categoryDtoNew = new CategoryDto();
             categoryDtoNew.setCategoryId(categoryDto.getCategoryId());
-            categoryDtoNew.setName(fetchValueFromJsonData(categoryDto.getName()));
+            categoryDtoNew.setName(categoryDto.getName());
             categoryDtoList.add(categoryDtoNew);
         }
         return categoryDtoList;
