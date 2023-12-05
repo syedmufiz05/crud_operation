@@ -20,7 +20,7 @@ public class InventoryMgmtController {
         return inventoryMgmtService.saveInventory(inventoryMgmtDto);
     }
 
-    @RequestMapping(value = "/save/all", method = RequestMethod.GET)
+    @RequestMapping(value = "/get/all", method = RequestMethod.GET)
     public List<InventoryMgmtDto> getAllInventoryDetails() {
         return inventoryMgmtService.getAllInventory();
     }

@@ -22,7 +22,7 @@ public class SimMgmtController {
         return simMgmtService.saveSimMgmt(simMgmtDto);
     }
 
-    @RequestMapping(value = "/save/all", method = RequestMethod.GET)
+    @RequestMapping(value = "/get/all", method = RequestMethod.GET)
     public List<SimMgmtDto> getAllSimMgmtDetails() {
         return simMgmtService.getAllSimMgmt();
     }

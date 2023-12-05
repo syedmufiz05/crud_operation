@@ -23,7 +23,7 @@ public class MsisdnMgmtController {
         return msisdnMgmtService.saveMsisdnMgmt(msisdnMgmtDto);
     }
 
-    @RequestMapping(value = "/save/all", method = RequestMethod.GET)
+    @RequestMapping(value = "/get/all", method = RequestMethod.GET)
     public List<MsisdnMgmtDto> getAllMsisdnDetails() {
         return msisdnMgmtService.getAllMsisdnDetail();
     }
