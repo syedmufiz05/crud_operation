@@ -31,7 +31,7 @@ public class RatesServiceImpl implements RatesService {
 
     @Override
     public RatesDto addRates(RatesDto ratesDto, String authToken) throws JsonProcessingException {
-        Optional<Rates> rates = ratesRepository.findById(ratesDto.getRatesId());
+        Optional<Rates> rates = ratesRepository.findById(ratesDto.getRatesId() != null ? ratesDto.getRatesId() : 0);
         if (rates.isPresent()) {
             Rates ratesDb = rates.get();
             ratesDb.setDestName(ratesDto.getDestName() != null ? ratesDto.getDestName() : "");
