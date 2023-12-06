@@ -11,6 +11,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/inventory/detail")
+@CrossOrigin("http://localhost:5173/")
 public class InventoryMgmtController {
     @Autowired
     private InventoryMgmtService inventoryMgmtService;
