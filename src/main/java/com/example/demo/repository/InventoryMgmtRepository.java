@@ -5,6 +5,7 @@ import com.example.demo.model.DeviceMgmt;
 import com.example.demo.model.InventoryMgmt;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -17,5 +18,6 @@ public interface InventoryMgmtRepository extends JpaRepository<InventoryMgmt, In
 
     Optional<InventoryMgmt> findByImsi(String imsi);
 
-    List<InventoryMgmt> findByImsiContaining(String imei);
+    @Query("select invMgmt from InventoryMgmt invMgmt where (invMgmt.imsi) like LOWER(CONCAT('%', :keyword, '%')) or (invMgmt.pImsi) like LOWER(CONCAT('%', :keyword, '%')) or (invMgmt.msisdn) like LOWER(CONCAT('%', :keyword, '%'))")
+    List<InventoryMgmt> searchItemsByName(@Param("keyword") String keyword);
 }

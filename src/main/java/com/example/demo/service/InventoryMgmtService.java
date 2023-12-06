@@ -11,6 +11,6 @@ public interface InventoryMgmtService {
 
     List<InventoryMgmtDto> getAllInventory();
 
-    List<InventoryMgmtDto> searchRecord(String imsi);
+    List<InventoryMgmtDto> searchRecord(String keyword);
 
 }

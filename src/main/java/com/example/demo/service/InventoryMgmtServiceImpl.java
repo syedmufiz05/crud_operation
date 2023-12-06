@@ -47,8 +47,8 @@ public class InventoryMgmtServiceImpl implements InventoryMgmtService {
     }
 
     @Override
-    public List<InventoryMgmtDto> searchRecord(String imsi) {
-        List<InventoryMgmt> inventoryMgmtDbList = inventoryMgmtRepository.findByImsiContaining(imsi);
+    public List<InventoryMgmtDto> searchRecord(String keyword) {
+        List<InventoryMgmt> inventoryMgmtDbList = inventoryMgmtRepository.searchItemsByName(keyword);
         List<InventoryMgmtDto> inventoryMgmtDtoList = new ArrayList<>();
         for (InventoryMgmt inventoryMgmt : inventoryMgmtDbList) {
             InventoryMgmtDto inventoryMgmtDto = new InventoryMgmtDto();
