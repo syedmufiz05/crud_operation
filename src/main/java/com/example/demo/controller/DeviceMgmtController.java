@@ -26,8 +26,8 @@ public class DeviceMgmtController {
     }
 
     @RequestMapping(value = "/search", method = RequestMethod.GET)
-    public ResponseEntity<List<DeviceMgmtDto>> searchInventoryDetails(@RequestParam("imei_list") String imeiList) {
-        List<DeviceMgmtDto> deviceMgmtList = deviceMgmtService.searchItems(imeiList);
+    public ResponseEntity<List<DeviceMgmtDto>> searchInventoryDetails(@RequestParam("keyword") String keyword) {
+        List<DeviceMgmtDto> deviceMgmtList = deviceMgmtService.searchItems(keyword);
         return ResponseEntity.ok(deviceMgmtList);
     }
 }

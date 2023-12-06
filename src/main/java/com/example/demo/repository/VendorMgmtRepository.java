@@ -12,4 +12,6 @@ import java.util.List;
 public interface VendorMgmtRepository extends JpaRepository<VendorMgmt, Integer> {
     @Query("select new com.example.demo.dto.VendorMgmtDto(vm.id,vm.vendorName,vm.email,vm.contact,vm.address,vm.type,vm.identification,vm.batchPrefix,vm.registrationDate,vm.status) from VendorMgmt vm")
     List<VendorMgmtDto> fetchAllVendors();
+
+    List<VendorMgmt> findByEmailContaining(String email);
 }

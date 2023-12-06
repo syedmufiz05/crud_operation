@@ -11,5 +11,5 @@ public interface DeviceMgmtService {
 
     List<DeviceMgmtDto> fetchAllDeviceMgmtDetail();
 
-    List<DeviceMgmtDto> searchItems(String imeiList);
+    List<DeviceMgmtDto> searchItems(String keyword);
 }

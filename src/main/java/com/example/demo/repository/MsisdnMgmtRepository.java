@@ -1,6 +1,7 @@
 package com.example.demo.repository;
 
 import com.example.demo.dto.MsisdnMgmtDto;
+import com.example.demo.model.InventoryMgmt;
 import com.example.demo.model.MsisdnMgmt;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -15,4 +16,6 @@ public interface MsisdnMgmtRepository extends JpaRepository<MsisdnMgmt, Integer>
 
     @Query("select new com.example.demo.dto.MsisdnMgmtDto(msisdnMgmt.id,msisdnMgmt.msisdn,msisdnMgmt.category,msisdnMgmt.seriesId,msisdnMgmt.isPrepaid,msisdnMgmt.isPostpaid,msisdnMgmt.isM2M,msisdnMgmt.isSpecialNo,msisdnMgmt.allocationDate,msisdnMgmt.status)from MsisdnMgmt msisdnMgmt")
     List<MsisdnMgmtDto> fetchAllMsisdnMgmtRecord();
+
+    List<MsisdnMgmt> findByMsisdnContaining(String msisdn);
 }

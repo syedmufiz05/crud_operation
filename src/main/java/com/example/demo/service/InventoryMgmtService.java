@@ -10,4 +10,7 @@ public interface InventoryMgmtService {
     ResponseEntity saveInventory(InventoryMgmtDto inventoryMgmtDto) throws ParseException;
 
     List<InventoryMgmtDto> getAllInventory();
+
+    List<InventoryMgmtDto> searchRecord(String imsi);
+
 }

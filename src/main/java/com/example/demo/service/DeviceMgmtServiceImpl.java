@@ -44,8 +44,8 @@ public class DeviceMgmtServiceImpl implements DeviceMgmtService {
     }
 
     @Override
-    public List<DeviceMgmtDto> searchItems(String imeiList) {
-        List<DeviceMgmt> deviceMgmtDbList = deviceMgmtRepository.findByImeiListContaining(imeiList);
+    public List<DeviceMgmtDto> searchItems(String keyword) {
+        List<DeviceMgmt> deviceMgmtDbList = deviceMgmtRepository.searchItemsByName(keyword);
         List<DeviceMgmtDto> deviceMgmtList = new ArrayList<>();
         for (DeviceMgmt deviceMgmtDb : deviceMgmtDbList) {
             DeviceMgmtDto deviceMgmtDto = new DeviceMgmtDto();

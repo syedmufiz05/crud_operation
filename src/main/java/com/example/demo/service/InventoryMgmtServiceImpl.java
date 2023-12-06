@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -43,6 +44,27 @@ public class InventoryMgmtServiceImpl implements InventoryMgmtService {
     @Override
     public List<InventoryMgmtDto> getAllInventory() {
         return inventoryMgmtRepository.fetchAllInventoriesMgmt();
+    }
+
+    @Override
+    public List<InventoryMgmtDto> searchRecord(String imsi) {
+        List<InventoryMgmt> inventoryMgmtDbList = inventoryMgmtRepository.findByImsiContaining(imsi);
+        List<InventoryMgmtDto> inventoryMgmtDtoList = new ArrayList<>();
+        for (InventoryMgmt inventoryMgmt : inventoryMgmtDbList) {
+            InventoryMgmtDto inventoryMgmtDto = new InventoryMgmtDto();
+            inventoryMgmtDto.setInventoryId(inventoryMgmt.getId());
+            inventoryMgmtDto.setImsi(inventoryMgmt.getImsi());
+            inventoryMgmtDto.setPImsi(inventoryMgmt.getPImsi());
+            inventoryMgmtDto.setBatchId(inventoryMgmt.getBatchId());
+            inventoryMgmtDto.setVendorId(inventoryMgmt.getVendorId());
+            inventoryMgmtDto.setMsisdn(inventoryMgmt.getMsisdn());
+            inventoryMgmtDto.setStatus(inventoryMgmt.getStatus());
+            inventoryMgmtDto.setProvStatus(inventoryMgmt.getProvStatus());
+            inventoryMgmtDto.setAllocationDate(inventoryMgmt.getAllocationDate());
+            inventoryMgmtDto.setActivationDate(inventoryMgmt.getActivationDate());
+            inventoryMgmtDtoList.add(inventoryMgmtDto);
+        }
+        return inventoryMgmtDtoList;
     }
 
     private Date fetchReadableDateTime(String value) throws ParseException {
