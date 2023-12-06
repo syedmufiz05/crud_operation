@@ -4,6 +4,7 @@ import com.example.demo.dto.DeviceMgmtDto;
 import com.example.demo.model.DeviceMgmt;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -15,4 +16,6 @@ public interface DeviceMgmtRepository extends JpaRepository<DeviceMgmt, Integer>
 
     @Query("select new com.example.demo.dto.DeviceMgmtDto(deviceMgmt.deviceId,deviceMgmt.imeiPrimary,deviceMgmt.imeiList,deviceMgmt.userAgent,deviceMgmt.footPrint,deviceMgmt.eirTrackId,deviceMgmt.isESim,deviceMgmt.isUicc,deviceMgmt.registrationDate,deviceMgmt.status)from DeviceMgmt deviceMgmt")
     List<DeviceMgmtDto> fetchAllDeviceMgmtDetail();
+
+    List<DeviceMgmt> findByImeiListContaining(String keyword);
 }

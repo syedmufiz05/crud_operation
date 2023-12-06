@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -40,5 +41,26 @@ public class DeviceMgmtServiceImpl implements DeviceMgmtService {
     @Override
     public List<DeviceMgmtDto> fetchAllDeviceMgmtDetail() {
         return deviceMgmtRepository.fetchAllDeviceMgmtDetail();
+    }
+
+    @Override
+    public List<DeviceMgmtDto> searchItems(String imeiList) {
+        List<DeviceMgmt> deviceMgmtDbList = deviceMgmtRepository.findByImeiListContaining(imeiList);
+        List<DeviceMgmtDto> deviceMgmtList = new ArrayList<>();
+        for (DeviceMgmt deviceMgmtDb : deviceMgmtDbList) {
+            DeviceMgmtDto deviceMgmtDto = new DeviceMgmtDto();
+            deviceMgmtDto.setDeviceId(deviceMgmtDb.getDeviceId());
+            deviceMgmtDto.setImeiPrimary(deviceMgmtDb.getImeiPrimary());
+            deviceMgmtDto.setImeiList(deviceMgmtDb.getImeiList());
+            deviceMgmtDto.setUserAgent(deviceMgmtDb.getUserAgent());
+            deviceMgmtDto.setFootPrint(deviceMgmtDb.getFootPrint());
+            deviceMgmtDto.setEirTrackId(deviceMgmtDb.getEirTrackId());
+            deviceMgmtDto.setIsESim(deviceMgmtDb.getIsESim());
+            deviceMgmtDto.setIsUicc(deviceMgmtDb.getIsUicc());
+            deviceMgmtDto.setRegistrationDate(deviceMgmtDb.getRegistrationDate());
+            deviceMgmtDto.setStatus(deviceMgmtDb.getStatus());
+            deviceMgmtList.add(deviceMgmtDto);
+        }
+        return deviceMgmtList;
     }
 }
