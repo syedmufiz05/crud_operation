@@ -69,7 +69,7 @@ public class RatingProfileServiceImpl implements RatingProfileService {
         ratingPlanRepository.save(ratingPlanNew);
         RatingProfile ratingProfile = new RatingProfile();
         ratingProfile.setId(1212);
-        ratingProfile.setCallingParty("");
+        ratingProfile.setCallingParty(ratingProfileDto.getCallingParty());
         ratingProfile.setCategory(categoryNew);
         ratingProfile.setRatingPlan(ratingPlanNew);
         ratingProfileRepository.save(ratingProfile);
