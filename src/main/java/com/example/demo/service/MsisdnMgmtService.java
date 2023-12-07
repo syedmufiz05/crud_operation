@@ -7,5 +7,8 @@ import java.util.List;
 
 public interface MsisdnMgmtService {
     ResponseEntity saveMsisdnMgmt(MsisdnMgmtDto msisdnMgmtDto);
+
     List<MsisdnMgmtDto> getAllMsisdnDetail();
+
+    List<MsisdnMgmtDto> searchRecord(String keyword);
 }

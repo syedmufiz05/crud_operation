@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -40,5 +41,26 @@ public class MsisdnMgmtServiceImpl implements MsisdnMgmtService {
     @Override
     public List<MsisdnMgmtDto> getAllMsisdnDetail() {
         return msisdnMgmtRepository.fetchAllMsisdnMgmtRecord();
+    }
+
+    @Override
+    public List<MsisdnMgmtDto> searchRecord(String keyword) {
+        List<MsisdnMgmt> msisdnMgmtListDb = msisdnMgmtRepository.searchItemsByName(keyword);
+        List<MsisdnMgmtDto> msisdnMgmtDtoList = new ArrayList<>();
+        for (MsisdnMgmt msisdnMgmt : msisdnMgmtListDb) {
+            MsisdnMgmtDto msisdnMgmtDto = new MsisdnMgmtDto();
+            msisdnMgmtDto.setId(msisdnMgmt.getId());
+            msisdnMgmtDto.setMsisdn(msisdnMgmt.getMsisdn());
+            msisdnMgmtDto.setCategory(msisdnMgmt.getCategory());
+            msisdnMgmtDto.setSeriesId(msisdnMgmt.getSeriesId());
+            msisdnMgmtDto.setIsPrepaid(msisdnMgmt.getIsPrepaid());
+            msisdnMgmtDto.setIsPostpaid(msisdnMgmt.getIsPostpaid());
+            msisdnMgmtDto.setIsM2M(msisdnMgmt.getIsM2M());
+            msisdnMgmtDto.setIsSpecialNo(msisdnMgmt.getIsSpecialNo());
+            msisdnMgmtDto.setAllocationDate(msisdnMgmt.getAllocationDate());
+            msisdnMgmtDto.setStatus(msisdnMgmt.getStatus());
+            msisdnMgmtDtoList.add(msisdnMgmtDto);
+        }
+        return msisdnMgmtDtoList;
     }
 }
