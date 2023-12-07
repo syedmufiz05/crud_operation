@@ -1,13 +1,11 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.DeviceMgmtDto;
 import com.example.demo.dto.InventoryMgmtDto;
 import com.example.demo.service.InventoryMgmtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.text.ParseException;
 import java.util.List;
 
 @RestController
@@ -18,8 +16,13 @@ public class InventoryMgmtController {
     private InventoryMgmtService inventoryMgmtService;
 
     @RequestMapping(value = "/save", method = RequestMethod.POST)
-    public ResponseEntity<InventoryMgmtDto> fetchInventoryDetails(@RequestBody InventoryMgmtDto inventoryMgmtDto) throws ParseException {
+    public ResponseEntity<InventoryMgmtDto> saveInventoryDetails(@RequestBody InventoryMgmtDto inventoryMgmtDto) {
         return inventoryMgmtService.saveInventory(inventoryMgmtDto);
+    }
+
+    @RequestMapping(value = "/edit/{inventory_id}", method = RequestMethod.PUT)
+    public ResponseEntity<InventoryMgmtDto> editInventoryDetails(@PathVariable("inventory_id") Integer inventoryId, @RequestBody InventoryMgmtDto inventoryMgmtDto) {
+        return inventoryMgmtService.editInventory(inventoryId, inventoryMgmtDto);
     }
 
     @RequestMapping(value = "/get/all", method = RequestMethod.GET)

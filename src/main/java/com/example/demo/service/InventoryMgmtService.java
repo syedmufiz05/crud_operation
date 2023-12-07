@@ -3,11 +3,12 @@ package com.example.demo.service;
 import com.example.demo.dto.InventoryMgmtDto;
 import org.springframework.http.ResponseEntity;
 
-import java.text.ParseException;
 import java.util.List;
 
 public interface InventoryMgmtService {
-    ResponseEntity saveInventory(InventoryMgmtDto inventoryMgmtDto) throws ParseException;
+    ResponseEntity saveInventory(InventoryMgmtDto inventoryMgmtDto);
+
+    ResponseEntity editInventory(Integer inventoryId, InventoryMgmtDto inventoryMgmtDto);
 
     List<InventoryMgmtDto> getAllInventory();
 

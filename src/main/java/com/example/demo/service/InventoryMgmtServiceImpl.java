@@ -23,7 +23,7 @@ public class InventoryMgmtServiceImpl implements InventoryMgmtService {
     private InventoryMgmtRepository inventoryMgmtRepository;
 
     @Override
-    public ResponseEntity saveInventory(InventoryMgmtDto inventoryMgmtDto) throws ParseException {
+    public ResponseEntity saveInventory(InventoryMgmtDto inventoryMgmtDto) {
         Optional<InventoryMgmt> inventoryMgmt = inventoryMgmtRepository.findByImsi(inventoryMgmtDto.getImsi());
         if (!inventoryMgmt.isPresent()) {
             InventoryMgmt inventoryMgmtDb = new InventoryMgmt();
@@ -39,6 +39,25 @@ public class InventoryMgmtServiceImpl implements InventoryMgmtService {
             return new ResponseEntity<>(inventoryMgmtDtoNew, HttpStatus.OK);
         }
         return ResponseEntity.status(HttpStatus.CONFLICT).body(new CustomMessage(HttpStatus.CONFLICT.value(), "IMSI Id already exist"));
+    }
+
+    @Override
+    public ResponseEntity editInventory(Integer inventoryId, InventoryMgmtDto inventoryMgmtDto) {
+        Optional<InventoryMgmt> inventoryMgmt = inventoryMgmtRepository.findById(inventoryId);
+        if (inventoryMgmt.isPresent()) {
+            InventoryMgmt inventoryMgmtDb = inventoryMgmt.get();
+            inventoryMgmtDb.setImsi(inventoryMgmtDto.getImsi() != null ? inventoryMgmtDto.getImsi() : inventoryMgmtDb.getImsi());
+            inventoryMgmtDb.setPImsi(inventoryMgmtDto.getPImsi() != null ? inventoryMgmtDto.getPImsi() : inventoryMgmtDb.getPImsi());
+            inventoryMgmtDb.setBatchId(inventoryMgmtDto.getBatchId() != null ? inventoryMgmtDto.getBatchId() : inventoryMgmtDb.getBatchId());
+            inventoryMgmtDb.setVendorId(inventoryMgmtDto.getVendorId() != null ? inventoryMgmtDto.getVendorId() : inventoryMgmtDb.getVendorId());
+            inventoryMgmtDb.setMsisdn(inventoryMgmtDto.getMsisdn() != null ? inventoryMgmtDto.getMsisdn() : inventoryMgmtDb.getMsisdn());
+            inventoryMgmtDb.setStatus(inventoryMgmtDto.getStatus() != null ? inventoryMgmtDto.getStatus() : inventoryMgmtDb.getStatus());
+            inventoryMgmtDb.setProvStatus(inventoryMgmtDto.getProvStatus() != null ? inventoryMgmtDto.getProvStatus() : inventoryMgmtDb.getProvStatus());
+            inventoryMgmtRepository.save(inventoryMgmtDb);
+            InventoryMgmtDto inventoryMgmtDtoNew = new InventoryMgmtDto(inventoryMgmtDb.getId(), inventoryMgmtDb.getImsi(), inventoryMgmtDb.getPImsi(), inventoryMgmtDb.getBatchId(), inventoryMgmtDb.getVendorId(), inventoryMgmtDb.getMsisdn(), inventoryMgmtDb.getStatus(), inventoryMgmtDb.getProvStatus(), inventoryMgmtDb.getAllocationDate(), inventoryMgmtDb.getActivationDate());
+            return new ResponseEntity<>(inventoryMgmtDtoNew, HttpStatus.OK);
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new CustomMessage(HttpStatus.NOT_FOUND.value(), "Inventory Id does n't exist"));
     }
 
     @Override
