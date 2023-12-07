@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -34,5 +35,26 @@ public class VendorMgmtServiceImpl implements VendorMgmtService {
     @Override
     public List<VendorMgmtDto> fetchAllVendors() {
         return vendorMgmtRepository.fetchAllVendors();
+    }
+
+    @Override
+    public List<VendorMgmtDto> searchVendors(String keyword) {
+        List<VendorMgmt> vendorMgmtListDb = vendorMgmtRepository.searchItemsByName(keyword);
+        List<VendorMgmtDto> vendorMgmtListDto = new ArrayList<>();
+        for (VendorMgmt vendorMgmtDb : vendorMgmtListDb) {
+            VendorMgmtDto vendorMgmtDto = new VendorMgmtDto();
+            vendorMgmtDto.setVendorId(vendorMgmtDb.getId());
+            vendorMgmtDto.setVendorName(vendorMgmtDb.getVendorName());
+            vendorMgmtDto.setEmail(vendorMgmtDb.getEmail());
+            vendorMgmtDto.setContact(vendorMgmtDb.getContact());
+            vendorMgmtDto.setAddress(vendorMgmtDb.getAddress());
+            vendorMgmtDto.setType(vendorMgmtDb.getType());
+            vendorMgmtDto.setIdentification(vendorMgmtDb.getIdentification());
+            vendorMgmtDto.setBatchPrefix(vendorMgmtDb.getBatchPrefix());
+            vendorMgmtDto.setRegistrationDate(vendorMgmtDb.getRegistrationDate());
+            vendorMgmtDto.setStatus(vendorMgmtDb.getStatus());
+            vendorMgmtListDto.add(vendorMgmtDto);
+        }
+        return vendorMgmtListDto;
     }
 }

@@ -9,4 +9,5 @@ import java.util.List;
 public interface VendorMgmtService {
     ResponseEntity saveVendor(VendorMgmtDto vendorMgmtDto);
     List<VendorMgmtDto> fetchAllVendors();
+    List<VendorMgmtDto> searchVendors(String keyword);
 }

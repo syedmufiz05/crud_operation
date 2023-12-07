@@ -26,4 +26,9 @@ public class VendorMgmtController {
     public List<VendorMgmtDto> getAllSimMgmtDetails() {
         return vendorMgmtService.fetchAllVendors();
     }
+
+    @RequestMapping(value = "/search", method = RequestMethod.GET)
+    public List<VendorMgmtDto> searchVendors(@RequestParam("keyword") String keyword) {
+        return vendorMgmtService.searchVendors(keyword);
+    }
 }
