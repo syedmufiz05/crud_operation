@@ -1,7 +1,6 @@
 package com.example.demo.repository;
 
 import com.example.demo.dto.SimMgmtDto;
-import com.example.demo.model.MsisdnMgmt;
 import com.example.demo.model.SimMgmt;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -17,5 +16,6 @@ public interface SimMgmtRepository extends JpaRepository<SimMgmt, Integer> {
 
     Optional<SimMgmt> findByImsi(String imsi);
 
-    List<SimMgmt> findByImsiContaining(String imsi);
+    @Query("select simMgmt from SimMgmt simMgmt where (simMgmt.imsi) like LOWER(CONCAT('%', :keyword, '%')) or (simMgmt.batchNo) like LOWER(CONCAT('%', :keyword, '%')) or (simMgmt.simType) like LOWER(CONCAT('%', :keyword, '%')) or (simMgmt.vendorName) like LOWER(CONCAT('%', :keyword, '%'))")
+    List<SimMgmt> searchItemsByName(String keyword);
 }

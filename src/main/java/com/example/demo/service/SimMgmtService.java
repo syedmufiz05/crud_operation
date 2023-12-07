@@ -7,5 +7,8 @@ import java.util.List;
 
 public interface SimMgmtService {
     ResponseEntity saveSimMgmt(SimMgmtDto simMgmtDto);
+
     List<SimMgmtDto> getAllSimMgmt();
+
+    List<SimMgmtDto> searchRecord(String keyword);
 }

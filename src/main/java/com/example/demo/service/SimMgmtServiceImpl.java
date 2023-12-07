@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,5 +40,26 @@ public class SimMgmtServiceImpl implements SimMgmtService {
     @Override
     public List<SimMgmtDto> getAllSimMgmt() {
         return simMgmtRepository.fetchAllSimMgmt();
+    }
+
+    @Override
+    public List<SimMgmtDto> searchRecord(String keyword) {
+        List<SimMgmt> simMgmtDbList = simMgmtRepository.searchItemsByName(keyword);
+        List<SimMgmtDto> simMgmtDtoList = new ArrayList<>();
+        for (SimMgmt simMgmtDb : simMgmtDbList) {
+            SimMgmtDto simMgmtDto = new SimMgmtDto();
+            simMgmtDto.setSimId(simMgmtDb.getId());
+            simMgmtDto.setImsi(simMgmtDb.getImsi());
+            simMgmtDto.setBatchNo(simMgmtDb.getBatchNo());
+            simMgmtDto.setBatchDate(simMgmtDb.getBatchDate());
+            simMgmtDto.setAllocationDate(simMgmtDb.getAllocationDate());
+            simMgmtDto.setSimType(simMgmtDb.getSimType());
+            simMgmtDto.setKeyId(simMgmtDb.getKeyId());
+            simMgmtDto.setAuthId(simMgmtDb.getAuthId());
+            simMgmtDto.setVendorName(simMgmtDb.getVendorName());
+            simMgmtDto.setStatus(simMgmtDb.getStatus());
+            simMgmtDtoList.add(simMgmtDto);
+        }
+        return simMgmtDtoList;
     }
 }

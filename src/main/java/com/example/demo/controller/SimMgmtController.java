@@ -24,4 +24,9 @@ public class SimMgmtController {
     public List<SimMgmtDto> getAllSimMgmtDetails() {
         return simMgmtService.getAllSimMgmt();
     }
+
+    @RequestMapping(value = "/search", method = RequestMethod.GET)
+    public List<SimMgmtDto> getSearchRecords(@RequestParam("keyword") String keyword) {
+        return simMgmtService.searchRecord(keyword);
+    }
 }
