@@ -25,6 +25,11 @@ public class InventoryMgmtController {
         return inventoryMgmtService.editInventory(inventoryId, inventoryMgmtDto);
     }
 
+    @RequestMapping(value = "/delete/{inventory_id}", method = RequestMethod.DELETE)
+    public ResponseEntity deleteInventoryDetail(@PathVariable("inventory_id") Integer inventoryId) {
+        return inventoryMgmtService.deleteInventory(inventoryId);
+    }
+
     @RequestMapping(value = "/get/all", method = RequestMethod.GET)
     public List<InventoryMgmtDto> getAllInventoryDetails() {
         return inventoryMgmtService.getAllInventory();

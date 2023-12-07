@@ -10,6 +10,8 @@ public interface InventoryMgmtService {
 
     ResponseEntity editInventory(Integer inventoryId, InventoryMgmtDto inventoryMgmtDto);
 
+    ResponseEntity deleteInventory(Integer inventoryId);
+
     List<InventoryMgmtDto> getAllInventory();
 
     List<InventoryMgmtDto> searchRecord(String keyword);

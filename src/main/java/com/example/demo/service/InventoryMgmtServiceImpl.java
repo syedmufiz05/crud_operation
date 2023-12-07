@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -58,6 +59,17 @@ public class InventoryMgmtServiceImpl implements InventoryMgmtService {
             return new ResponseEntity<>(inventoryMgmtDtoNew, HttpStatus.OK);
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new CustomMessage(HttpStatus.NOT_FOUND.value(), "Inventory Id does n't exist"));
+    }
+
+    @Transactional
+    @Override
+    public ResponseEntity deleteInventory(Integer inventoryId) {
+        Optional<InventoryMgmt> inventoryMgmt = inventoryMgmtRepository.findById(inventoryId);
+        if (inventoryMgmt.isPresent()) {
+            inventoryMgmtRepository.deleteById(inventoryId);
+            return ResponseEntity.status(HttpStatus.OK).body(new CustomMessage(HttpStatus.OK.value(), "Deleted Successfully"));
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new CustomMessage(HttpStatus.NOT_FOUND.value(), "Invalid inventory id"));
     }
 
     @Override
