@@ -1,8 +1,6 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.SimMgmtDto;
 import com.example.demo.dto.VendorMgmtDto;
-import com.example.demo.service.SimMgmtService;
 import com.example.demo.service.VendorMgmtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

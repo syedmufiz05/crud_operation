@@ -20,6 +20,16 @@ public class DeviceMgmtController {
         return deviceMgmtService.saveDeviceMgmtDetail(deviceMgmtDto);
     }
 
+    @RequestMapping(value = "/update/{device_id}", method = RequestMethod.PUT)
+    public ResponseEntity<DeviceMgmtDto> updateDeviceMgmtDetails(@PathVariable("device_id") Integer deviceId, @RequestBody DeviceMgmtDto deviceMgmtDto) {
+        return deviceMgmtService.editDeviceMgmtDetail(deviceId, deviceMgmtDto);
+    }
+
+    @RequestMapping(value = "/delete/{device_id}", method = RequestMethod.DELETE)
+    public ResponseEntity deleteDeviceMgmtDetails(@PathVariable("device_id") Integer deviceId) {
+        return deviceMgmtService.deleteDeviceMgmtDetail(deviceId);
+    }
+
     @RequestMapping(value = "/get/all", method = RequestMethod.GET)
     public List<DeviceMgmtDto> getAllInventoryDetails() {
         return deviceMgmtService.fetchAllDeviceMgmtDetail();

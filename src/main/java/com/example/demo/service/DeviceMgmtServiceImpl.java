@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -36,6 +37,37 @@ public class DeviceMgmtServiceImpl implements DeviceMgmtService {
             return new ResponseEntity<>(deviceMgmtDtoNew, HttpStatus.OK);
         }
         return ResponseEntity.status(HttpStatus.CONFLICT).body(new CustomMessage(HttpStatus.CONFLICT.value(), "Device Id already exist"));
+    }
+
+    @Override
+    public ResponseEntity editDeviceMgmtDetail(Integer deviceId, DeviceMgmtDto deviceMgmtDto) {
+        Optional<DeviceMgmt> deviceMgmt = deviceMgmtRepository.findByDeviceId(deviceId);
+        if (deviceMgmt.isPresent()) {
+            DeviceMgmt deviceMgmtDb = deviceMgmt.get();
+            deviceMgmtDb.setImeiPrimary(deviceMgmtDto.getImeiPrimary() != null ? deviceMgmtDto.getImeiPrimary() : deviceMgmtDb.getImeiPrimary());
+            deviceMgmtDb.setImeiList(deviceMgmtDto.getImeiList() != null ? deviceMgmtDto.getImeiList() : deviceMgmtDb.getImeiList());
+            deviceMgmtDb.setUserAgent(deviceMgmtDto.getUserAgent() != null ? deviceMgmtDto.getUserAgent() : deviceMgmtDb.getUserAgent());
+            deviceMgmtDb.setFootPrint(deviceMgmtDto.getFootPrint() != null ? deviceMgmtDto.getFootPrint() : deviceMgmtDb.getFootPrint());
+            deviceMgmtDb.setEirTrackId(deviceMgmtDto.getEirTrackId() != null ? deviceMgmtDto.getEirTrackId() : deviceMgmtDb.getEirTrackId());
+            deviceMgmtDb.setIsESim(deviceMgmtDto.getIsESim() != null ? deviceMgmtDto.getIsESim() : deviceMgmtDb.getIsESim());
+            deviceMgmtDb.setIsUicc(deviceMgmtDto.getIsUicc() != null ? deviceMgmtDto.getIsUicc() : deviceMgmtDb.getIsUicc());
+            deviceMgmtDb.setStatus(deviceMgmtDto.getStatus() != null ? deviceMgmtDto.getStatus() : deviceMgmtDb.getStatus());
+            DeviceMgmtDto deviceMgmtDtoNew = new DeviceMgmtDto(deviceMgmtDb.getDeviceId(), deviceMgmtDb.getImeiPrimary(), deviceMgmtDb.getImeiList(), deviceMgmtDb.getUserAgent(), deviceMgmtDb.getFootPrint(), deviceMgmtDb.getEirTrackId(), deviceMgmtDb.getIsESim(), deviceMgmtDb.getIsUicc(), deviceMgmtDb.getRegistrationDate(), deviceMgmtDb.getStatus());
+            deviceMgmtRepository.save(deviceMgmtDb);
+            return new ResponseEntity<>(deviceMgmtDtoNew, HttpStatus.OK);
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new CustomMessage(HttpStatus.NOT_FOUND.value(), "Invalid device Id"));
+    }
+
+    @Transactional
+    @Override
+    public ResponseEntity deleteDeviceMgmtDetail(Integer deviceId) {
+        Optional<DeviceMgmt> deviceMgmt = deviceMgmtRepository.findByDeviceId(deviceId);
+        if (deviceMgmt.isPresent()) {
+            deviceMgmtRepository.deleteByDeviceId(deviceId);
+            return ResponseEntity.status(HttpStatus.OK).body(new CustomMessage(HttpStatus.OK.value(), "Deleted Successfully"));
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new CustomMessage(HttpStatus.NOT_FOUND.value(), "Invalid device Id"));
     }
 
     @Override

@@ -14,6 +14,8 @@ import java.util.Optional;
 public interface DeviceMgmtRepository extends JpaRepository<DeviceMgmt, Integer> {
     Optional<DeviceMgmt> findByDeviceId(Integer deviceId);
 
+    void deleteByDeviceId(Integer deviceId);
+
     @Query("select new com.example.demo.dto.DeviceMgmtDto(deviceMgmt.deviceId,deviceMgmt.imeiPrimary,deviceMgmt.imeiList,deviceMgmt.userAgent,deviceMgmt.footPrint,deviceMgmt.eirTrackId,deviceMgmt.isESim,deviceMgmt.isUicc,deviceMgmt.registrationDate,deviceMgmt.status)from DeviceMgmt deviceMgmt")
     List<DeviceMgmtDto> fetchAllDeviceMgmtDetail();
 
