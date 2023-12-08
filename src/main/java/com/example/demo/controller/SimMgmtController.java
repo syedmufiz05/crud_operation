@@ -16,8 +16,18 @@ public class SimMgmtController {
     private SimMgmtService simMgmtService;
 
     @RequestMapping(value = "/save", method = RequestMethod.POST)
-    public ResponseEntity<SimMgmtDto> fetchSimMgmtDetails(@RequestBody SimMgmtDto simMgmtDto) {
+    public ResponseEntity<SimMgmtDto> saveSimMgmtDetails(@RequestBody SimMgmtDto simMgmtDto) {
         return simMgmtService.saveSimMgmt(simMgmtDto);
+    }
+
+    @RequestMapping(value = "/edit/{sim_id}", method = RequestMethod.PUT)
+    public ResponseEntity<SimMgmtDto> editSimMgmtDetails(@PathVariable("sim_id") Integer simId, @RequestBody SimMgmtDto simMgmtDto) {
+        return simMgmtService.editSimMgmt(simId, simMgmtDto);
+    }
+
+    @RequestMapping(value = "/delete/{sim_id}", method = RequestMethod.DELETE)
+    public ResponseEntity<SimMgmtDto> deleteSimMgmtDetails(@PathVariable("sim_id") Integer simId) {
+        return simMgmtService.deleteSimMgmt(simId);
     }
 
     @RequestMapping(value = "/get/all", method = RequestMethod.GET)
