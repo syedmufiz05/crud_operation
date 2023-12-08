@@ -16,12 +16,22 @@ public class VendorMgmtController {
     private VendorMgmtService vendorMgmtService;
 
     @RequestMapping(value = "/save", method = RequestMethod.POST)
-    public ResponseEntity<VendorMgmtDto> fetchSimMgmtDetails(@RequestBody VendorMgmtDto vendorMgmtDto) {
+    public ResponseEntity<VendorMgmtDto> saveVendorMgmtDetails(@RequestBody VendorMgmtDto vendorMgmtDto) {
         return vendorMgmtService.saveVendor(vendorMgmtDto);
     }
 
+    @RequestMapping(value = "/edit/{vendor_id}", method = RequestMethod.PUT)
+    public ResponseEntity<VendorMgmtDto> editVendorMgmtDetails(@PathVariable("vendor_id") Integer vendorId, @RequestBody VendorMgmtDto vendorMgmtDto) {
+        return vendorMgmtService.editVendor(vendorId, vendorMgmtDto);
+    }
+
+    @RequestMapping(value = "/delete/{vendor_id}", method = RequestMethod.DELETE)
+    public ResponseEntity<VendorMgmtDto> deleteVendorMgmtDetails(@PathVariable("vendor_id") Integer vendorId) {
+        return vendorMgmtService.deleteVendor(vendorId);
+    }
+
     @RequestMapping(value = "/get/all", method = RequestMethod.GET)
-    public List<VendorMgmtDto> getAllSimMgmtDetails() {
+    public List<VendorMgmtDto> getAllVendorMgmtDetails() {
         return vendorMgmtService.fetchAllVendors();
     }
 
