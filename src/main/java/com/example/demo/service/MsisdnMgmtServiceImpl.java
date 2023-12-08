@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -36,6 +37,37 @@ public class MsisdnMgmtServiceImpl implements MsisdnMgmtService {
             return new ResponseEntity<>(msisdnMgmtDtoNew, HttpStatus.OK);
         }
         return ResponseEntity.status(HttpStatus.CONFLICT).body(new CustomMessage(HttpStatus.CONFLICT.value(), "MSISDN already exist"));
+    }
+
+    @Override
+    public ResponseEntity editMsisdnMgmt(Integer msisdnId, MsisdnMgmtDto msisdnMgmtDto) {
+        Optional<MsisdnMgmt> msisdnMgmt = msisdnMgmtRepository.findById(msisdnId);
+        if (msisdnMgmt.isPresent()) {
+            MsisdnMgmt msisdnMgmtDb = msisdnMgmt.get();
+            msisdnMgmtDb.setMsisdn(msisdnMgmtDto.getMsisdn() != null ? msisdnMgmtDto.getMsisdn() : msisdnMgmtDb.getMsisdn());
+            msisdnMgmtDb.setCategory(msisdnMgmtDto.getCategory() != null ? msisdnMgmtDto.getCategory() : msisdnMgmtDb.getCategory());
+            msisdnMgmtDb.setSeriesId(msisdnMgmtDto.getSeriesId() != null ? msisdnMgmtDto.getSeriesId() : msisdnMgmtDb.getSeriesId());
+            msisdnMgmtDb.setIsPrepaid(msisdnMgmtDto.getIsPrepaid() != null ? msisdnMgmtDto.getIsPrepaid() : msisdnMgmtDb.getIsPrepaid());
+            msisdnMgmtDb.setIsPostpaid(msisdnMgmtDto.getIsPostpaid() != null ? msisdnMgmtDto.getIsPostpaid() : msisdnMgmtDb.getIsPostpaid());
+            msisdnMgmtDb.setIsM2M(msisdnMgmtDto.getIsM2M() != null ? msisdnMgmtDto.getIsM2M() : msisdnMgmtDb.getIsM2M());
+            msisdnMgmtDb.setIsSpecialNo(msisdnMgmtDto.getIsSpecialNo() != null ? msisdnMgmtDto.getIsSpecialNo() : msisdnMgmtDb.getIsSpecialNo());
+            msisdnMgmtDb.setStatus(msisdnMgmtDto.getStatus() != null ? msisdnMgmtDto.getStatus() : msisdnMgmtDb.getStatus());
+            msisdnMgmtRepository.save(msisdnMgmtDb);
+            MsisdnMgmtDto msisdnMgmtDtoNew = new MsisdnMgmtDto(msisdnMgmtDb.getId(), msisdnMgmtDb.getMsisdn(), msisdnMgmtDb.getCategory(), msisdnMgmtDb.getSeriesId(), msisdnMgmtDb.getIsPrepaid(), msisdnMgmtDb.getIsPostpaid(), msisdnMgmtDb.getIsM2M(), msisdnMgmtDb.getIsSpecialNo(), msisdnMgmtDb.getAllocationDate(), msisdnMgmtDb.getStatus());
+            return new ResponseEntity<>(msisdnMgmtDtoNew, HttpStatus.OK);
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new CustomMessage(HttpStatus.NOT_FOUND.value(), "Invalid MSISDN Id"));
+    }
+
+    @Transactional
+    @Override
+    public ResponseEntity deleteMsisdnMgmt(Integer msisdnId) {
+        Optional<MsisdnMgmt> msisdnMgmt = msisdnMgmtRepository.findById(msisdnId);
+        if (msisdnMgmt.isPresent()) {
+            msisdnMgmtRepository.deleteById(msisdnId);
+            return ResponseEntity.status(HttpStatus.OK).body(new CustomMessage(HttpStatus.OK.value(), "Deleted Successfully"));
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new CustomMessage(HttpStatus.OK.value(), "Invalid MSISDN Id"));
     }
 
     @Override

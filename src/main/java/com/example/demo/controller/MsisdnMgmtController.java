@@ -16,8 +16,18 @@ public class MsisdnMgmtController {
     private MsisdnMgmtService msisdnMgmtService;
 
     @RequestMapping(value = "/save", method = RequestMethod.POST)
-    public ResponseEntity<MsisdnMgmtDto> fetchMsisdnDetail(@RequestBody MsisdnMgmtDto msisdnMgmtDto) {
+    public ResponseEntity<MsisdnMgmtDto> saveMsisdnDetail(@RequestBody MsisdnMgmtDto msisdnMgmtDto) {
         return msisdnMgmtService.saveMsisdnMgmt(msisdnMgmtDto);
+    }
+
+    @RequestMapping(value = "/edit/{msisdn_id}", method = RequestMethod.PUT)
+    public ResponseEntity<MsisdnMgmtDto> editMsisdnDetail(@PathVariable("msisdn_id") Integer msisdnId, @RequestBody MsisdnMgmtDto msisdnMgmtDto) {
+        return msisdnMgmtService.editMsisdnMgmt(msisdnId, msisdnMgmtDto);
+    }
+
+    @RequestMapping(value = "/delete/{msisdn_id}", method = RequestMethod.DELETE)
+    public ResponseEntity<MsisdnMgmtDto> deleteMsisdnDetail(@PathVariable("msisdn_id") Integer msisdnId) {
+        return msisdnMgmtService.deleteMsisdnMgmt(msisdnId);
     }
 
     @RequestMapping(value = "/get/all", method = RequestMethod.GET)
