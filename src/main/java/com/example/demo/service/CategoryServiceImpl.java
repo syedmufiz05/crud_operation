@@ -81,8 +81,8 @@ public class CategoryServiceImpl implements CategoryService {
         if (category.isPresent()) {
             Category categoryDb = category.get();
             CtgNameDto ctgNameDto = new CtgNameDto();
-            ctgNameDto.setCategoryName(categoryName);
-            categoryDb.setName(categoryName);
+            ctgNameDto.setCategoryName(!categoryName.isEmpty() ? categoryName : categoryDb.getName());
+            categoryDb.setName(!categoryName.isEmpty() ? categoryName : categoryDb.getName());
             CategoryDto categoryDto = new CategoryDto(categoryId, categoryName);
             Optional<AccessLogs> accessLogs = accessLogsRepository.findById(categoryDb.getAccessLogs() != null ? categoryDb.getAccessLogs().getId() : 0);
             if (accessLogs.isPresent()) {
