@@ -1,18 +1,22 @@
 package com.example.demo.service;
 
 import com.example.demo.dto.RatingProfileDto;
+import com.example.demo.dto.RatingProfileVoucherDto;
 import com.example.demo.exception.CustomMessage;
 import com.example.demo.model.Category;
 import com.example.demo.model.RatingPlan;
 import com.example.demo.model.RatingProfile;
+import com.example.demo.model.RatingProfileVoucher;
 import com.example.demo.repository.CategoryRepository;
 import com.example.demo.repository.RatingPlanRepository;
 import com.example.demo.repository.RatingProfileRepository;
+import com.example.demo.repository.RatingProfileVoucherRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,6 +28,8 @@ public class RatingProfileServiceImpl implements RatingProfileService {
     private CategoryRepository categoryRepository;
     @Autowired
     private RatingPlanRepository ratingPlanRepository;
+    @Autowired
+    private RatingProfileVoucherRepository ratingProfileVoucherRepository;
 
     @Override
     public RatingProfileDto createRatingProfile(RatingProfileDto ratingProfileDto, String authToken) {
@@ -77,6 +83,24 @@ public class RatingProfileServiceImpl implements RatingProfileService {
     }
 
     @Override
+    public ResponseEntity createRatingProfileVoucher(RatingProfileVoucherDto ratingProfileVoucherDto) {
+        Optional<RatingProfileVoucher> ratingProfileVoucherDb = ratingProfileVoucherRepository.findById(ratingProfileVoucherDto.getRatingProfileId() != null ? ratingProfileVoucherDto.getRatingProfileId() : 0);
+        if (!ratingProfileVoucherDb.isPresent()) {
+            RatingProfileVoucher ratingProfileVoucher = new RatingProfileVoucher();
+            ratingProfileVoucher.setCategoryOffer(ratingProfileVoucherDto.getCategoryNameDtoList().toString());
+            ratingProfileVoucher.setRatesOffer(ratingProfileVoucherDto.getRatesOfferDtoList().toString());
+            ratingProfileVoucher.setRatesPlanOffer(ratingProfileVoucherDto.getRatingPlanDtoList().toString());
+            ratingProfileVoucherRepository.save(ratingProfileVoucher);
+            List<String> categoryList = convertStringToList(ratingProfileVoucher.getCategoryOfferList());
+            List<String> ratesOfferList = convertStringToList(ratingProfileVoucher.getRatesOfferList());
+            List<String> ratesPlanOfferList = convertStringToList(ratingProfileVoucher.getRatesPlanOfferList());
+            RatingProfileVoucherDto ratingProfileDtoNew = new RatingProfileVoucherDto(ratingProfileVoucher.getId(), categoryList, ratesOfferList, ratesPlanOfferList);
+            return new ResponseEntity<>(ratingProfileDtoNew, HttpStatus.OK);
+        }
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(new CustomMessage(HttpStatus.CONFLICT.value(), "Duplicate Rating Profile Id"));
+    }
+
+    @Override
     public ResponseEntity getRatingProfile(Integer ratingProfileId) {
         Optional<RatingProfile> ratingProfile = ratingProfileRepository.findById(ratingProfileId);
         if (ratingProfile.isPresent()) {
@@ -113,5 +137,10 @@ public class RatingProfileServiceImpl implements RatingProfileService {
     public String deleteRatingProfile(Integer ratingProfileId) {
         ratingProfileRepository.deleteById(ratingProfileId);
         return "Deleted successfully";
+    }
+
+    private static List<String> convertStringToList(String data) {
+        String[] dataArray = data.split(",");
+        return Arrays.asList(dataArray);
     }
 }
