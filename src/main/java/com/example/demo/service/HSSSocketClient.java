@@ -23,8 +23,8 @@ public class HSSSocketClient implements Serializable {
     Socket socket = null;
     InputStream inputStream = null;
     OutputStream outputStream = null;
-    final String host = "10.60.1.148";
-    final int port = 9901;
+    final String host = "10.248.140.124";
+    final int port = 4100;
     final int READ_TIME_OUT = 30 * 1000;
     final int RECV_BUFFER = 2 * 1024;
     private String dlgId;

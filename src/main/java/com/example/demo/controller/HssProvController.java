@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.dto.HssProvDto;
+import com.example.demo.dto.HssProvDtoNew;
 import com.example.demo.service.HssProvServiceImpl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,11 @@ public class HssProvController {
     public ResponseEntity<HssProvDto> saveDetails(@RequestBody HssProvDto hssProvDto, HttpServletRequest httpServletRequest) throws JsonProcessingException {
         String authCode = httpServletRequest.getHeader("Authorization").replace("Bearer", "");
         return hssProvService.saveHssProv(hssProvDto, authCode);
+    }
+
+    @RequestMapping(value = "/new/save", method = RequestMethod.POST)
+    public ResponseEntity<HssProvDtoNew> saveHssDetails(@RequestBody HssProvDtoNew hssProvDtoNew) {
+        return hssProvService.saveHssProvNew(hssProvDtoNew, "");
     }
 
     @RequestMapping(value = "/get", method = RequestMethod.GET)
