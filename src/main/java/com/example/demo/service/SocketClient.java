@@ -3,7 +3,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
 import org.apache.commons.net.telnet.TelnetClient;
+import org.springframework.stereotype.Service;
 
+@Service
 public class SocketClient {
 
 		
