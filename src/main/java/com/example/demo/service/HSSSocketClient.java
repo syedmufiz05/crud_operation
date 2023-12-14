@@ -56,8 +56,9 @@ public class HSSSocketClient implements Serializable {
             outputStream = new BufferedOutputStream(socket.getOutputStream(), RECV_BUFFER);
 
             String smpMessage =
-                    "`SC`00581.0000001001SRVM    00001001DLGLGN    00001001TXBEG     LOGIN: USER=ussdmml,PSWD=ussdmml9986DEF6";
+                    "`SC`00581.0000001001SRVM    00001001DLGLGN    00001001TXBEG     LOGIN: USER=admin,PSWD=admin";
             String response = send(smpMessage);
+            System.out.println(response);
             if (response != null && response.indexOf("SUCCESS") != -1) {
                 Thread.sleep(5 * 1000);
                 dlgId = response.substring(28, 36);

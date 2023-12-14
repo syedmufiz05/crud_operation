@@ -18,6 +18,7 @@ repositories {
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'commons-net:commons-net:3.6'
     providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
     implementation 'org.apache.commons:commons-lang3:3.13.0'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
