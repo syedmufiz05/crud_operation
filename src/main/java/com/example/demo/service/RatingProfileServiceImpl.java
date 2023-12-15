@@ -101,6 +101,24 @@ public class RatingProfileServiceImpl implements RatingProfileService {
     }
 
     @Override
+    public ResponseEntity editRatingProfileVoucher(RatingProfileVoucherDto ratingProfileVoucherDto) {
+        Optional<RatingProfileVoucher> ratingProfileVoucher = ratingProfileVoucherRepository.findById(ratingProfileVoucherDto.getRatingProfileId());
+        if (ratingProfileVoucher.isPresent()) {
+            RatingProfileVoucher ratingProfileVoucherDb = ratingProfileVoucher.get();
+            ratingProfileVoucherDb.setCategoryOffer(ratingProfileVoucherDto.getCategoryNameDtoList().toString() != null ? ratingProfileVoucherDto.getCategoryNameDtoList().toString() : ratingProfileVoucherDb.getCategoryOfferList());
+            ratingProfileVoucherDb.setRatesOffer(ratingProfileVoucherDto.getRatesOfferDtoList().toString() != null ? ratingProfileVoucherDto.getRatesOfferDtoList().toString() : ratingProfileVoucherDb.getRatesOfferList());
+            ratingProfileVoucherDb.setRatesPlanOffer(ratingProfileVoucherDto.getRatingPlanDtoList().toString() != null ? ratingProfileVoucherDto.getRatingPlanDtoList().toString() : ratingProfileVoucherDb.getRatesPlanOfferList());
+            ratingProfileVoucherRepository.save(ratingProfileVoucherDb);
+            List<String> categoryList = convertStringToList(ratingProfileVoucherDb.getCategoryOfferList());
+            List<String> ratesOfferList = convertStringToList(ratingProfileVoucherDb.getRatesOfferList());
+            List<String> ratesPlanOfferList = convertStringToList(ratingProfileVoucherDb.getRatesPlanOfferList());
+            RatingProfileVoucherDto ratingProfileVoucherDtoNew = new RatingProfileVoucherDto(ratingProfileVoucherDb.getId(), categoryList, ratesOfferList, ratesPlanOfferList);
+            return new ResponseEntity<>(ratingProfileVoucherDtoNew, HttpStatus.OK);
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new CustomMessage(HttpStatus.NOT_FOUND.value(), "Invalid Rating Profile Id"));
+    }
+
+    @Override
     public ResponseEntity getRatingProfile(Integer ratingProfileId) {
         Optional<RatingProfile> ratingProfile = ratingProfileRepository.findById(ratingProfileId);
         if (ratingProfile.isPresent()) {
