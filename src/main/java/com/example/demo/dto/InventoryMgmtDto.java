@@ -36,8 +36,8 @@ public class InventoryMgmtDto {
     private Boolean provStatus;
 
     @JsonProperty("allocation_date")
-    private Date allocationDate;
+    private String allocationDate;
 
     @JsonProperty("activation_date")
-    private Date activationDate;
+    private String activationDate;
 }

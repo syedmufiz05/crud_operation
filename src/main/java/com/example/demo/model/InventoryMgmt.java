@@ -37,11 +37,9 @@ public class InventoryMgmt {
     @Column(name = "prov_status")
     private Boolean provStatus;
 
-    @CreationTimestamp
     @Column(name = "allocation_date")
-    private Date allocationDate;
+    private String allocationDate;
 
-    @UpdateTimestamp
     @Column(name = "activation_date")
-    private Date activationDate;
+    private String activationDate;
 }

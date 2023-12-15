@@ -10,8 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -25,7 +23,7 @@ public class InventoryMgmtServiceImpl implements InventoryMgmtService {
 
     @Override
     public ResponseEntity saveInventory(InventoryMgmtDto inventoryMgmtDto) {
-        Optional<InventoryMgmt> inventoryMgmt = inventoryMgmtRepository.findByImsi(inventoryMgmtDto.getImsi());
+        Optional<InventoryMgmt> inventoryMgmt = inventoryMgmtRepository.findByImsi(inventoryMgmtDto.getImsi() != null ? inventoryMgmtDto.getImsi() : "0");
         if (!inventoryMgmt.isPresent()) {
             InventoryMgmt inventoryMgmtDb = new InventoryMgmt();
             inventoryMgmtDb.setImsi(inventoryMgmtDto.getImsi() != null ? inventoryMgmtDto.getImsi() : "");
@@ -35,6 +33,8 @@ public class InventoryMgmtServiceImpl implements InventoryMgmtService {
             inventoryMgmtDb.setMsisdn(inventoryMgmtDto.getMsisdn() != null ? inventoryMgmtDto.getMsisdn() : "");
             inventoryMgmtDb.setStatus(inventoryMgmtDto.getStatus() != null ? inventoryMgmtDto.getStatus() : false);
             inventoryMgmtDb.setProvStatus(inventoryMgmtDto.getProvStatus() != null ? inventoryMgmtDto.getProvStatus() : false);
+            inventoryMgmtDb.setAllocationDate(String.valueOf(new Date()));
+            inventoryMgmtDb.setActivationDate(String.valueOf(new Date()));
             inventoryMgmtRepository.save(inventoryMgmtDb);
             InventoryMgmtDto inventoryMgmtDtoNew = new InventoryMgmtDto(inventoryMgmtDb.getId(), inventoryMgmtDb.getImsi(), inventoryMgmtDb.getPImsi(), inventoryMgmtDb.getBatchId(), inventoryMgmtDb.getVendorId(), inventoryMgmtDb.getMsisdn(), inventoryMgmtDb.getStatus(), inventoryMgmtDb.getProvStatus(), inventoryMgmtDb.getAllocationDate(), inventoryMgmtDb.getActivationDate());
             return new ResponseEntity<>(inventoryMgmtDtoNew, HttpStatus.OK);
@@ -54,8 +54,10 @@ public class InventoryMgmtServiceImpl implements InventoryMgmtService {
             inventoryMgmtDb.setMsisdn(inventoryMgmtDto.getMsisdn() != null ? inventoryMgmtDto.getMsisdn() : inventoryMgmtDb.getMsisdn());
             inventoryMgmtDb.setStatus(inventoryMgmtDto.getStatus() != null ? inventoryMgmtDto.getStatus() : inventoryMgmtDb.getStatus());
             inventoryMgmtDb.setProvStatus(inventoryMgmtDto.getProvStatus() != null ? inventoryMgmtDto.getProvStatus() : inventoryMgmtDb.getProvStatus());
+            inventoryMgmtDb.setActivationDate(inventoryMgmtDb.getActivationDate());
+            inventoryMgmtDb.setAllocationDate(inventoryMgmtDb.getAllocationDate());
             inventoryMgmtRepository.save(inventoryMgmtDb);
-            InventoryMgmtDto inventoryMgmtDtoNew = new InventoryMgmtDto(inventoryMgmtDb.getId(), inventoryMgmtDb.getImsi(), inventoryMgmtDb.getPImsi(), inventoryMgmtDb.getBatchId(), inventoryMgmtDb.getVendorId(), inventoryMgmtDb.getMsisdn(), inventoryMgmtDb.getStatus(), inventoryMgmtDb.getProvStatus(), inventoryMgmtDb.getAllocationDate(), inventoryMgmtDb.getActivationDate());
+            InventoryMgmtDto inventoryMgmtDtoNew = new InventoryMgmtDto(inventoryMgmtDb.getId(), inventoryMgmtDb.getImsi(), inventoryMgmtDb.getPImsi(), inventoryMgmtDb.getBatchId(), inventoryMgmtDb.getVendorId(), inventoryMgmtDb.getMsisdn(), inventoryMgmtDb.getStatus(), inventoryMgmtDb.getProvStatus(), fetchReadableDateTime(inventoryMgmtDb.getAllocationDate()), fetchReadableDateTime(inventoryMgmtDb.getActivationDate()));
             return new ResponseEntity<>(inventoryMgmtDtoNew, HttpStatus.OK);
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new CustomMessage(HttpStatus.NOT_FOUND.value(), "Inventory Id does n't exist"));
@@ -91,17 +93,17 @@ public class InventoryMgmtServiceImpl implements InventoryMgmtService {
             inventoryMgmtDto.setMsisdn(inventoryMgmt.getMsisdn());
             inventoryMgmtDto.setStatus(inventoryMgmt.getStatus());
             inventoryMgmtDto.setProvStatus(inventoryMgmt.getProvStatus());
-            inventoryMgmtDto.setAllocationDate(inventoryMgmt.getAllocationDate());
-            inventoryMgmtDto.setActivationDate(inventoryMgmt.getActivationDate());
+            inventoryMgmtDto.setAllocationDate(fetchReadableDateTime(inventoryMgmt.getAllocationDate()));
+            inventoryMgmtDto.setActivationDate(fetchReadableDateTime(inventoryMgmt.getActivationDate()));
             inventoryMgmtDtoList.add(inventoryMgmtDto);
         }
         return inventoryMgmtDtoList;
     }
 
-    private Date fetchReadableDateTime(String value) throws ParseException {
-        DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-        Date date = sdf.parse(value);
-        System.out.println(date);
-        return date;
+    private String fetchReadableDateTime(String date) {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        String formattedDate = simpleDateFormat.format(date);
+        System.out.println(formattedDate);
+        return formattedDate;
     }
 }
