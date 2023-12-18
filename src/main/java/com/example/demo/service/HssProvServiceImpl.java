@@ -31,10 +31,10 @@ public class HssProvServiceImpl implements HssProvService {
     private HssProvRepositoryNew hssProvRepositoryNew;
     @Autowired
     private AccessLogsRepository accessLogsRepository;
-//    @Autowired
-//    private SocketClient socketClient;
-//    @Autowired
-//    private HSSSocketClient hssSocketClient;
+    @Autowired
+    private SocketClient socketClient;
+    @Autowired
+    private HSSSocketClient hssSocketClient;
 
 
     public ResponseEntity saveHssProv(HssProvDto hssProvDto, String authToken) throws JsonProcessingException {
@@ -140,10 +140,10 @@ public class HssProvServiceImpl implements HssProvService {
         Optional<HssProvNew> hssProvNew = hssProvRepositoryNew.findByImsiOrMsisdn(imsi, msisdn);
         if (hssProvNew.isPresent()) {
             HssProvNew hssProvDb = hssProvNew.get();
-            //socketClient.connect();
+            socketClient.connect();
             String msg = setSocketMsgBody(hssProvDb);
-            //socketClient.sendCommand(msg);
-            //socketClient.logout();
+            socketClient.sendCommand(msg);
+            socketClient.logout();
         }
 //        if (hssProv.isPresent()) {
 //            HssProv hssProvDb = hssProv.get();
@@ -303,9 +303,6 @@ public class HssProvServiceImpl implements HssProvService {
     private static String setSocketMsgBody(HssProvNew hssProvNew) {
         String body = "add udmuser:imsi=" + hssProvNew.getImsi() + ",msisdn=" + hssProvNew.getMsisdn() + ",ambr=" + hssProvNew.getAmbr() + ",nssai=" + hssProvNew.getNssai() + ",arfb=" + hssProvNew.getArfb() + ",sar=" + hssProvNew.getSar() + ",rat=" + hssProvNew.getRat() + ",cn=" + hssProvNew.getCn() + ",smf_sel=" + hssProvNew.getSmfSel() + ",sm_dat=" + hssProvNew.getSmDat() + ",eps_flag=" + hssProvNew.getEpsFlag() + ",eps_odb=" + hssProvNew.getEpsOdb() + ",hplmn_odb=" + hssProvNew.getHplmnOdb() + ",ard=" + hssProvNew.getArd() + ",epstpl=" + hssProvNew.getEpsTpl() + ",context_id=" + hssProvNew.getContextId() + ",apn_context=" + hssProvNew.getApnContext();
         return body;
-        // String body = "create subscriber -imsi\t" + hssProv.getImsi() + "-imsi_flag\t" + hssProv.getImsiFlag() + "- nam\t" + hssProv.getNam() + "- msisdn\t" + hssProv.getMsisdn() + "-odb\t" + hssProv.getOdb() + "-baoc\t" + hssProv.getBaoc() + "- boic\t" + hssProv.getBoic() + "- osb1\t" + hssProv.getOsb1() + "- osb2\t" + hssProv.getOsb2() + " - baic\t" + hssProv.getBaic() + "- roaming\t" + hssProv.getRoaming() + "- bearer_service\t" + hssProv.getBearerService() + "- telephony\t" + hssProv.getTelephone() + "- sms\t" + hssProv.getSms() + "- cfu_a\t" + hssProv.getCfuA() + "- cfu_r\t" + hssProv.getCfuR() + "- cfu_p\t" + hssProv.getCfuP() + "- cfb_p\t" + hssProv.getCfbP() + "- cfnry_p\t" + hssProv.getCfnryP() + "- cfnry_t\t" + hssProv.getCfnryT() + "- cfnrc_p\t" + hssProv.getCfnrcP() + "-cw_a\t" + hssProv.getCwA() + "-cw_p\t" + hssProv.getCwP() + "-ch_p\t" + hssProv.getChP() + "-camel\t" + hssProv.getCamel() + "- o_csi\t" + hssProv.getOCsi() + "- t_csi\t" + hssProv.getTCsi() + "-ss_csi\t" + hssProv.getSsCsi() + "- sms_csi\t" + hssProv.getSmsCsi() + "-o_csi_scf_no\t" + hssProv.getOCsiScfNo() + "-t_csi_scf_no\t" + hssProv.getTCsiScfNo() + "-ss_csi_scf_no\t" + hssProv.getSsCsiScfNo() + "- sms_sci_scf_no\t" + hssProv.getSmsSciScfNo() + "-gprs_flag\t" + hssProv.getGprsFlag() + "-eps_flag\t" + hssProv.getEpsFlag() + "-ard\t" + hssProv.getArd() + "-eps_user_tpl\t" + hssProv.getEpsUserTpl() + "def_eps\t" + hssProv.getDefEps() + "-context_id\t" + hssProv.getContextD() + "-apn_ctxt_list\t" + hssProv.getApnCtxtList() + "-ims_flag\t" + hssProv.getImsFlag();
-        //System.out.println(body);
-        // return body;
     }
 
 }
