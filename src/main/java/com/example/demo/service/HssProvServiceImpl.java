@@ -31,8 +31,8 @@ public class HssProvServiceImpl implements HssProvService {
     private HssProvRepositoryNew hssProvRepositoryNew;
     @Autowired
     private AccessLogsRepository accessLogsRepository;
-    @Autowired
-    private SocketClient socketClient;
+//    @Autowired
+//    private SocketClient socketClient;
 //    @Autowired
 //    private HSSSocketClient hssSocketClient;
 
@@ -140,10 +140,10 @@ public class HssProvServiceImpl implements HssProvService {
         Optional<HssProvNew> hssProvNew = hssProvRepositoryNew.findByImsiOrMsisdn(imsi, msisdn);
         if (hssProvNew.isPresent()) {
             HssProvNew hssProvDb = hssProvNew.get();
-            socketClient.connect();
+            //socketClient.connect();
             String msg = setSocketMsgBody(hssProvDb);
-            socketClient.sendCommand(msg);
-            socketClient.logout();
+            //socketClient.sendCommand(msg);
+            //socketClient.logout();
         }
 //        if (hssProv.isPresent()) {
 //            HssProv hssProvDb = hssProv.get();

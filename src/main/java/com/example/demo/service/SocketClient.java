@@ -152,6 +152,11 @@ public class SocketClient {
             //System.out.println("run command"); telnet.sendCommand("ls ");
             // System.out.println("run command 2"); telnet.disconnect();
             // System.out.println("DONE");
+            SocketClient socketClient = SocketClient.getInstance();
+            socketClient.connect();
+            socketClient.sendCommand("add udmuser:imsi=001010617001007,msisdn=9876543207,ambr=def_ambr,nssai=def_nssai,arfb=def_arfb,sar=def_sar,rat=0,cn=3,smf_sel=def_snssai,sm_dat=1-000001&INTERNET&ims,eps_flag=1,eps_odb=64,hplmn_odb=24,ard=65,epstpl=def_eps,context_id=1,apn_context=010200000000");
+            socketClient.logout();
+            System.out.println("Done");
         } catch (Exception e) {
             e.printStackTrace();
         }
