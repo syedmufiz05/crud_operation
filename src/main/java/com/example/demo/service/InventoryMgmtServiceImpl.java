@@ -1,6 +1,7 @@
 package com.example.demo.service;
 
 import com.example.demo.dto.InventoryMgmtDto;
+import com.example.demo.dto.InventoryMgmtDtoList;
 import com.example.demo.exception.CustomMessage;
 import com.example.demo.model.InventoryMgmt;
 import com.example.demo.repository.InventoryMgmtRepository;
@@ -33,17 +34,17 @@ public class InventoryMgmtServiceImpl implements InventoryMgmtService {
             inventoryMgmtDb.setMsisdn(inventoryMgmtDto.getMsisdn() != null ? inventoryMgmtDto.getMsisdn() : "");
             inventoryMgmtDb.setStatus(inventoryMgmtDto.getStatus() != null ? inventoryMgmtDto.getStatus() : false);
             inventoryMgmtDb.setProvStatus(inventoryMgmtDto.getProvStatus() != null ? inventoryMgmtDto.getProvStatus() : false);
-            inventoryMgmtDb.setAllocationDate(String.valueOf(new Date()));
-            inventoryMgmtDb.setActivationDate(String.valueOf(new Date()));
+            inventoryMgmtDb.setAllocationDate(new Date());
+            inventoryMgmtDb.setActivationDate(new Date());
             inventoryMgmtRepository.save(inventoryMgmtDb);
-            InventoryMgmtDto inventoryMgmtDtoNew = new InventoryMgmtDto(inventoryMgmtDb.getId(), inventoryMgmtDb.getImsi(), inventoryMgmtDb.getPImsi(), inventoryMgmtDb.getBatchId(), inventoryMgmtDb.getVendorId(), inventoryMgmtDb.getMsisdn(), inventoryMgmtDb.getStatus(), inventoryMgmtDb.getProvStatus(), inventoryMgmtDb.getAllocationDate(), inventoryMgmtDb.getActivationDate());
+            InventoryMgmtDto inventoryMgmtDtoNew = new InventoryMgmtDto(inventoryMgmtDb.getId(), inventoryMgmtDb.getImsi(), inventoryMgmtDb.getPImsi(), inventoryMgmtDb.getBatchId(), inventoryMgmtDb.getVendorId(), inventoryMgmtDb.getMsisdn(), inventoryMgmtDb.getStatus(), inventoryMgmtDb.getProvStatus(), fetchReadableDateTime(inventoryMgmtDb.getAllocationDate()), fetchReadableDateTime(inventoryMgmtDb.getActivationDate()));
             return new ResponseEntity<>(inventoryMgmtDtoNew, HttpStatus.OK);
         }
         return ResponseEntity.status(HttpStatus.CONFLICT).body(new CustomMessage(HttpStatus.CONFLICT.value(), "IMSI Id already exist"));
     }
 
     @Override
-    public ResponseEntity editInventory(Integer inventoryId, InventoryMgmtDto inventoryMgmtDto) {
+    public ResponseEntity editInventory(Integer inventoryId, InventoryMgmtDtoList inventoryMgmtDto) {
         Optional<InventoryMgmt> inventoryMgmt = inventoryMgmtRepository.findById(inventoryId);
         if (inventoryMgmt.isPresent()) {
             InventoryMgmt inventoryMgmtDb = inventoryMgmt.get();
@@ -76,7 +77,23 @@ public class InventoryMgmtServiceImpl implements InventoryMgmtService {
 
     @Override
     public List<InventoryMgmtDto> getAllInventory() {
-        return inventoryMgmtRepository.fetchAllInventoriesMgmt();
+        List<InventoryMgmtDtoList> inventoryMgmtDbList= inventoryMgmtRepository.fetchAllInventoriesMgmt();
+        List<InventoryMgmtDto> inventoryMgmtDtoList = new ArrayList<>();
+        for (InventoryMgmtDtoList inventoryMgmt : inventoryMgmtDbList) {
+            InventoryMgmtDto inventoryMgmtDto = new InventoryMgmtDto();
+            inventoryMgmtDto.setInventoryId(inventoryMgmt.getInventoryId());
+            inventoryMgmtDto.setImsi(inventoryMgmt.getImsi());
+            inventoryMgmtDto.setPImsi(inventoryMgmt.getPImsi());
+            inventoryMgmtDto.setBatchId(inventoryMgmt.getBatchId());
+            inventoryMgmtDto.setVendorId(inventoryMgmt.getVendorId());
+            inventoryMgmtDto.setMsisdn(inventoryMgmt.getMsisdn());
+            inventoryMgmtDto.setStatus(inventoryMgmt.getStatus());
+            inventoryMgmtDto.setProvStatus(inventoryMgmt.getProvStatus());
+            inventoryMgmtDto.setAllocationDate(fetchReadableDateTime(inventoryMgmt.getAllocationDate()));
+            inventoryMgmtDto.setActivationDate(fetchReadableDateTime(inventoryMgmt.getActivationDate()));
+            inventoryMgmtDtoList.add(inventoryMgmtDto);
+        }
+        return inventoryMgmtDtoList;
     }
 
     @Override
@@ -100,10 +117,9 @@ public class InventoryMgmtServiceImpl implements InventoryMgmtService {
         return inventoryMgmtDtoList;
     }
 
-    private String fetchReadableDateTime(String date) {
+    private String fetchReadableDateTime(Date date) {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
         String formattedDate = simpleDateFormat.format(date);
-        System.out.println(formattedDate);
         return formattedDate;
     }
 }

@@ -6,10 +6,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class InventoryMgmtDto {
+public class InventoryMgmtDtoList {
     @JsonProperty("inventory_id")
     private Integer inventoryId;
 
@@ -35,8 +36,8 @@ public class InventoryMgmtDto {
     private Boolean provStatus;
 
     @JsonProperty("allocation_date")
-    private String allocationDate;
+    private Date allocationDate;
 
     @JsonProperty("activation_date")
-    private String activationDate;
+    private Date activationDate;
 }

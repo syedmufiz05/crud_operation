@@ -1,8 +1,6 @@
 package com.example.demo.model;
 
 import lombok.Data;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -38,8 +36,8 @@ public class InventoryMgmt {
     private Boolean provStatus;
 
     @Column(name = "allocation_date")
-    private String allocationDate;
+    private Date allocationDate;
 
     @Column(name = "activation_date")
-    private String activationDate;
+    private Date activationDate;
 }

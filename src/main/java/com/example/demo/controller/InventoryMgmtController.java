@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.dto.InventoryMgmtDto;
+import com.example.demo.dto.InventoryMgmtDtoList;
 import com.example.demo.service.InventoryMgmtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -21,8 +22,8 @@ public class InventoryMgmtController {
     }
 
     @RequestMapping(value = "/edit/{inventory_id}", method = RequestMethod.PUT)
-    public ResponseEntity<InventoryMgmtDto> editInventoryDetails(@PathVariable("inventory_id") Integer inventoryId, @RequestBody InventoryMgmtDto inventoryMgmtDto) {
-        return inventoryMgmtService.editInventory(inventoryId, inventoryMgmtDto);
+    public ResponseEntity<InventoryMgmtDtoList> editInventoryDetails(@PathVariable("inventory_id") Integer inventoryId, @RequestBody InventoryMgmtDtoList inventoryMgmtDtoList) {
+        return inventoryMgmtService.editInventory(inventoryId, inventoryMgmtDtoList);
     }
 
     @RequestMapping(value = "/delete/{inventory_id}", method = RequestMethod.DELETE)
