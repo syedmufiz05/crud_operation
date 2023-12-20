@@ -1,6 +1,7 @@
 package com.example.demo.service;
 
 import com.example.demo.dto.MsisdnMgmtDto;
+import com.example.demo.dto.MsisdnMgmtDtoNew;
 import com.example.demo.exception.CustomMessage;
 import com.example.demo.model.MsisdnMgmt;
 import com.example.demo.repository.MsisdnMgmtRepository;
@@ -10,7 +11,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,7 +23,7 @@ public class MsisdnMgmtServiceImpl implements MsisdnMgmtService {
     private MsisdnMgmtRepository msisdnMgmtRepository;
 
     @Override
-    public ResponseEntity saveMsisdnMgmt(MsisdnMgmtDto msisdnMgmtDto) {
+    public ResponseEntity saveMsisdnMgmt(MsisdnMgmtDtoNew msisdnMgmtDto) {
         Optional<MsisdnMgmt> msisdnMgmt = msisdnMgmtRepository.findByMsisdn(msisdnMgmtDto.getMsisdn());
         if (!msisdnMgmt.isPresent()) {
             MsisdnMgmt msisdnMgmtDb = new MsisdnMgmt();
@@ -33,14 +36,14 @@ public class MsisdnMgmtServiceImpl implements MsisdnMgmtService {
             msisdnMgmtDb.setIsSpecialNo(msisdnMgmtDto.getIsSpecialNo() != null ? msisdnMgmtDto.getIsSpecialNo() : false);
             msisdnMgmtDb.setStatus(msisdnMgmtDto.getStatus() != null ? msisdnMgmtDto.getStatus() : false);
             msisdnMgmtRepository.save(msisdnMgmtDb);
-            MsisdnMgmtDto msisdnMgmtDtoNew = new MsisdnMgmtDto(msisdnMgmtDb.getId(), msisdnMgmtDb.getMsisdn(), msisdnMgmtDb.getCategory(), msisdnMgmtDb.getSeriesId(), msisdnMgmtDb.getIsPrepaid(), msisdnMgmtDb.getIsPostpaid(), msisdnMgmtDb.getIsM2M(), msisdnMgmtDb.getIsSpecialNo(), msisdnMgmtDb.getAllocationDate(), msisdnMgmtDb.getStatus());
+            MsisdnMgmtDtoNew msisdnMgmtDtoNew = new MsisdnMgmtDtoNew(msisdnMgmtDb.getId(), msisdnMgmtDb.getMsisdn(), msisdnMgmtDb.getCategory(), msisdnMgmtDb.getSeriesId(), msisdnMgmtDb.getIsPrepaid(), msisdnMgmtDb.getIsPostpaid(), msisdnMgmtDb.getIsM2M(), msisdnMgmtDb.getIsSpecialNo(), fetchReadableDateTime(msisdnMgmtDb.getAllocationDate()), msisdnMgmtDb.getStatus());
             return new ResponseEntity<>(msisdnMgmtDtoNew, HttpStatus.OK);
         }
         return ResponseEntity.status(HttpStatus.CONFLICT).body(new CustomMessage(HttpStatus.CONFLICT.value(), "MSISDN already exist"));
     }
 
     @Override
-    public ResponseEntity editMsisdnMgmt(Integer msisdnId, MsisdnMgmtDto msisdnMgmtDto) {
+    public ResponseEntity editMsisdnMgmt(Integer msisdnId, MsisdnMgmtDtoNew msisdnMgmtDto) {
         Optional<MsisdnMgmt> msisdnMgmt = msisdnMgmtRepository.findById(msisdnId);
         if (msisdnMgmt.isPresent()) {
             MsisdnMgmt msisdnMgmtDb = msisdnMgmt.get();
@@ -53,7 +56,7 @@ public class MsisdnMgmtServiceImpl implements MsisdnMgmtService {
             msisdnMgmtDb.setIsSpecialNo(msisdnMgmtDto.getIsSpecialNo() != null ? msisdnMgmtDto.getIsSpecialNo() : msisdnMgmtDb.getIsSpecialNo());
             msisdnMgmtDb.setStatus(msisdnMgmtDto.getStatus() != null ? msisdnMgmtDto.getStatus() : msisdnMgmtDb.getStatus());
             msisdnMgmtRepository.save(msisdnMgmtDb);
-            MsisdnMgmtDto msisdnMgmtDtoNew = new MsisdnMgmtDto(msisdnMgmtDb.getId(), msisdnMgmtDb.getMsisdn(), msisdnMgmtDb.getCategory(), msisdnMgmtDb.getSeriesId(), msisdnMgmtDb.getIsPrepaid(), msisdnMgmtDb.getIsPostpaid(), msisdnMgmtDb.getIsM2M(), msisdnMgmtDb.getIsSpecialNo(), msisdnMgmtDb.getAllocationDate(), msisdnMgmtDb.getStatus());
+            MsisdnMgmtDtoNew msisdnMgmtDtoNew = new MsisdnMgmtDtoNew(msisdnMgmtDb.getId(), msisdnMgmtDb.getMsisdn(), msisdnMgmtDb.getCategory(), msisdnMgmtDb.getSeriesId(), msisdnMgmtDb.getIsPrepaid(), msisdnMgmtDb.getIsPostpaid(), msisdnMgmtDb.getIsM2M(), msisdnMgmtDb.getIsSpecialNo(), fetchReadableDateTime(msisdnMgmtDb.getAllocationDate()), msisdnMgmtDb.getStatus());
             return new ResponseEntity<>(msisdnMgmtDtoNew, HttpStatus.OK);
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new CustomMessage(HttpStatus.NOT_FOUND.value(), "Invalid MSISDN Id"));
@@ -71,16 +74,11 @@ public class MsisdnMgmtServiceImpl implements MsisdnMgmtService {
     }
 
     @Override
-    public List<MsisdnMgmtDto> getAllMsisdnDetail() {
-        return msisdnMgmtRepository.fetchAllMsisdnMgmtRecord();
-    }
-
-    @Override
-    public List<MsisdnMgmtDto> searchRecord(String keyword) {
-        List<MsisdnMgmt> msisdnMgmtListDb = msisdnMgmtRepository.searchItemsByName(keyword);
-        List<MsisdnMgmtDto> msisdnMgmtDtoList = new ArrayList<>();
-        for (MsisdnMgmt msisdnMgmt : msisdnMgmtListDb) {
-            MsisdnMgmtDto msisdnMgmtDto = new MsisdnMgmtDto();
+    public List<MsisdnMgmtDtoNew> getAllMsisdnDetail() {
+        List<MsisdnMgmtDto> msisdnMgmtDbList = msisdnMgmtRepository.fetchAllMsisdnMgmtRecord();
+        List<MsisdnMgmtDtoNew> msisdnMgmtDtoList = new ArrayList<>();
+        for (MsisdnMgmtDto msisdnMgmt : msisdnMgmtDbList) {
+            MsisdnMgmtDtoNew msisdnMgmtDto = new MsisdnMgmtDtoNew();
             msisdnMgmtDto.setId(msisdnMgmt.getId());
             msisdnMgmtDto.setMsisdn(msisdnMgmt.getMsisdn());
             msisdnMgmtDto.setCategory(msisdnMgmt.getCategory());
@@ -89,10 +87,37 @@ public class MsisdnMgmtServiceImpl implements MsisdnMgmtService {
             msisdnMgmtDto.setIsPostpaid(msisdnMgmt.getIsPostpaid());
             msisdnMgmtDto.setIsM2M(msisdnMgmt.getIsM2M());
             msisdnMgmtDto.setIsSpecialNo(msisdnMgmt.getIsSpecialNo());
-            msisdnMgmtDto.setAllocationDate(msisdnMgmt.getAllocationDate());
+            msisdnMgmtDto.setAllocationDate(fetchReadableDateTime(msisdnMgmt.getAllocationDate()));
             msisdnMgmtDto.setStatus(msisdnMgmt.getStatus());
             msisdnMgmtDtoList.add(msisdnMgmtDto);
         }
         return msisdnMgmtDtoList;
+    }
+
+    @Override
+    public List<MsisdnMgmtDtoNew> searchRecord(String keyword) {
+        List<MsisdnMgmt> msisdnMgmtListDb = msisdnMgmtRepository.searchItemsByName(keyword);
+        List<MsisdnMgmtDtoNew> msisdnMgmtDtoList = new ArrayList<>();
+        for (MsisdnMgmt msisdnMgmt : msisdnMgmtListDb) {
+            MsisdnMgmtDtoNew msisdnMgmtDto = new MsisdnMgmtDtoNew();
+            msisdnMgmtDto.setId(msisdnMgmt.getId());
+            msisdnMgmtDto.setMsisdn(msisdnMgmt.getMsisdn());
+            msisdnMgmtDto.setCategory(msisdnMgmt.getCategory());
+            msisdnMgmtDto.setSeriesId(msisdnMgmt.getSeriesId());
+            msisdnMgmtDto.setIsPrepaid(msisdnMgmt.getIsPrepaid());
+            msisdnMgmtDto.setIsPostpaid(msisdnMgmt.getIsPostpaid());
+            msisdnMgmtDto.setIsM2M(msisdnMgmt.getIsM2M());
+            msisdnMgmtDto.setIsSpecialNo(msisdnMgmt.getIsSpecialNo());
+            msisdnMgmtDto.setAllocationDate(fetchReadableDateTime(msisdnMgmt.getAllocationDate()));
+            msisdnMgmtDto.setStatus(msisdnMgmt.getStatus());
+            msisdnMgmtDtoList.add(msisdnMgmtDto);
+        }
+        return msisdnMgmtDtoList;
+    }
+
+    private String fetchReadableDateTime(Date date) {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        String formattedDate = simpleDateFormat.format(date);
+        return formattedDate;
     }
 }

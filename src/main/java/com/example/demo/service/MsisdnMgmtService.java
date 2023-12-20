@@ -1,18 +1,18 @@
 package com.example.demo.service;
 
-import com.example.demo.dto.MsisdnMgmtDto;
+import com.example.demo.dto.MsisdnMgmtDtoNew;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
 public interface MsisdnMgmtService {
-    ResponseEntity saveMsisdnMgmt(MsisdnMgmtDto msisdnMgmtDto);
+    ResponseEntity saveMsisdnMgmt(MsisdnMgmtDtoNew msisdnMgmtDto);
 
-    ResponseEntity editMsisdnMgmt(Integer msisdnId, MsisdnMgmtDto msisdnMgmtDto);
+    ResponseEntity editMsisdnMgmt(Integer msisdnId, MsisdnMgmtDtoNew msisdnMgmtDto);
 
     ResponseEntity deleteMsisdnMgmt(Integer msisdnId);
 
-    List<MsisdnMgmtDto> getAllMsisdnDetail();
+    List<MsisdnMgmtDtoNew> getAllMsisdnDetail();
 
-    List<MsisdnMgmtDto> searchRecord(String keyword);
+    List<MsisdnMgmtDtoNew> searchRecord(String keyword);
 }

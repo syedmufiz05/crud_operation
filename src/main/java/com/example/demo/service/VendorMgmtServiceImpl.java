@@ -1,6 +1,7 @@
 package com.example.demo.service;
 
 import com.example.demo.dto.VendorMgmtDto;
+import com.example.demo.dto.VendorMgmtDtoNew;
 import com.example.demo.exception.CustomMessage;
 import com.example.demo.model.VendorMgmt;
 import com.example.demo.repository.VendorMgmtRepository;
@@ -10,7 +11,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,7 +23,7 @@ public class VendorMgmtServiceImpl implements VendorMgmtService {
     private VendorMgmtRepository vendorMgmtRepository;
 
     @Override
-    public ResponseEntity saveVendor(VendorMgmtDto vendorMgmtDto) {
+    public ResponseEntity saveVendor(VendorMgmtDtoNew vendorMgmtDto) {
         VendorMgmt vendorMgmtDb = new VendorMgmt();
         vendorMgmtDb.setVendorName(vendorMgmtDto.getVendorName() != null ? vendorMgmtDto.getVendorName() : "");
         vendorMgmtDb.setEmail(vendorMgmtDto.getEmail() != null ? vendorMgmtDto.getEmail() : "");
@@ -31,7 +34,7 @@ public class VendorMgmtServiceImpl implements VendorMgmtService {
         vendorMgmtDb.setBatchPrefix(vendorMgmtDto.getBatchPrefix() != null ? vendorMgmtDto.getBatchPrefix() : "");
         vendorMgmtDb.setStatus(vendorMgmtDto.getStatus() != null ? vendorMgmtDto.getStatus() : false);
         vendorMgmtRepository.save(vendorMgmtDb);
-        VendorMgmtDto vendorMgmtDtoNew = new VendorMgmtDto(vendorMgmtDb.getId(), vendorMgmtDb.getVendorName(), vendorMgmtDb.getEmail(), vendorMgmtDb.getContact(), vendorMgmtDb.getAddress(), vendorMgmtDb.getType(), vendorMgmtDb.getIdentification(), vendorMgmtDb.getBatchPrefix(), vendorMgmtDb.getRegistrationDate(), vendorMgmtDb.getStatus());
+        VendorMgmtDtoNew vendorMgmtDtoNew = new VendorMgmtDtoNew(vendorMgmtDb.getId(), vendorMgmtDb.getVendorName(), vendorMgmtDb.getEmail(), vendorMgmtDb.getContact(), vendorMgmtDb.getAddress(), vendorMgmtDb.getType(), vendorMgmtDb.getIdentification(), vendorMgmtDb.getBatchPrefix(), fetchReadableDateTime(vendorMgmtDb.getRegistrationDate()), vendorMgmtDb.getStatus());
         return new ResponseEntity<>(vendorMgmtDtoNew, HttpStatus.OK);
     }
 
@@ -49,7 +52,7 @@ public class VendorMgmtServiceImpl implements VendorMgmtService {
             vendorMgmtDb.setBatchPrefix(vendorMgmtDto.getBatchPrefix() != null ? vendorMgmtDto.getBatchPrefix() : vendorMgmtDb.getBatchPrefix());
             vendorMgmtDb.setStatus(vendorMgmtDto.getStatus() != null ? vendorMgmtDto.getStatus() : vendorMgmtDb.getStatus());
             vendorMgmtRepository.save(vendorMgmtDb);
-            VendorMgmtDto vendorMgmtDtoNew = new VendorMgmtDto(vendorMgmtDb.getId(), vendorMgmtDb.getVendorName(), vendorMgmtDb.getEmail(), vendorMgmtDb.getContact(), vendorMgmtDb.getAddress(), vendorMgmtDb.getType(), vendorMgmtDb.getIdentification(), vendorMgmtDb.getBatchPrefix(), vendorMgmtDb.getRegistrationDate(), vendorMgmtDb.getStatus());
+            VendorMgmtDtoNew vendorMgmtDtoNew = new VendorMgmtDtoNew(vendorMgmtDb.getId(), vendorMgmtDb.getVendorName(), vendorMgmtDb.getEmail(), vendorMgmtDb.getContact(), vendorMgmtDb.getAddress(), vendorMgmtDb.getType(), vendorMgmtDb.getIdentification(), vendorMgmtDb.getBatchPrefix(), fetchReadableDateTime(vendorMgmtDb.getRegistrationDate()), vendorMgmtDb.getStatus());
             return new ResponseEntity<>(vendorMgmtDtoNew, HttpStatus.OK);
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new CustomMessage(HttpStatus.NOT_FOUND.value(), "Invalid Vendor Id"));
@@ -67,16 +70,32 @@ public class VendorMgmtServiceImpl implements VendorMgmtService {
     }
 
     @Override
-    public List<VendorMgmtDto> fetchAllVendors() {
-        return vendorMgmtRepository.fetchAllVendors();
+    public List<VendorMgmtDtoNew> fetchAllVendors() {
+        List<VendorMgmtDto> vendorMgmtDtoList = vendorMgmtRepository.fetchAllVendors();
+        List<VendorMgmtDtoNew> vendorMgmtListDto = new ArrayList<>();
+        for (VendorMgmtDto vendorMgmtDto : vendorMgmtDtoList) {
+            VendorMgmtDtoNew vendorMgmtDtoNew = new VendorMgmtDtoNew();
+            vendorMgmtDtoNew.setVendorId(vendorMgmtDto.getVendorId());
+            vendorMgmtDtoNew.setVendorName(vendorMgmtDto.getVendorName());
+            vendorMgmtDtoNew.setEmail(vendorMgmtDto.getEmail());
+            vendorMgmtDtoNew.setContact(vendorMgmtDto.getContact());
+            vendorMgmtDtoNew.setAddress(vendorMgmtDto.getAddress());
+            vendorMgmtDtoNew.setType(vendorMgmtDto.getType());
+            vendorMgmtDtoNew.setIdentification(vendorMgmtDto.getIdentification());
+            vendorMgmtDtoNew.setBatchPrefix(vendorMgmtDto.getBatchPrefix());
+            vendorMgmtDtoNew.setRegistrationDate(fetchReadableDateTime(vendorMgmtDto.getRegistrationDate()));
+            vendorMgmtDtoNew.setStatus(vendorMgmtDto.getStatus());
+            vendorMgmtListDto.add(vendorMgmtDtoNew);
+        }
+        return vendorMgmtListDto;
     }
 
     @Override
-    public List<VendorMgmtDto> searchVendors(String keyword) {
+    public List<VendorMgmtDtoNew> searchVendors(String keyword) {
         List<VendorMgmt> vendorMgmtListDb = vendorMgmtRepository.searchItemsByName(keyword);
-        List<VendorMgmtDto> vendorMgmtListDto = new ArrayList<>();
+        List<VendorMgmtDtoNew> vendorMgmtListDto = new ArrayList<>();
         for (VendorMgmt vendorMgmtDb : vendorMgmtListDb) {
-            VendorMgmtDto vendorMgmtDto = new VendorMgmtDto();
+            VendorMgmtDtoNew vendorMgmtDto = new VendorMgmtDtoNew();
             vendorMgmtDto.setVendorId(vendorMgmtDb.getId());
             vendorMgmtDto.setVendorName(vendorMgmtDb.getVendorName());
             vendorMgmtDto.setEmail(vendorMgmtDb.getEmail());
@@ -85,10 +104,16 @@ public class VendorMgmtServiceImpl implements VendorMgmtService {
             vendorMgmtDto.setType(vendorMgmtDb.getType());
             vendorMgmtDto.setIdentification(vendorMgmtDb.getIdentification());
             vendorMgmtDto.setBatchPrefix(vendorMgmtDb.getBatchPrefix());
-            vendorMgmtDto.setRegistrationDate(vendorMgmtDb.getRegistrationDate());
+            vendorMgmtDto.setRegistrationDate(fetchReadableDateTime(vendorMgmtDb.getRegistrationDate()));
             vendorMgmtDto.setStatus(vendorMgmtDb.getStatus());
             vendorMgmtListDto.add(vendorMgmtDto);
         }
         return vendorMgmtListDto;
+    }
+
+    private String fetchReadableDateTime(Date date) {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        String formattedDate = simpleDateFormat.format(date);
+        return formattedDate;
     }
 }

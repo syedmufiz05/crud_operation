@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.dto.VendorMgmtDto;
+import com.example.demo.dto.VendorMgmtDtoNew;
 import com.example.demo.service.VendorMgmtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +17,7 @@ public class VendorMgmtController {
     private VendorMgmtService vendorMgmtService;
 
     @RequestMapping(value = "/save", method = RequestMethod.POST)
-    public ResponseEntity<VendorMgmtDto> saveVendorMgmtDetails(@RequestBody VendorMgmtDto vendorMgmtDto) {
+    public ResponseEntity<VendorMgmtDto> saveVendorMgmtDetails(@RequestBody VendorMgmtDtoNew vendorMgmtDto) {
         return vendorMgmtService.saveVendor(vendorMgmtDto);
     }
 
@@ -31,12 +32,12 @@ public class VendorMgmtController {
     }
 
     @RequestMapping(value = "/get/all", method = RequestMethod.GET)
-    public List<VendorMgmtDto> getAllVendorMgmtDetails() {
+    public List<VendorMgmtDtoNew> getAllVendorMgmtDetails() {
         return vendorMgmtService.fetchAllVendors();
     }
 
     @RequestMapping(value = "/search", method = RequestMethod.GET)
-    public List<VendorMgmtDto> searchVendors(@RequestParam("keyword") String keyword) {
+    public List<VendorMgmtDtoNew> searchVendors(@RequestParam("keyword") String keyword) {
         return vendorMgmtService.searchVendors(keyword);
     }
 }

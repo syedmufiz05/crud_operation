@@ -1,6 +1,7 @@
 package com.example.demo.service;
 
 import com.example.demo.dto.SimMgmtDto;
+import com.example.demo.dto.SimMgmtDtoNew;
 import com.example.demo.exception.CustomMessage;
 import com.example.demo.model.SimMgmt;
 import com.example.demo.repository.SimMgmtRepository;
@@ -10,7 +11,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,7 +23,7 @@ public class SimMgmtServiceImpl implements SimMgmtService {
     private SimMgmtRepository simMgmtRepository;
 
     @Override
-    public ResponseEntity saveSimMgmt(SimMgmtDto simMgmtDto) {
+    public ResponseEntity saveSimMgmt(SimMgmtDtoNew simMgmtDto) {
         Optional<SimMgmt> simMgmt = simMgmtRepository.findByImsi(simMgmtDto.getImsi());
         if (!simMgmt.isPresent()) {
             SimMgmt simMgmtDb = new SimMgmt();
@@ -32,14 +35,14 @@ public class SimMgmtServiceImpl implements SimMgmtService {
             simMgmtDb.setVendorName(simMgmtDto.getVendorName() != null ? simMgmtDto.getVendorName() : "");
             simMgmtDb.setStatus(simMgmtDto.getStatus() != null ? simMgmtDto.getStatus() : false);
             simMgmtRepository.save(simMgmtDb);
-            SimMgmtDto simMgmtDtoNew = new SimMgmtDto(simMgmtDb.getId(), simMgmtDb.getImsi(), simMgmtDb.getBatchNo(), simMgmtDb.getBatchDate(), simMgmtDb.getAllocationDate(), simMgmtDb.getSimType(), simMgmtDb.getKeyId(), simMgmtDb.getAuthId(), simMgmtDb.getVendorName(), simMgmtDb.getStatus());
+            SimMgmtDtoNew simMgmtDtoNew = new SimMgmtDtoNew(simMgmtDb.getId(), simMgmtDb.getImsi(), simMgmtDb.getBatchNo(), fetchReadableDateTime(simMgmtDb.getBatchDate()), fetchReadableDateTime(simMgmtDb.getAllocationDate()), simMgmtDb.getSimType(), simMgmtDb.getKeyId(), simMgmtDb.getAuthId(), simMgmtDb.getVendorName(), simMgmtDb.getStatus());
             return new ResponseEntity<>(simMgmtDtoNew, HttpStatus.OK);
         }
         return ResponseEntity.status(HttpStatus.CONFLICT).body(new CustomMessage(HttpStatus.CONFLICT.value(), "IMSI Id already exist"));
     }
 
     @Override
-    public ResponseEntity editSimMgmt(Integer simId, SimMgmtDto simMgmtDto) {
+    public ResponseEntity editSimMgmt(Integer simId, SimMgmtDtoNew simMgmtDto) {
         Optional<SimMgmt> simMgmt = simMgmtRepository.findById(simId);
         if (simMgmt.isPresent()) {
             SimMgmt simMgmtDb = simMgmt.get();
@@ -51,7 +54,7 @@ public class SimMgmtServiceImpl implements SimMgmtService {
             simMgmtDb.setVendorName(simMgmtDto.getVendorName() != null ? simMgmtDto.getVendorName() : simMgmtDb.getVendorName());
             simMgmtDb.setStatus(simMgmtDto.getStatus() != null ? simMgmtDto.getStatus() : simMgmtDb.getStatus());
             simMgmtRepository.save(simMgmtDb);
-            SimMgmtDto simMgmtDtoNew = new SimMgmtDto(simMgmtDb.getId(), simMgmtDb.getImsi(), simMgmtDb.getBatchNo(), simMgmtDb.getBatchDate(), simMgmtDb.getAllocationDate(), simMgmtDb.getSimType(), simMgmtDb.getKeyId(), simMgmtDb.getAuthId(), simMgmtDb.getVendorName(), simMgmtDb.getStatus());
+            SimMgmtDtoNew simMgmtDtoNew = new SimMgmtDtoNew(simMgmtDb.getId(), simMgmtDb.getImsi(), simMgmtDb.getBatchNo(), fetchReadableDateTime(simMgmtDb.getBatchDate()), fetchReadableDateTime(simMgmtDb.getAllocationDate()), simMgmtDb.getSimType(), simMgmtDb.getKeyId(), simMgmtDb.getAuthId(), simMgmtDb.getVendorName(), simMgmtDb.getStatus());
             return new ResponseEntity<>(simMgmtDtoNew, HttpStatus.OK);
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new CustomMessage(HttpStatus.NOT_FOUND.value(), "Invalid Sim Id"));
@@ -69,21 +72,37 @@ public class SimMgmtServiceImpl implements SimMgmtService {
     }
 
     @Override
-    public List<SimMgmtDto> getAllSimMgmt() {
-        return simMgmtRepository.fetchAllSimMgmt();
+    public List<SimMgmtDtoNew> getAllSimMgmt() {
+        List<SimMgmtDto> simMgmtDbList = simMgmtRepository.fetchAllSimMgmt();
+        List<SimMgmtDtoNew> simMgmtDtoList = new ArrayList<>();
+        for (SimMgmtDto simMgmtDto : simMgmtDbList) {
+            SimMgmtDtoNew simMgmtDtoNew=new SimMgmtDtoNew();
+            simMgmtDtoNew.setSimId(simMgmtDto.getSimId());
+            simMgmtDtoNew.setImsi(simMgmtDto.getImsi());
+            simMgmtDtoNew.setBatchNo(simMgmtDto.getBatchNo());
+            simMgmtDtoNew.setBatchDate(fetchReadableDateTime(simMgmtDto.getBatchDate()));
+            simMgmtDtoNew.setAllocationDate(fetchReadableDateTime(simMgmtDto.getAllocationDate()));
+            simMgmtDtoNew.setSimType(simMgmtDto.getSimType());
+            simMgmtDtoNew.setKeyId(simMgmtDto.getKeyId());
+            simMgmtDtoNew.setAuthId(simMgmtDto.getAuthId());
+            simMgmtDtoNew.setVendorName(simMgmtDto.getVendorName());
+            simMgmtDtoNew.setStatus(simMgmtDto.getStatus());
+            simMgmtDtoList.add(simMgmtDtoNew);
+        }
+        return simMgmtDtoList;
     }
 
     @Override
-    public List<SimMgmtDto> searchRecord(String keyword) {
+    public List<SimMgmtDtoNew> searchRecord(String keyword) {
         List<SimMgmt> simMgmtDbList = simMgmtRepository.searchItemsByName(keyword);
-        List<SimMgmtDto> simMgmtDtoList = new ArrayList<>();
+        List<SimMgmtDtoNew> simMgmtDtoList = new ArrayList<>();
         for (SimMgmt simMgmtDb : simMgmtDbList) {
-            SimMgmtDto simMgmtDto = new SimMgmtDto();
+            SimMgmtDtoNew simMgmtDto = new SimMgmtDtoNew();
             simMgmtDto.setSimId(simMgmtDb.getId());
             simMgmtDto.setImsi(simMgmtDb.getImsi());
             simMgmtDto.setBatchNo(simMgmtDb.getBatchNo());
-            simMgmtDto.setBatchDate(simMgmtDb.getBatchDate());
-            simMgmtDto.setAllocationDate(simMgmtDb.getAllocationDate());
+            simMgmtDto.setBatchDate(fetchReadableDateTime(simMgmtDb.getBatchDate()));
+            simMgmtDto.setAllocationDate(fetchReadableDateTime(simMgmtDb.getAllocationDate()));
             simMgmtDto.setSimType(simMgmtDb.getSimType());
             simMgmtDto.setKeyId(simMgmtDb.getKeyId());
             simMgmtDto.setAuthId(simMgmtDb.getAuthId());
@@ -92,5 +111,11 @@ public class SimMgmtServiceImpl implements SimMgmtService {
             simMgmtDtoList.add(simMgmtDto);
         }
         return simMgmtDtoList;
+    }
+
+    private String fetchReadableDateTime(Date date) {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        String formattedDate = simpleDateFormat.format(date);
+        return formattedDate;
     }
 }

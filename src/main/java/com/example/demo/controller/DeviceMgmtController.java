@@ -1,6 +1,6 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.DeviceMgmtDto;
+import com.example.demo.dto.DeviceMgmtDtoNew;
 import com.example.demo.service.DeviceMgmtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -16,12 +16,12 @@ public class DeviceMgmtController {
     private DeviceMgmtService deviceMgmtService;
 
     @RequestMapping(value = "/save", method = RequestMethod.POST)
-    public ResponseEntity<DeviceMgmtDto> saveDeviceMgmtDetails(@RequestBody DeviceMgmtDto deviceMgmtDto) {
+    public ResponseEntity<DeviceMgmtDtoNew> saveDeviceMgmtDetails(@RequestBody DeviceMgmtDtoNew deviceMgmtDto) {
         return deviceMgmtService.saveDeviceMgmtDetail(deviceMgmtDto);
     }
 
     @RequestMapping(value = "/update/{device_id}", method = RequestMethod.PUT)
-    public ResponseEntity<DeviceMgmtDto> updateDeviceMgmtDetails(@PathVariable("device_id") Integer deviceId, @RequestBody DeviceMgmtDto deviceMgmtDto) {
+    public ResponseEntity<DeviceMgmtDtoNew> updateDeviceMgmtDetails(@PathVariable("device_id") Integer deviceId, @RequestBody DeviceMgmtDtoNew deviceMgmtDto) {
         return deviceMgmtService.editDeviceMgmtDetail(deviceId, deviceMgmtDto);
     }
 
@@ -31,13 +31,13 @@ public class DeviceMgmtController {
     }
 
     @RequestMapping(value = "/get/all", method = RequestMethod.GET)
-    public List<DeviceMgmtDto> getAllInventoryDetails() {
+    public List<DeviceMgmtDtoNew> getAllInventoryDetails() {
         return deviceMgmtService.fetchAllDeviceMgmtDetail();
     }
 
     @RequestMapping(value = "/search", method = RequestMethod.GET)
-    public ResponseEntity<List<DeviceMgmtDto>> searchInventoryDetails(@RequestParam("keyword") String keyword) {
-        List<DeviceMgmtDto> deviceMgmtList = deviceMgmtService.searchItems(keyword);
+    public ResponseEntity<List<DeviceMgmtDtoNew>> searchInventoryDetails(@RequestParam("keyword") String keyword) {
+        List<DeviceMgmtDtoNew> deviceMgmtList = deviceMgmtService.searchItems(keyword);
         return ResponseEntity.ok(deviceMgmtList);
     }
 }

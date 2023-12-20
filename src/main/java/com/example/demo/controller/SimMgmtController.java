@@ -1,6 +1,6 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.SimMgmtDto;
+import com.example.demo.dto.SimMgmtDtoNew;
 import com.example.demo.service.SimMgmtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -16,27 +16,27 @@ public class SimMgmtController {
     private SimMgmtService simMgmtService;
 
     @RequestMapping(value = "/save", method = RequestMethod.POST)
-    public ResponseEntity<SimMgmtDto> saveSimMgmtDetails(@RequestBody SimMgmtDto simMgmtDto) {
+    public ResponseEntity<SimMgmtDtoNew> saveSimMgmtDetails(@RequestBody SimMgmtDtoNew simMgmtDto) {
         return simMgmtService.saveSimMgmt(simMgmtDto);
     }
 
     @RequestMapping(value = "/edit/{sim_id}", method = RequestMethod.PUT)
-    public ResponseEntity<SimMgmtDto> editSimMgmtDetails(@PathVariable("sim_id") Integer simId, @RequestBody SimMgmtDto simMgmtDto) {
+    public ResponseEntity<SimMgmtDtoNew> editSimMgmtDetails(@PathVariable("sim_id") Integer simId, @RequestBody SimMgmtDtoNew simMgmtDto) {
         return simMgmtService.editSimMgmt(simId, simMgmtDto);
     }
 
     @RequestMapping(value = "/delete/{sim_id}", method = RequestMethod.DELETE)
-    public ResponseEntity<SimMgmtDto> deleteSimMgmtDetails(@PathVariable("sim_id") Integer simId) {
+    public ResponseEntity deleteSimMgmtDetails(@PathVariable("sim_id") Integer simId) {
         return simMgmtService.deleteSimMgmt(simId);
     }
 
     @RequestMapping(value = "/get/all", method = RequestMethod.GET)
-    public List<SimMgmtDto> getAllSimMgmtDetails() {
+    public List<SimMgmtDtoNew> getAllSimMgmtDetails() {
         return simMgmtService.getAllSimMgmt();
     }
 
     @RequestMapping(value = "/search", method = RequestMethod.GET)
-    public List<SimMgmtDto> getSearchRecords(@RequestParam("keyword") String keyword) {
+    public List<SimMgmtDtoNew> getSearchRecords(@RequestParam("keyword") String keyword) {
         return simMgmtService.searchRecord(keyword);
     }
 }

@@ -1,6 +1,7 @@
 package com.example.demo.service;
 
 import com.example.demo.dto.DeviceMgmtDto;
+import com.example.demo.dto.DeviceMgmtDtoNew;
 import com.example.demo.exception.CustomMessage;
 import com.example.demo.model.DeviceMgmt;
 import com.example.demo.repository.DeviceMgmtRepository;
@@ -10,7 +11,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,7 +23,7 @@ public class DeviceMgmtServiceImpl implements DeviceMgmtService {
     private DeviceMgmtRepository deviceMgmtRepository;
 
     @Override
-    public ResponseEntity saveDeviceMgmtDetail(DeviceMgmtDto deviceMgmtDto) {
+    public ResponseEntity saveDeviceMgmtDetail(DeviceMgmtDtoNew deviceMgmtDto) {
         Optional<DeviceMgmt> deviceMgmt = deviceMgmtRepository.findByDeviceId(deviceMgmtDto.getDeviceId());
         if (!deviceMgmt.isPresent()) {
             DeviceMgmt deviceMgmtDb = new DeviceMgmt();
@@ -33,14 +36,14 @@ public class DeviceMgmtServiceImpl implements DeviceMgmtService {
             deviceMgmtDb.setIsUicc(deviceMgmtDto.getIsUicc() != null ? deviceMgmtDto.getIsUicc() : false);
             deviceMgmtDb.setStatus(deviceMgmtDto.getStatus() != null ? deviceMgmtDto.getStatus() : false);
             deviceMgmtRepository.save(deviceMgmtDb);
-            DeviceMgmtDto deviceMgmtDtoNew = new DeviceMgmtDto(deviceMgmtDb.getDeviceId(), deviceMgmtDb.getImeiPrimary(), deviceMgmtDb.getImeiList(), deviceMgmtDb.getUserAgent(), deviceMgmtDb.getFootPrint(), deviceMgmtDb.getEirTrackId(), deviceMgmtDb.getIsESim(), deviceMgmtDb.getIsUicc(), deviceMgmtDb.getRegistrationDate(), deviceMgmtDb.getStatus());
+            DeviceMgmtDtoNew deviceMgmtDtoNew = new DeviceMgmtDtoNew(deviceMgmtDb.getDeviceId(), deviceMgmtDb.getImeiPrimary(), deviceMgmtDb.getImeiList(), deviceMgmtDb.getUserAgent(), deviceMgmtDb.getFootPrint(), deviceMgmtDb.getEirTrackId(), deviceMgmtDb.getIsESim(), deviceMgmtDb.getIsUicc(), fetchReadableDateTime(deviceMgmtDb.getRegistrationDate()), deviceMgmtDb.getStatus());
             return new ResponseEntity<>(deviceMgmtDtoNew, HttpStatus.OK);
         }
         return ResponseEntity.status(HttpStatus.CONFLICT).body(new CustomMessage(HttpStatus.CONFLICT.value(), "Device Id already exist"));
     }
 
     @Override
-    public ResponseEntity editDeviceMgmtDetail(Integer deviceId, DeviceMgmtDto deviceMgmtDto) {
+    public ResponseEntity editDeviceMgmtDetail(Integer deviceId, DeviceMgmtDtoNew deviceMgmtDto) {
         Optional<DeviceMgmt> deviceMgmt = deviceMgmtRepository.findByDeviceId(deviceId);
         if (deviceMgmt.isPresent()) {
             DeviceMgmt deviceMgmtDb = deviceMgmt.get();
@@ -52,7 +55,7 @@ public class DeviceMgmtServiceImpl implements DeviceMgmtService {
             deviceMgmtDb.setIsESim(deviceMgmtDto.getIsESim() != null ? deviceMgmtDto.getIsESim() : deviceMgmtDb.getIsESim());
             deviceMgmtDb.setIsUicc(deviceMgmtDto.getIsUicc() != null ? deviceMgmtDto.getIsUicc() : deviceMgmtDb.getIsUicc());
             deviceMgmtDb.setStatus(deviceMgmtDto.getStatus() != null ? deviceMgmtDto.getStatus() : deviceMgmtDb.getStatus());
-            DeviceMgmtDto deviceMgmtDtoNew = new DeviceMgmtDto(deviceMgmtDb.getDeviceId(), deviceMgmtDb.getImeiPrimary(), deviceMgmtDb.getImeiList(), deviceMgmtDb.getUserAgent(), deviceMgmtDb.getFootPrint(), deviceMgmtDb.getEirTrackId(), deviceMgmtDb.getIsESim(), deviceMgmtDb.getIsUicc(), deviceMgmtDb.getRegistrationDate(), deviceMgmtDb.getStatus());
+            DeviceMgmtDtoNew deviceMgmtDtoNew = new DeviceMgmtDtoNew(deviceMgmtDb.getDeviceId(), deviceMgmtDb.getImeiPrimary(), deviceMgmtDb.getImeiList(), deviceMgmtDb.getUserAgent(), deviceMgmtDb.getFootPrint(), deviceMgmtDb.getEirTrackId(), deviceMgmtDb.getIsESim(), deviceMgmtDb.getIsUicc(), fetchReadableDateTime(deviceMgmtDb.getRegistrationDate()), deviceMgmtDb.getStatus());
             deviceMgmtRepository.save(deviceMgmtDb);
             return new ResponseEntity<>(deviceMgmtDtoNew, HttpStatus.OK);
         }
@@ -71,16 +74,32 @@ public class DeviceMgmtServiceImpl implements DeviceMgmtService {
     }
 
     @Override
-    public List<DeviceMgmtDto> fetchAllDeviceMgmtDetail() {
-        return deviceMgmtRepository.fetchAllDeviceMgmtDetail();
+    public List<DeviceMgmtDtoNew> fetchAllDeviceMgmtDetail() {
+        List<DeviceMgmtDto> deviceMgmtDbList = deviceMgmtRepository.fetchAllDeviceMgmtDetail();
+        List<DeviceMgmtDtoNew> deviceMgmtDtoList = new ArrayList<>();
+        for (DeviceMgmtDto deviceMgmtDto : deviceMgmtDbList) {
+            DeviceMgmtDtoNew deviceMgmtDtoNew = new DeviceMgmtDtoNew();
+            deviceMgmtDtoNew.setDeviceId(deviceMgmtDto.getDeviceId());
+            deviceMgmtDtoNew.setImeiPrimary(deviceMgmtDto.getImeiPrimary());
+            deviceMgmtDtoNew.setImeiList(deviceMgmtDto.getImeiList());
+            deviceMgmtDtoNew.setUserAgent(deviceMgmtDto.getUserAgent());
+            deviceMgmtDtoNew.setFootPrint(deviceMgmtDto.getFootPrint());
+            deviceMgmtDtoNew.setEirTrackId(deviceMgmtDto.getEirTrackId());
+            deviceMgmtDtoNew.setIsESim(deviceMgmtDto.getIsESim());
+            deviceMgmtDtoNew.setIsUicc(deviceMgmtDto.getIsUicc());
+            deviceMgmtDtoNew.setRegistrationDate(fetchReadableDateTime(deviceMgmtDto.getRegistrationDate()));
+            deviceMgmtDtoNew.setStatus(deviceMgmtDto.getStatus());
+            deviceMgmtDtoList.add(deviceMgmtDtoNew);
+        }
+        return deviceMgmtDtoList;
     }
 
     @Override
-    public List<DeviceMgmtDto> searchItems(String keyword) {
+    public List<DeviceMgmtDtoNew> searchItems(String keyword) {
         List<DeviceMgmt> deviceMgmtDbList = deviceMgmtRepository.searchItemsByName(keyword);
-        List<DeviceMgmtDto> deviceMgmtList = new ArrayList<>();
+        List<DeviceMgmtDtoNew> deviceMgmtList = new ArrayList<>();
         for (DeviceMgmt deviceMgmtDb : deviceMgmtDbList) {
-            DeviceMgmtDto deviceMgmtDto = new DeviceMgmtDto();
+            DeviceMgmtDtoNew deviceMgmtDto = new DeviceMgmtDtoNew();
             deviceMgmtDto.setDeviceId(deviceMgmtDb.getDeviceId());
             deviceMgmtDto.setImeiPrimary(deviceMgmtDb.getImeiPrimary());
             deviceMgmtDto.setImeiList(deviceMgmtDb.getImeiList());
@@ -89,10 +108,16 @@ public class DeviceMgmtServiceImpl implements DeviceMgmtService {
             deviceMgmtDto.setEirTrackId(deviceMgmtDb.getEirTrackId());
             deviceMgmtDto.setIsESim(deviceMgmtDb.getIsESim());
             deviceMgmtDto.setIsUicc(deviceMgmtDb.getIsUicc());
-            deviceMgmtDto.setRegistrationDate(deviceMgmtDb.getRegistrationDate());
+            deviceMgmtDto.setRegistrationDate(fetchReadableDateTime(deviceMgmtDb.getRegistrationDate()));
             deviceMgmtDto.setStatus(deviceMgmtDb.getStatus());
             deviceMgmtList.add(deviceMgmtDto);
         }
         return deviceMgmtList;
+    }
+
+    private String fetchReadableDateTime(Date date) {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        String formattedDate = simpleDateFormat.format(date);
+        return formattedDate;
     }
 }
