@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/voucher/detail")
 public class VoucherController {
@@ -15,6 +17,16 @@ public class VoucherController {
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     public ResponseEntity<VouchersDto> saveVoucher(@RequestBody VouchersDto vouchersDto) {
         return vouchersService.saveVoucher(vouchersDto);
+    }
+
+    @RequestMapping(value = "/get", method = RequestMethod.GET)
+    public ResponseEntity<VouchersDto> getVoucher(@RequestParam("voucher_no") String voucherNo) {
+        return vouchersService.getVoucher(voucherNo);
+    }
+
+    @RequestMapping(value = "/get/all", method = RequestMethod.GET)
+    public List<VouchersDto> getAllVoucher() {
+        return vouchersService.getAllVoucher();
     }
 
     @RequestMapping(value = "/edit", method = RequestMethod.PUT)

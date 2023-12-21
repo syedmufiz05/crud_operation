@@ -1,6 +1,7 @@
 package com.example.demo.service;
 
 import com.example.demo.dto.VouchersDto;
+import com.example.demo.dto.VouchersDtoList;
 import com.example.demo.exception.CustomMessage;
 import com.example.demo.model.Vouchers;
 import com.example.demo.repository.VouchersRepository;
@@ -11,7 +12,9 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -38,6 +41,7 @@ public class VouchersServiceImpl implements VouchersService {
             voucher.setSerialNo(vouchersDto.getSerialNo() != null ? vouchersDto.getSerialNo() : "");
             voucher.setStatus(vouchersDto.getStatus() != null ? vouchersDto.getStatus() : "");
             voucher.setVoucherNo(vouchersDto.getVoucherNo() != null ? vouchersDto.getVoucherNo() : "");
+            vouchersRepository.save(voucher);
             VouchersDto vouchersDtoNew = new VouchersDto(voucher.getId(), fetchReadableDateTime(voucher.getActivatedDate()), voucher.getAmount(), voucher.getBatchId(), fetchReadableDateTime(voucher.getCreatedDate()), voucher.getCurrency(), fetchReadableDateTime(voucher.getExpiryDate()), voucher.getGroupCode(), voucher.getInstructionId(), voucher.getPayeeFunctionalId(), voucher.getRegisteringInstitutionId(), voucher.getRequestId(), voucher.getSerialNo(), voucher.getStatus(), voucher.getVoucherNo());
             return new ResponseEntity<>(vouchersDtoNew, HttpStatus.OK);
         }
@@ -48,7 +52,7 @@ public class VouchersServiceImpl implements VouchersService {
     public ResponseEntity editVoucher(String voucherNo, VouchersDto vouchersDto) {
         Optional<Vouchers> voucherDb = vouchersRepository.findByVoucherNo(voucherNo);
         if (voucherDb.isPresent()) {
-            Vouchers voucher = new Vouchers();
+            Vouchers voucher = voucherDb.get();
             voucher.setAmount(vouchersDto.getAmount() != null ? vouchersDto.getAmount() : voucher.getAmount());
             voucher.setBatchId(vouchersDto.getBatchId() != null ? vouchersDto.getBatchId() : voucher.getBatchId());
             voucher.setCurrency(vouchersDto.getCurrency() != null ? vouchersDto.getCurrency() : voucher.getCurrency());
@@ -59,6 +63,7 @@ public class VouchersServiceImpl implements VouchersService {
             voucher.setRequestId(vouchersDto.getRequestId() != null ? vouchersDto.getRequestId() : voucher.getRequestId());
             voucher.setSerialNo(vouchersDto.getSerialNo() != null ? vouchersDto.getSerialNo() : voucher.getSerialNo());
             voucher.setStatus(vouchersDto.getStatus() != null ? vouchersDto.getStatus() : voucher.getStatus());
+            vouchersRepository.save(voucher);
             VouchersDto vouchersDtoNew = new VouchersDto(voucher.getId(), fetchReadableDateTime(voucher.getActivatedDate()), voucher.getAmount(), voucher.getBatchId(), fetchReadableDateTime(voucher.getCreatedDate()), voucher.getCurrency(), fetchReadableDateTime(voucher.getExpiryDate()), voucher.getGroupCode(), voucher.getInstructionId(), voucher.getPayeeFunctionalId(), voucher.getRegisteringInstitutionId(), voucher.getRequestId(), voucher.getSerialNo(), voucher.getStatus(), voucher.getVoucherNo());
             return new ResponseEntity<>(vouchersDtoNew, HttpStatus.OK);
         }
@@ -75,6 +80,58 @@ public class VouchersServiceImpl implements VouchersService {
             return ResponseEntity.status(HttpStatus.OK).body(new CustomMessage(HttpStatus.OK.value(), "Deleted Successfully"));
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new CustomMessage(HttpStatus.NOT_FOUND.value(), "Invalid Voucher No."));
+    }
+
+    @Override
+    public ResponseEntity getVoucher(String voucherNo) {
+        Optional<Vouchers> voucher = vouchersRepository.findByVoucherNo(voucherNo);
+        if (voucher.isPresent()) {
+            Vouchers vouchersDb = voucher.get();
+            VouchersDto vouchersDto = new VouchersDto();
+            vouchersDto.setId(vouchersDb.getId());
+            vouchersDto.setActivatedDate(fetchReadableDateTime(vouchersDb.getActivatedDate()));
+            vouchersDto.setAmount(vouchersDb.getAmount());
+            vouchersDto.setBatchId(vouchersDb.getBatchId());
+            vouchersDto.setCreatedDate(fetchReadableDateTime(vouchersDb.getCreatedDate()));
+            vouchersDto.setCurrency(vouchersDb.getCurrency());
+            vouchersDto.setExpiryDate(fetchReadableDateTime(vouchersDb.getExpiryDate()));
+            vouchersDto.setGroupCode(vouchersDb.getGroupCode());
+            vouchersDto.setInstructionId(vouchersDb.getInstructionId());
+            vouchersDto.setPayeeFunctionalId(vouchersDb.getPayeeFunctionalId());
+            vouchersDto.setRegisteringInstitutionId(vouchersDb.getRegisteringInstitutionId());
+            vouchersDto.setRequestId(vouchersDb.getRequestId());
+            vouchersDto.setSerialNo(vouchersDb.getSerialNo());
+            vouchersDto.setStatus(vouchersDb.getStatus());
+            vouchersDto.setVoucherNo(vouchersDb.getVoucherNo());
+            return new ResponseEntity<>(vouchersDto, HttpStatus.OK);
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new CustomMessage(HttpStatus.NOT_FOUND.value(), "Invalid Voucher No."));
+    }
+
+    @Override
+    public List<VouchersDto> getAllVoucher() {
+        List<VouchersDtoList> vouchersDbList = vouchersRepository.fetchAllVouchers();
+        List<VouchersDto> vouchersDtoList = new ArrayList<>();
+        for (VouchersDtoList vouchersDb : vouchersDbList) {
+            VouchersDto vouchersDto = new VouchersDto();
+            vouchersDto.setId(vouchersDb.getId());
+            vouchersDto.setActivatedDate(fetchReadableDateTime(vouchersDb.getActivatedDate()));
+            vouchersDto.setAmount(vouchersDb.getAmount());
+            vouchersDto.setBatchId(vouchersDb.getBatchId());
+            vouchersDto.setCreatedDate(fetchReadableDateTime(vouchersDb.getCreatedDate()));
+            vouchersDto.setCurrency(vouchersDb.getCurrency());
+            vouchersDto.setExpiryDate(fetchReadableDateTime(vouchersDb.getExpiryDate()));
+            vouchersDto.setGroupCode(vouchersDb.getGroupCode());
+            vouchersDto.setInstructionId(vouchersDb.getInstructionId());
+            vouchersDto.setPayeeFunctionalId(vouchersDb.getPayeeFunctionalId());
+            vouchersDto.setRegisteringInstitutionId(vouchersDb.getRegisteringInstitutionId());
+            vouchersDto.setRequestId(vouchersDb.getRequestId());
+            vouchersDto.setSerialNo(vouchersDb.getSerialNo());
+            vouchersDto.setStatus(vouchersDb.getStatus());
+            vouchersDto.setVoucherNo(vouchersDb.getVoucherNo());
+            vouchersDtoList.add(vouchersDto);
+        }
+        return vouchersDtoList;
     }
 
     private String fetchReadableDateTime(Date date) {
