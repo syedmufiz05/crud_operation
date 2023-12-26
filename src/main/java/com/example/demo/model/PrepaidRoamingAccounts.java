@@ -2,14 +2,14 @@ package com.example.demo.model;
 
 import lombok.Data;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
-@Table(name = "prepaid_roaming_accounts")
 @Data
+@Table(name = "prepaid_roaming_accounts")
 public class PrepaidRoamingAccounts {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "roaming_account_id")
     private Integer roamingAccountId;
 

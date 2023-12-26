@@ -17,18 +17,18 @@ public class PrepaidAccountController {
         return prepaidAccountsService.savePrepaidAccount(prepaidAccountsDto);
     }
 
-    @RequestMapping(value = "/edit/{account_id}", method = RequestMethod.POST)
+    @RequestMapping(value = "/edit/{account_id}", method = RequestMethod.PUT)
     public ResponseEntity<PrepaidAccountsDto> editPrepaidAccount(@PathVariable("account_id") Integer accountId, @RequestBody PrepaidAccountsDto prepaidAccountsDto) {
         return prepaidAccountsService.editPrepaidAccount(accountId, prepaidAccountsDto);
     }
 
-    @RequestMapping(value = "/delete/{account_id}", method = RequestMethod.POST)
+    @RequestMapping(value = "/delete/{account_id}", method = RequestMethod.DELETE)
     public ResponseEntity deletePrepaidAccount(@PathVariable("account_id") Integer accountId) {
         return prepaidAccountsService.deletePrepaidAccount(accountId);
     }
 
-    @RequestMapping(value = "/get/{account_id}", method = RequestMethod.POST)
+    @RequestMapping(value = "/get/{account_id}", method = RequestMethod.GET)
     public ResponseEntity<PrepaidAccountsDto> getPrepaidAccount(@PathVariable("account_id") Integer accountId) {
-        return prepaidAccountsService.deletePrepaidAccount(accountId);
+        return prepaidAccountsService.getPrepaidAccount(accountId);
     }
 }
