@@ -1,10 +1,13 @@
 package com.example.demo.service;
 
+import com.example.demo.dto.DeductionDto;
 import com.example.demo.dto.PrepaidAccountsDto;
 import org.springframework.http.ResponseEntity;
 
 public interface PrepaidAccountsService {
     ResponseEntity savePrepaidAccount(PrepaidAccountsDto prepaidAccountsDto);
+
+    String saveDeductionRecord(DeductionDto deductionDto);
 
     ResponseEntity editPrepaidAccount(Integer accountId, PrepaidAccountsDto prepaidAccountsDto);
 

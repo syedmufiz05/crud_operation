@@ -28,29 +28,29 @@ public class PrepaidAccountsDto {
     private Integer fiveGDataOctets;
 
     @JsonProperty("volte_call_seconds")
-    private Integer volteCallSeconds;
+    private Long volteCallSeconds;
 
     @JsonProperty("total_data_octets_available")
-    private Integer totalDataOctetsAvailable;
+    private Long totalDataOctetsAvailable;
 
     @JsonProperty("total_input_data_octets_available")
-    private Integer totalInputDataOctetsAvailable;
+    private Long totalInputDataOctetsAvailable;
 
     @JsonProperty("total_output_data_octets_available")
-    private Integer totalOutputDataOctetsAvailable;
+    private Long totalOutputDataOctetsAvailable;
 
     @JsonProperty("total_data_octets_consumed")
-    private Integer totalDataOctetsConsumed;
+    private Long totalDataOctetsConsumed;
 
     @JsonProperty("total_call_seconds_available")
-    private Integer totalCallSecondsAvailable;
+    private Long totalCallSecondsAvailable;
 
     @JsonProperty("total_call_seconds_consumed")
-    private Integer totalCallSecondsConsumed;
+    private Long totalCallSecondsConsumed;
 
     @JsonProperty("total_sms_available")
-    private Integer totalSmsAvailable;
+    private Long totalSmsAvailable;
 
     @JsonProperty("total_sms_consumed")
-    private Integer totalSmsConsumed;
+    private Long totalSmsConsumed;
 }

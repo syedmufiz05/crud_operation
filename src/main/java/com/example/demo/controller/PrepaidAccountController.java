@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.dto.DeductionDto;
 import com.example.demo.dto.PrepaidAccountsDto;
 import com.example.demo.service.PrepaidAccountsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,5 +31,10 @@ public class PrepaidAccountController {
     @RequestMapping(value = "/get/{account_id}", method = RequestMethod.GET)
     public ResponseEntity<PrepaidAccountsDto> getPrepaidAccount(@PathVariable("account_id") Integer accountId) {
         return prepaidAccountsService.getPrepaidAccount(accountId);
+    }
+
+    @RequestMapping(value = "/deduct", method = RequestMethod.POST)
+    public String saveDeductionRecord(@RequestBody DeductionDto deductionDto) {
+        return prepaidAccountsService.saveDeductionRecord(deductionDto);
     }
 }

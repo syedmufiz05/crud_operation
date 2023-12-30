@@ -29,29 +29,29 @@ public class PrepaidAccounts {
     private Integer fiveGDataOctets;
 
     @Column(name = "volte_call_seconds")
-    private Integer volteCallSeconds;
+    private Long volteCallSeconds;
 
     @Column(name = "total_data_octets_available")
-    private Integer totalDataOctetsAvailable;
+    private Long totalDataOctetsAvailable;
 
     @Column(name = "total_input_data_octets_available")
-    private Integer totalInputDataOctetsAvailable;
+    private Long totalInputDataOctetsAvailable;
 
     @Column(name = "total_output_data_octets_available")
-    private Integer totalOutputDataOctetsAvailable;
+    private Long totalOutputDataOctetsAvailable;
 
     @Column(name = "total_data_octets_consumed")
-    private Integer totalDataOctetsConsumed;
+    private Long totalDataOctetsConsumed;
 
     @Column(name = "total_call_seconds_available")
-    private Integer totalCallSecondsAvailable;
+    private Long totalCallSecondsAvailable;
 
     @Column(name = "total_call_seconds_consumed")
-    private Integer totalCallSecondsConsumed;
+    private Long totalCallSecondsConsumed;
 
     @Column(name = "total_sms_available")
-    private Integer totalSmsAvailable;
+    private Long totalSmsAvailable;
 
     @Column(name = "total_sms_consumed")
-    private Integer totalSmsConsumed;
+    private Long totalSmsConsumed;
 }

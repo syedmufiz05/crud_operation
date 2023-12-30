@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import com.example.demo.dto.DeductionDto;
 import com.example.demo.dto.PrepaidAccountsDto;
 import com.example.demo.exception.CustomMessage;
 import com.example.demo.model.PrepaidAccounts;
@@ -10,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.math.BigDecimal;
 import java.util.Optional;
 
 @Service
@@ -41,6 +43,17 @@ public class PrepaidAccountsServiceImpl implements PrepaidAccountsService {
             return new ResponseEntity(prepaidAccountsDtoNew, HttpStatus.OK);
         }
         return ResponseEntity.status(HttpStatus.CONFLICT).body(new CustomMessage(HttpStatus.CONFLICT.value(), "Account Id already exist"));
+    }
+
+    @Override
+    public String saveDeductionRecord(DeductionDto deductionDto) {
+        PrepaidAccounts prepaidAccounts = new PrepaidAccounts();
+        prepaidAccounts.setTotalDataOctetsAvailable(convertGigabytesToBytes(deductionDto.getConsumedOctets().getTotal()));
+        prepaidAccounts.setTotalInputDataOctetsAvailable(convertGigabytesToBytes(deductionDto.getConsumedOctets().getInput()));
+        prepaidAccounts.setTotalOutputDataOctetsAvailable(convertGigabytesToBytes(deductionDto.getConsumedOctets().getOutput()));
+        prepaidAccounts.setTotalCallSecondsConsumed(convertGigabytesToBytes(deductionDto.getConsumedTimeSeconds()));
+        prepaidAccountsRepository.save(prepaidAccounts);
+        return "Saved successfully";
     }
 
     @Override
@@ -104,5 +117,14 @@ public class PrepaidAccountsServiceImpl implements PrepaidAccountsService {
             return new ResponseEntity<>(prepaidAccountsDto, HttpStatus.OK);
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new CustomMessage(HttpStatus.NOT_FOUND.value(), "Invalid Account Id"));
+    }
+
+    public static long convertGigabytesToBytes(Long gigabytes) {
+        // 1 GB = 1024^3 bytes
+        BigDecimal gigabytesBigDecimal = new BigDecimal(String.valueOf(gigabytes));
+        BigDecimal bytesBigDecimal = gigabytesBigDecimal.multiply(BigDecimal.valueOf(Math.pow(1024, 3)));
+
+        // Convert to long, rounding down to the nearest whole number
+        return bytesBigDecimal.longValue();
     }
 }
