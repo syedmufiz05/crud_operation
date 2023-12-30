@@ -37,4 +37,9 @@ public class PrepaidAccountController {
     public String saveDeductionRecord(@RequestBody DeductionDto deductionDto) {
         return prepaidAccountsService.saveDeductionRecord(deductionDto);
     }
+
+    @RequestMapping(value = "/get/all/available/balance", method = RequestMethod.GET)
+    public ResponseEntity<PrepaidAccountsDto> getAllAvailableBalance(@RequestParam("msisdn") String msisdn) {
+        return prepaidAccountsService.getAvailableBalance(msisdn);
+    }
 }

@@ -2,6 +2,7 @@ package com.example.demo.service;
 
 import com.example.demo.dto.DeductionDto;
 import com.example.demo.dto.PrepaidAccountsDto;
+import com.example.demo.dto.PrepaidAvailBalanceDto;
 import com.example.demo.exception.CustomMessage;
 import com.example.demo.model.PrepaidAccounts;
 import com.example.demo.repository.PrepaidAccountsRepository;
@@ -119,12 +120,33 @@ public class PrepaidAccountsServiceImpl implements PrepaidAccountsService {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new CustomMessage(HttpStatus.NOT_FOUND.value(), "Invalid Account Id"));
     }
 
+    @Override
+    public ResponseEntity getAvailableBalance(String msisdn) {
+        Optional<PrepaidAccounts> prepaidAccounts = prepaidAccountsRepository.findByMsisdn(msisdn);
+        if (prepaidAccounts.isPresent()) {
+            PrepaidAccounts prepaidAccountsDb = prepaidAccounts.get();
+            PrepaidAvailBalanceDto prepaidAvailBalanceDto = new PrepaidAvailBalanceDto();
+            prepaidAvailBalanceDto.setTotalDataOctetsAvailable(convertGigabytesToBytes(prepaidAccountsDb.getTotalDataOctetsAvailable()));
+            prepaidAvailBalanceDto.setTotalInputDataOctetsAvailable(convertGigabytesToBytes(prepaidAccountsDb.getTotalInputDataOctetsAvailable()));
+            prepaidAvailBalanceDto.setTotalOutputDataOctetsAvailable(convertGigabytesToBytes(prepaidAccountsDb.getTotalOutputDataOctetsAvailable()));
+            prepaidAvailBalanceDto.setTotalCallSecondsAvailable(convertHoursToSeconds(prepaidAccountsDb.getTotalCallSecondsAvailable()));
+            prepaidAvailBalanceDto.setTotalSmsAvailable(prepaidAccountsDb.getTotalSmsAvailable());
+            return new ResponseEntity<>(prepaidAvailBalanceDto, HttpStatus.OK);
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new CustomMessage(HttpStatus.NOT_FOUND.value(), "Invalid Account Id"));
+    }
+
     public static long convertGigabytesToBytes(Long gigabytes) {
         // 1 GB = 1024^3 bytes
         BigDecimal gigabytesBigDecimal = new BigDecimal(String.valueOf(gigabytes));
         BigDecimal bytesBigDecimal = gigabytesBigDecimal.multiply(BigDecimal.valueOf(Math.pow(1024, 3)));
+        return bytesBigDecimal.longValue();
+    }
 
-        // Convert to long, rounding down to the nearest whole number
+    public static long convertHoursToSeconds(Long hours) {
+        // 1 Hour = 60^2 seconds
+        BigDecimal gigabytesBigDecimal = new BigDecimal(String.valueOf(hours));
+        BigDecimal bytesBigDecimal = gigabytesBigDecimal.multiply(BigDecimal.valueOf(Math.pow(60, 2)));
         return bytesBigDecimal.longValue();
     }
 }

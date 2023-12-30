@@ -14,4 +14,6 @@ public interface PrepaidAccountsService {
     ResponseEntity deletePrepaidAccount(Integer accountId);
 
     ResponseEntity getPrepaidAccount(Integer accountId);
+
+    ResponseEntity getAvailableBalance(String msisdn);
 }
