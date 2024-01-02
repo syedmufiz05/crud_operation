@@ -34,7 +34,7 @@ public class PrepaidAccountController {
     }
 
     @RequestMapping(value = "/deduct", method = RequestMethod.POST)
-    public String saveDeductionRecord(@RequestBody DeductionDto deductionDto) {
+    public ResponseEntity<PrepaidAccountsDto> saveDeductionRecord(@RequestBody DeductionDto deductionDto) {
         return prepaidAccountsService.saveDeductionRecord(deductionDto);
     }
 

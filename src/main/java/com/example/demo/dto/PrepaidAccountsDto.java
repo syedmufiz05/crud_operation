@@ -19,7 +19,7 @@ public class PrepaidAccountsDto {
     private String msisdn;
 
     @JsonProperty("cs_voice_call_seconds")
-    private Integer csVoiceCallSeconds;
+    private Long csVoiceCallSeconds;
 
     @JsonProperty("4g_data_octets")
     private Integer fourGDataOctets;

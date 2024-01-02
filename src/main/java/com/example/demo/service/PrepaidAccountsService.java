@@ -7,7 +7,7 @@ import org.springframework.http.ResponseEntity;
 public interface PrepaidAccountsService {
     ResponseEntity savePrepaidAccount(PrepaidAccountsDto prepaidAccountsDto);
 
-    String saveDeductionRecord(DeductionDto deductionDto);
+    ResponseEntity saveDeductionRecord(DeductionDto deductionDto);
 
     ResponseEntity editPrepaidAccount(Integer accountId, PrepaidAccountsDto prepaidAccountsDto);
 

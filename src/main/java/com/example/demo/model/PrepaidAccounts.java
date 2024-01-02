@@ -20,7 +20,7 @@ public class PrepaidAccounts {
     private String msisdn;
 
     @Column(name = "cs_voice_call_seconds")
-    private Integer csVoiceCallSeconds;
+    private Long csVoiceCallSeconds;
 
     @Column(name = "4g_data_octets")
     private Integer fourGDataOctets;
